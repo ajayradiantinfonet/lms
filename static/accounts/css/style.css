@@ -1,0 +1,387 @@
+.nav-box{
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+.search-btn{
+	color:#fff;
+	background: #28a745;
+	border:none;
+}
+.search-btn:hover{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+}
+
+.txt-center{
+	text-align: center;
+}
+.category-btn-pills{
+	border:1px solid #28a745;
+	color:#333;
+	box-shadow: 1px 1px 1px #d6d6d6;
+	background: #fff;
+	height: 30px;
+	border-radius: 15px;
+	box-shadow: 0 2px 5px #aaa;
+}
+
+.bg-img-cover{
+	background-position: center;
+	background-size: cover;
+	background-color: #E5F2E5;
+}
+
+.clr-green{
+	color: green !important;
+}
+
+.clr-green:hover{
+	color: green;
+	text-shadow: 1px;
+}
+
+.cta-color{
+	color: #28a745 !important;
+}
+
+.cta-color:hover{
+	color: #28a745;
+	text-shadow: 1px;
+}
+
+
+.cta-btn{
+	background: transparent linear-gradient(180deg, #93F9B9 0%, #47B78F 100%) 0% 0% no-repeat padding-box;
+	box-shadow: 0px 3px 6px #00000029;
+	color: #fff;
+	border: 1px solid #47B78F;
+	padding:5px 30px;
+	border-radius: 5px;
+}
+.cta-btn:hover{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+
+.cta-btn:active{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+
+.browse-menu-content{
+	width:100%;
+	margin-top:50px;
+}
+
+.card{
+	background: #fff;
+	width:200px;
+	box-shadow: 0 2px 10px #aaa;
+}
+
+.card-inner{
+	margin:5px;
+}
+
+.card-inner-content{
+	padding: 5px;
+}
+
+.card-course-name{
+	font-weight: 800;
+	font-size: 16px;
+	text-shadow: 1px;
+}
+
+.card-course-price{
+	color:#CD385C;
+}
+
+.card-course-price-strike{
+	color:#d6d6d6;
+}
+
+.card-course-rating-star{
+	color:#eb8a2F;
+}
+
+.card-enroll-count{
+	color:#333;
+}
+
+.fav-not{
+	background: #28a745;
+	color:#fff;
+	border-radius:50%;
+	border:1px solid #28a745;
+	height:30px;
+	width: 30px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+
+.fav{
+	background: #fff;
+	color: #28a745;
+	border-radius:50%;
+	border:1px solid #28a745;
+	height:30px;
+	width: 30px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+
+.search-bar-wd{
+	width:400px !important;
+}
+
+.btn-wdth-120{
+	min-width:120px;
+}
+
+
+.ht-30{
+	height:30px !important;
+}
+
+.ht-30-lg{
+	height:30px !important;
+}
+
+.fs-13{
+	font-size: 13px;
+}
+
+.fs-15{
+	font-size: 15px;
+}
+
+.fw-800{
+	font-weight: 800;
+}
+
+.fs-18{
+	font-size: 18px;
+}
+
+.fs-20{
+	font-size: 20px;
+}
+
+.fs-24{
+	font-size: 24px;
+}
+
+.fs-13-lg{
+	font-size: 13px;
+}
+
+.fl-rt{
+	float: right;
+}
+
+.fl-rt-lg{
+	float: right;
+}
+
+.nav-dd-item{
+	color: #333;
+	text-decoration:none;
+}
+
+.nav-dd-item:hover{
+	color: #333;
+	text-decoration:none;
+}
+
+.dd-browse{
+	width:80vw;
+	left:-700px;
+	top:40px;
+}
+
+.brd-btm{
+	border-bottom: 1px solid #000;
+}
+
+.brd-y2{
+	border-bottom: 2px solid #c6c6c6;
+	border-top: 2px solid #c6c6c6;
+}
+
+.brd-green{
+	border: 1px solid #28a745;
+}
+
+.brd-rds-5{
+	border-radius: 5px;
+}
+.brd-rds-15{
+	border-radius: 15px;
+}
+
+.brd-rds-8{
+	border-radius: 8px;
+}
+
+.brd-rds-tlr-10{
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px; 
+}
+.check-list {
+  list-style: none;
+}
+
+.check-list .check-list-item:before {
+  content: '✓';
+  color:#28a745;
+}
+
+
+.course-detail-card{
+	width: 300px;
+    position: absolute;
+    top: -350px;
+}
+.course-detail-card-price{
+	font-size:24px;
+	color: #CD385C;
+}
+.page-footer{
+	background: #3C4852;
+	background-blend-mode: luminosity, lighten;
+}
+
+.px-lg-x0-sm-x15{
+	padding-left:0px; 
+	padding-right:0px; 
+}
+.pl-lg-x20-sm-5{
+	padding-left:0px;
+}
+
+.module-box{
+	box-shadow: 0 2px 10px #aaa;
+	border: 1px solid #28a745;
+}
+
+@media(max-width:990px){
+	.search-bar-wd{
+		width:100% !important;
+	}
+
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.wd-full{
+		width:100% !important;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+
+	.fs-13-lg{
+		font-size: 1rem;
+	}
+
+	.dd-browse{
+		width:100%;
+		left:0px;
+		top:30px;
+	}
+
+	.px-lg-x0-sm-x15{
+		padding-left:0px; 
+		padding-right:0px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:0px;
+	}
+	.course-detail-card{
+		width: 100%;
+	    position: absolute;
+	    top: -450px;
+	}
+
+}
+
+@media(max-width:768px){
+	.search-bar-wd{
+		width:100% !important;
+	}
+
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.wd-full{
+		width:100% !important;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+
+	.fs-13-lg{
+		font-size: 1rem;
+	}
+	.mbl-hide{
+		display: none;
+	}
+	.dd-browse{
+		width:100%;
+		left:0px;
+		top:40px;
+	}
+	.course-detail-card{
+		width: 100%;
+	    position: relative;
+	    top: 10px;
+	}
+	.sm-100{
+		width: 100% !important;
+	}
+	.px-lg-x0-sm-x15{
+		padding-left:15px; 
+		padding-right:15px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:5px;
+	}
+	.card{
+		width:100% !important;
+	}
+
+	.card-inner img{
+		width:100% !important;
+		height: auto !important
+	}
+}
+
+@media (min-width: 576px){
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+	.sm-100{
+		width: 100% !important;
+	}
+	.px-lg-x0-sm-x15{
+		padding-left:15px; 
+		padding-right:15px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:5px;
+	}
+}
+

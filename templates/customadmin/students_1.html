@@ -1,0 +1,194 @@
+{% extends 'head2.html'%}
+
+ {% block inner_content %}
+  {% load static %}
+  {% load mytag %}
+
+
+    <div class="right_col" role="main" style="min-height: 796px;">  
+        <!-- users-->
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-dismissible alert-{{ message.tags }}">
+          <button type="button" class="close" data-dismiss="alert">
+              <i class="fa fa-close"></i>
+          </button>
+          <strong>{{ message }}</strong>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+
+          <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+              <div class="dashboard_graph1">
+
+          <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                           <div class="x_title h2-size table-border1">
+                            <div class="col-md-3">
+                                <h2>Users</h2>
+                              </div>
+                               <div class="col-md-6">
+
+                                  <div class="col-md-4">
+                                  </div>
+                                  <div class="col-md-4">
+                                  </div>
+
+                                  
+                               </div>
+
+                               <div class="col-md-3">
+                                  <label class="btn btn_upload">
+                                      <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
+                                    </label>
+                                    <label class="btn btn_add add_user">
+                                       <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Users</span>
+                                    </label> 
+                                  <div class="col-md-12 btn-width" data-toggle="buttons">
+                                             
+                                    </div>
+                              </div>
+            
+                                 <!-- <div class="col-md-4">
+                                  <div class="filter_img filter-btn box_show">
+                                  <img src="{% static 'boimage/filter-button.png' %}">
+                                      <ul style="display:none;" class="box_hide box-ulfilter">
+                                      <li>Company</li>
+                                       <li>Courses</li>
+                                        <li>Instructor</li>
+                                         <li>Student</li>
+                                         <li>Admin</li>
+                                    </ul>
+                                    <span class="filter_span1">Filter</span>
+                                 
+                                     </div>
+                                   </div> -->
+
+                                    <!-- <div class="col-md-4">
+                                      <div class="filter_img">
+                                         <span class="filter_span">Search:</span>
+                                         <input type="text" placeholder="search....">
+                                       </div>
+                                    </div> -->
+
+                                
+                                </div>
+
+                <div class="clearfix"></div>
+              </div>
+                  <div class="x_content">
+                      <div class="row">
+                          <div class="col-sm-12">
+                            <div class="card-box table-responsive">
+                   
+
+                   {% ifequal object_list|length 0 %}
+                  <p>
+                      There is no User Available 
+                    </p>
+
+                {% else %}
+          
+                    <table id="user-table" class="table table-striped dt-responsive nowrap table_content" cellspacing="0" width="100%">
+                      <thead>
+
+                        <tr>
+                           <th>Users</th>
+                          <th>Name</th>
+                          <th>Course/Company</th>
+                          <th>Role</th>
+                          <th>Enrollment Date</th>
+                          <th>Contact</th>
+                          <th>E-Mail</th>
+                          <th>City</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+
+                      {% for obj in object_list %}
+                      <tr>
+                        <td>
+                          <a href="" class="user-profile" aria-haspopup="true" id="navbarDropdown" aria-expanded="false">
+                          {% if obj.image %}
+                              <img src="{{ obj.image.url }}" alt="">
+                        {% else %}
+                           <img src="{% static 'boimage/account-circle.svg' %}" alt="no image">
+                        {% endif %}
+                        </a>
+                        </td>
+                          <td>{% if obj.first_name %} {{obj.first_name}} {% else %} &nbsp; {% endif %}</td>
+                          <td>{{ obj.organization_student.all.0 }}</td>
+                          <td>{{ obj.position }}</td>
+                          <td>{% if obj.date_joined %} {{obj.date_joined|date}} {% else %} &nbsp; {% endif %}</td>
+                          <td>{{ obj.phone }}</td>
+                          <td>{{ obj.email }}</td>
+                          <td>{{ obj.city }}</td>
+                          <td class="td_img">
+                            <a href="{% url 'customadmin:edit_students' obj.id %}"><img src="{% static 'boimage/edit.svg' %}" alt=""></a>
+                            <a href="{% url 'customadmin:delete_students' obj.id %}"><img src="{% static 'boimage/delete.svg' %}" alt=""></a>
+                          </td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                      </tbody>
+                    </table>
+
+                    {% endifequal %}
+                 </div>
+                </div>
+              </div>
+            </div>
+            <!-- table end -->
+                </div>
+              </div>
+               <div class="clearfix"></div>
+               </div>
+              </div>
+          </div>
+          <!-- /row 4 -->
+
+    </div>
+
+
+
+
+
+    
+
+  {% endblock %}
+
+
+  {% block inpage_script %}
+
+<!-- <link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
+</script> -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
+</script>
+    <script>
+   
+      $('#user-table').DataTable();
+
+    $('.add_user').click(function()
+    {
+      window.location.href="{% url 'customadmin:create_organization_user' %}";
+    });
+
+    
+  </script>
+
+  {% endblock %}
+
+
+

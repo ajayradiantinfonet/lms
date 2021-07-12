@@ -1,0 +1,394 @@
+
+{% load static %}
+{% load mytag %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+
+    <title>dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'boheader/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="{% static 'boheader/vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!-- NProgress -->
+    <link href="{% static 'boheader/vendors/nprogress/nprogress.css' %}" rel="stylesheet" />
+    <!-- iCheck -->
+    <link href="{% static 'boheader/vendors/iCheck/skins/flat/green.css' %}" rel="stylesheet" />
+	
+    <!-- bootstrap-progressbar -->
+    <link href="{% static 'boheader/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet" />
+    <!-- JQVMap -->
+    <link href="{% static 'boheader/vendors/jqvmap/dist/jqvmap.min.css' %}" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static 'boheader/vendors/bootstrap-daterangepicker/daterangepicker.css' %}" rel="stylesheet" />
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'boheader/build/css/custom.min.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/style.css' %}" />
+
+
+     <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/responsive.css' %}" />
+
+
+
+
+
+
+     <style>
+      @media only screen and (min-width:1030px) and (max-width:1366px) {
+    #cards_landscape_wrap-2 .card-flyer .img-height img{
+        height: 110px;
+      }
+       .height-card1 {
+    height: 235px;
+    }
+      #cards_landscape_wrap-2 .card-flyer .text-box h6 {
+    font-size: 10px;
+  }
+.right_col {
+    min-height: 635px !important;
+}
+  
+    .ul-management li {
+    margin: 0px 3px !important;
+    font-size: 10px !important;}
+    .ul-management img {
+    width: 12px !important;
+}
+#cards_landscape_wrap-2 .card-flyer .text-box .text-container {
+    padding: 10px 5px;
+}
+  
+
+
+body{
+  /*font-family: 'Open Sans';*/
+  /*font-family:sans-serif;*/
+  font: normal normal 600 Open Sans;
+
+}
+     </style>
+
+
+    
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+
+        <!-- left panel -->
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <a href="{% url 'userlms:home' %}" class="site_title">
+                <img src="{% static 'boimage/ApprentissageLogo.png' %}" alt=""></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu ul_img">
+                  <li><a style=""href="{% url 'customadmin:admin_home' %}"><img src="{% static 'boimage/menu.svg'  %}" alt=""></i><span style="font-size:14px !important;color:black;"> Dashboard</span></a>
+                  </li>
+                  <li><a href="{% url 'customadmin:all_course_user' %}"><i href="#"><img src="{% static 'boimage/mortarboard.svg' %}" alt=""></i><span style="font-size:14px !important;color:black;">Courses</a>
+                  </li>
+                  <li><a href="{% url 'customadmin:all_organization' %}"><i href="#"><img src="{% static 'boimage/TEMP.svg'  %}" alt=""></i><span style="font-size:14px !important;color:black;">Companies</a>
+                  </li>
+                  <li><a href="{% url 'customadmin:students' %}"><i href="#"><img src="{% static 'boimage/users.svg'  %}" alt=""></i><span style="font-size:14px !important;color:black;">Users </span></a>
+                  </li>
+                  <li><a href="{% url 'customadmin:calendar' %}"><i href="#"><img src="{% static 'boimage/calendar.svg'%}" alt=""></i><span style="font-size:14px !important;color:black;">Calender </span> <!-- <span class="fa fa-chevron-down"></span> --></a>
+
+
+
+                    
+                   <!--  <ul class="nav child_menu">
+                      <li><a href="#">text</a></li>
+                      <li><a href="#">text</a></li>
+                      <li><a href="#">text</a></li>
+                      <li><a href="#">text</a></li>
+                      <li><a href="#">text</a></li>
+                    </ul> -->
+                  </li>
+
+                  <li><a href="{% url 'customadmin:course_report' %}"><i href="#"><img src="{% static 'boimage/calendar.svg'%}" alt=""></i><span style="font-size:14px !important;color:black;">User Report</span></a>
+                  </li>
+
+                  <li><a><i href="#"><img src="{% static 'boimage/calendar.svg'%}"
+                    alt="">
+                    </i><span style="font-size:14px !important;color:black;"> Other Details </span> </a>
+
+                     <ul class="nav child_menu">
+                      <li>
+                        <a style="color:black" href="{% url 'customadmin:country' %}"> Country </a>
+                      </li>
+                      <li>
+                        <a style="color:black" href="{% url 'customadmin:state' %}"> State </a>
+                      </li>
+
+                      <li>
+                        <a style="color:black" href="{% url 'customadmin:city' %}"> City </a>
+                      </li>
+
+            <li>
+              <a  href="{% url 'grades:grading_systems_home' %}"> Grading System</a>
+            </li>
+
+           <!--  <li>
+              <a  href="{% url 'grades:add_grade' %}"> Add Grade </a>
+            </li> -->
+                                      {% if not user.is_anonymous %}
+                      {% if user|check_permission:'generic.can_view_category' %}
+                        <li> 
+                             <a style="color:black" href="{% url 'customadmin:all_category_user' %}">Categories </a>
+                        </li>
+                      {% endif %}
+
+                    {% endif %}
+                      <li><a href="#">text</a></li>
+                    </ul>
+                  </li>
+                  <!-- <li><a><i href="#"><img src="{% static 'boimage/chart.svg'  %}" alt=""></i><span> Analytics </span> 
+                  </li> -->
+                </ul>
+              </div>
+
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+              <nav class="nav navbar-nav">
+                <div class="search-icon">
+              <img  src="{% static 'boimage/search.svg' %}">
+                 <input type="text"  placeholder="search....">
+               </div>
+
+              <ul class="navbar-right">
+                
+                <li class="nav-item dropdown open" style="padding-left: 15px;">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                    <img src="{% static 'boimage/img.jpg' %}" alt="">{{ user.first_name }}
+                  </a>
+                  <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item"  href="javascript:;"> Profile</a>
+                      <a class="dropdown-item"  href="javascript:;">
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
+                      </a>
+                  <a class="dropdown-item"  href="javascript:;">Help</a>
+                    <a class="dropdown-item"  href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                  </div>
+                </li>
+
+                <li role="presentation" class="nav-item dropdown open">
+                  <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                    <li class="nav-item">
+                      <a class="dropdown-item">
+                        <span class="image"><img src="{% static 'boimage/img.jpg' %}" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          text...........
+                        </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="dropdown-item">
+                        <span class="image"><img src="{% static 'boimage/img.jpg' %}" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          text...........
+                        </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="dropdown-item">
+                        <span class="image"><img src="{% static 'boimage/img.jpg' %}" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                         <span class="message">
+                          text...........
+                        </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="dropdown-item">
+                        <span class="image"><img src="{% static 'boimage/img.jpg' %}" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                         <span class="message">
+                          text...........
+                        </span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <div class="text-center">
+                        <a class="dropdown-item">
+                          <strong>See All Alerts</strong>
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item dropdown open" style="padding-left: 15px;">
+                  <a href="javascript:;" class="bell_img">
+                    <img src="{% static 'boimage/bell.svg' %}" alt="">
+                  </a>
+               </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        {% block inner_content %}
+
+        {% endblock %}
+
+
+
+        
+
+        
+
+
+
+
+<!-- footer content -->
+      <footer>
+        <div class="row footer_left">
+          <div class="col-md-4 footer_section">
+            <img src="images/copyright.svg" alt=""><a>&nbsp;2020 Talento Consulting Pvt Ltd.</a>
+          </div>
+          <div class="col-md-2 footer_section">
+            <img src="images/explorer.svg" alt=""><a>&nbsp;https://talento.in</a>
+          </div>
+                        <div class="col-md-3 footer_section">
+                          <img src="images/call.svg" alt=""><a>&nbsp;Call Us : +91-11-40820002</a>
+                        </div>
+                        <div class="col-md-3 footer_section">
+                          <img src="images/email.svg" alt=""><a>&nbsp;contact@talento.in</a>
+                        </div>
+                      </div>
+                      <div class="clearfix"></div>
+      </footer>
+
+
+<!-- /footer content -->
+</div>
+</div>
+
+<!-- jQuery -->
+<script src="{% static 'boheader/vendors/jquery/dist/jquery.min.js' %}"></script>
+<!-- Bootstrap -->
+<script src="{% static 'boheader/vendors/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<!-- FastClick -->
+<script src="{% static 'boheader/vendors/fastclick/lib/fastclick.js' %}"></script>
+<!-- NProgress -->
+<script src="{% static 'boheader/vendors/nprogress/nprogress.js' %}"></script>
+<!-- Chart.js -->
+<script src="{% static 'boheader/vendors/Chart.js/dist/Chart.min.js' %}"></script>
+<!-- gauge.js -->
+<script src="{% static 'boheader/vendors/gauge.js/dist/gauge.min.js' %}"></script>
+<!-- bootstrap-progressbar -->
+<script src="{% static 'boheader/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+<!-- iCheck -->
+<script src="{% static 'boheader/vendors/iCheck/icheck.min.js' %}"></script>
+<!-- Skycons -->
+<script src="{% static 'boheader/vendors/skycons/skycons.js' %}"></script>
+<!-- Flot -->
+<script src="{% static 'boheader/vendors/Flot/jquery.flot.js' %}"></script>
+<script src="{% static 'boheader/vendors/Flot/jquery.flot.pie.js' %}"></script>
+<script src="{% static 'boheader/vendors/Flot/jquery.flot.time.js' %}"></script>
+<script src="{% static 'boheader/vendors/Flot/jquery.flot.stack.js' %}"></script>
+<script src="{% static 'boheader/vendors/Flot/jquery.flot.resize.js' %}"></script>
+<!-- Flot plugins -->
+<script src="{% static 'boheader/vendors/flot.orderbars/js/jquery.flot.orderBars.js' %}"></script>
+<script src="{% static 'boheader/vendors/flot-spline/js/jquery.flot.spline.min.js' %}"></script>
+<script src="{% static 'boheader/vendors/flot.curvedlines/curvedLines.js' %}"></script>
+<!-- DateJS -->
+<script src="{% static 'boheader/vendors/DateJS/build/date.js' %}"></script>
+<!-- JQVMap -->
+<script src="{% static 'boheader/vendors/jqvmap/dist/jquery.vmap.js' %}"></script>
+<script src="{% static 'boheader/vendors/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
+<script src="{% static 'boheader/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="{% static 'boheader/vendors/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'boheader/vendors/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+
+<!-- Custom Theme Scripts -->
+
+
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+
+<script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+
+<script src="{% static 'boheader/build/js/custom.min.js' %}"></script>
+
+
+<script src="{% static 'user_lms/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/custom.min.js' %}"></script>
+
+
+    
+    <!-- Bootstrap js -->
+<!--  <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script> -->
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" 
+        crossorigin="anonymous">
+</script> -->
+<script>
+
+  // $(document).ready(function(){
+  //   $(".box_show").click(function(){
+  //     $(this).children(".box_hide").toggle();
+  //   });
+  // });
+
+</script>
+
+{% block inpage_script %}
+{% endblock %}
+
+
+</body>
+</html>

@@ -1,0 +1,741 @@
+.nav-box{
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+.search-btn{
+	color:#fff;
+	background: #28a745;
+	border:none;
+}
+.search-btn:hover{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+}
+
+.txt-center{
+	text-align: center;
+}
+.category-btn-pills{
+	border:1px solid #28a745;
+	color:#333;
+	box-shadow: 1px 1px 1px #d6d6d6;
+	background: #fff;
+	height: 30px;
+	border-radius: 15px;
+	box-shadow: 0 2px 5px #aaa;
+}
+
+.bg-img-cover{
+	background-position: center;
+	background-size: cover;
+	background-color: #E5F2E5;
+}
+
+.course-dashboard-cover{
+	background-position: center;
+	background-size: cover;
+	background-color: #E5F2E5;
+	background-image: url('../img/course_cover_bg.png');
+}
+
+.clr-green{
+	color: green !important;
+}
+
+.clr-green:hover{
+	color: green;
+	text-shadow: 1px;
+}
+
+.cta-color{
+	color: #28a745 !important;
+}
+
+.cta-color:hover{
+	color: #28a745;
+	text-shadow: 1px;
+}
+
+
+.cta-btn{
+	background: transparent linear-gradient(270deg, #73E19C 0%, #4CA64A 100%) 0% 0% no-repeat padding-box;
+	box-shadow: 0px 3px 6px #00000029;
+	border-radius: 10px;
+	opacity: 1;
+	color: #fff;
+	border: 1px solid #47B78F;
+	padding:5px 30px;
+}
+.cta-btn:hover{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+
+.cta-btn:active{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+
+.browse-menu-content{
+	width:100%;
+	margin-top:50px;
+}
+
+.card{
+	background: #fff;
+	width:200px;
+	box-shadow: 0 2px 10px #aaa;
+	margin:0 auto 0;
+}
+
+.card-inner{
+	margin:5px;
+}
+
+.card-inner-content{
+	padding: 5px;
+}
+
+.card-course-name{
+	font-weight: 800;
+	font-size: 16px;
+	text-shadow: 1px;
+	min-height: 50px;
+	max-height: 50px;
+	overflow: hidden;
+}
+
+.card-course-price{
+	color:#CD385C;
+	display: none;
+}
+
+.card-course-price-strike{
+	color:#d6d6d6;
+	display: none;
+}
+
+.card-course-rating-star{
+	color:#eb8a2F;
+}
+
+.card-enroll-count{
+	color:#333;
+}
+
+.fav-not{
+	background: #28a745;
+	color:#fff;
+	border-radius:50%;
+	border:1px solid #28a745;
+	height:30px;
+	width: 30px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+
+.fav{
+	background: #fff;
+	color: #28a745;
+	border-radius:50%;
+	border:1px solid #28a745;
+	height:30px;
+	width: 30px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+
+.search-bar-wd{
+	width:400px !important;
+}
+
+.btn-wdth-120{
+	min-width:120px;
+}
+
+
+.ht-30{
+	height:30px !important;
+}
+
+.ht-30-lg{
+	height:30px !important;
+}
+
+.fs-13{
+	font-size: 13px;
+}
+
+.fs-15{
+	font-size: 15px;
+}
+
+.fw-800{
+	font-weight: 800;
+}
+
+.fs-18{
+	font-size: 18px;
+}
+
+.fs-20{
+	font-size: 20px;
+}
+
+.fs-24{
+	font-size: 24px;
+}
+
+.fs-13-lg{
+	font-size: 13px;
+}
+
+.fl-rt{
+	float: right;
+}
+
+.fl-rt-lg{
+	float: right;
+}
+
+.nav-dd-item{
+	color: #333;
+	text-decoration:none;
+}
+
+.nav-dd-item:hover{
+	color: #333;
+	text-decoration:none;
+}
+
+.dd-browse{
+	width:80vw;
+	left:-700px;
+	top:40px;
+}
+
+.brd-btm{
+	border-bottom: 1px solid #000;
+}
+.brd-btm2{
+	border-bottom: 2px solid #333;
+}
+
+.brd-y2{
+	border-bottom: 2px solid #c6c6c6;
+	border-top: 2px solid #c6c6c6;
+}
+
+.brd-green{
+	border: 1px solid #28a745;
+}
+
+.brd-rds-5{
+	border-radius: 5px;
+}
+.brd-rds-15{
+	border-radius: 15px;
+}
+
+.brd-rds-8{
+	border-radius: 8px;
+}
+
+.brd-rds-tlr-10{
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px; 
+}
+.check-list > ul {
+  list-style: none;
+}
+
+.check-list > ul >  li:before {
+  content: '✓';
+  color:#28a745;
+}
+
+ul {
+  list-style: none;
+}
+
+ul > li:before {
+  content: '✓';
+  color:#28a745;
+}
+
+li.nav-item:before {
+  content: none !important;
+}
+
+
+.course-detail-card{
+	width: 300px;
+    position: absolute;
+    top: -350px;
+}
+.course-detail-card-price{
+	font-size:24px;
+	color: #CD385C;
+	display: none;
+}
+.page-footer{
+	background: #3C4852;
+	background-blend-mode: luminosity, lighten;
+}
+
+.px-lg-x0-sm-x15{
+	padding-left:0px; 
+	padding-right:0px; 
+}
+.pl-lg-x20-sm-5{
+	padding-left:0px;
+}
+
+.module-box{
+	box-shadow: 0 2px 10px #aaa;
+	border: 1px solid #28a745;
+}
+
+.brd-gry{
+	border-color: #d6d6d6;
+}
+.signup-btn{
+	color:#fff;
+	background: #28a745;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+	padding:5px 30px;
+	border-radius: 5px;
+}
+.signup-btn:hover{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+.login-btn{
+	color:#28a745;
+	background: #fff;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+	padding:5px 30px;
+	border-radius: 5px;
+}
+.login-btn:hover{
+	color:#fff;
+	background: #28a745;
+	border:1px solid #28a745;
+	box-shadow: 0px 3px 6px #00000029;
+}
+
+.txt-justify{
+	text-align: justify;
+}
+
+.pop-card-hover{
+	display: none;
+}
+
+.pop-card-hover:hover{
+	display: block;
+}
+
+.pop-card:hover > .pop-card-hover{
+	display: block;
+}
+
+.a-norm{
+	text-decoration:none;
+	color:#222;
+}
+
+.a-norm:hover{
+	text-decoration:none;
+	color:#222;
+}
+
+.a-norm:active{
+	text-decoration:none;
+	color:#222;
+}
+
+
+.p-hightlight p{
+	margin-bottom:1px !important;
+}
+
+.c-overview{
+	padding-left:0px;
+}
+
+.ml-2-mbl-ml-0{
+	margin-left: .5rem;
+}
+
+.blk-wht-clr{
+	color:#000 !important;
+}
+
+.blk-wht-clr:hover{
+	color: #fff !important;
+}
+
+.player-ply-btn{
+	width: 60px ! important;
+	height: 60px ! important;
+	font-size: 37px ! important;
+	border-radius: 50% ! important;
+	position: relative ! important;
+}
+
+.screen-resize-btn{
+	background: #28a745;
+	color: #fff;
+	border: 1px solid #28a745;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	border-radius: 2px;
+	z-index: 9;
+}
+
+.full-screen-div{
+	position: fixed !important;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 3px;
+}
+
+
+/*lock time line classes start*/
+
+/* The actual timeline (the vertical ruler) */
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+  content: '';
+  position: absolute;
+  border:1px dotted #333;
+  top: 0;
+  bottom: 0;
+  left: 17px;
+  margin-left: -3px;
+}
+
+/* Container around content */
+.timeline-container {
+  padding-left: 15px;
+  position: relative;
+  background-color: inherit;
+  width: 95%;
+}
+
+/* The circles on the timeline */
+.timeline-container::after {
+  content: '\f13e';
+  position: absolute;
+  right: -17px;
+  background-color: white;
+  width: 15px;
+  height: 25px;
+  line-height: 1.5;
+  top: -1px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.timeline-container-lock {
+  padding-left: 15px;
+  position: relative;
+  background-color: inherit;
+  width: 95%;
+}
+.timeline-container-lock::after {
+  content: '\f023';
+  position: absolute;
+  right: -17px;
+  background-color: white;
+  width: 15px;
+  height: 25px;
+  line-height: 1.5;
+  top: -1px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Place the container to the left */
+.timeline-left {
+  left: 0;
+}
+
+/* Place the container to the right */
+.timeline-right {
+  left: 13px;
+}
+
+/* Add arrows to the left container (pointing right) */
+.timeline-left::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  right: 30px;
+  border: medium solid white;
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent white;
+}
+
+/* Add arrows to the right container (pointing left) */
+/*.timeline-right::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  left: 30px;
+  border: medium solid white;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent white transparent transparent;
+}*/
+
+/* Fix the circle for containers on the right side */
+.timeline-right::after {
+  left: -5px;
+}
+
+/* The actual content */
+.timeline-content {
+  padding: 20px 30px;
+  background-color: white;
+  position: relative;
+  border-radius: 6px;
+}
+
+/* Media queries - Responsive timeline on screens less than 600px wide */
+@media screen and (max-width: 600px) {
+  /* Place the timelime to the left */
+  .timeline::after {
+  	left: 31px;
+  }
+  
+  /* Full-width containers */
+  .timeline-container {
+  width: 100%;
+  padding-left: 70px;
+  padding-right: 25px;
+  }
+  
+  .timeline-container-lock {
+  width: 100%;
+  padding-left: 70px;
+  padding-right: 25px;
+  }
+  
+  /* Make sure that all arrows are pointing leftwards */
+  /*.timeline-container::before {
+  left: 60px;
+  border: medium solid white;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent white transparent transparent;
+  }*/
+
+  /* Make sure all circles are at the same spot */
+  .timeline-left::after, .timeline-right::after {
+  left: 15px;
+  }
+  
+  /* Make all right containers behave like the left ones */
+  .timeline-right {
+  left: 0%;
+  }
+}
+
+/*lock time line classes end */
+
+
+
+
+@media(max-width:990px){
+	.search-bar-wd{
+		width:100% !important;
+	}
+
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.wd-full{
+		width:100% !important;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+
+	.fs-13-lg{
+		font-size: 1rem;
+	}
+
+	.dd-browse{
+		width:100%;
+		left:0px;
+		top:30px;
+	}
+
+	.px-lg-x0-sm-x15{
+		padding-left:0px; 
+		padding-right:0px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:0px;
+	}
+	.course-detail-card{
+		width: 100%;
+	    position: absolute;
+	    top: -450px;
+	}
+
+	.p-tb-10{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left:0px;
+	}
+
+}
+
+@media(max-width:768px){
+	.search-bar-wd{
+		width:100% !important;
+	}
+
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.wd-full{
+		width:100% !important;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+
+	.fs-13-lg{
+		font-size: 1rem;
+	}
+	.mbl-hide{
+		display: none;
+	}
+	.dd-browse{
+		width:100%;
+		left:0px;
+		top:40px;
+	}
+	.course-detail-card{
+		width: 100%;
+	    position: relative;
+	    top: 10px;
+	}
+	.sm-100{
+		width: 100% !important;
+	}
+	.px-lg-x0-sm-x15{
+		padding-left:15px; 
+		padding-right:15px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:5px;
+	}
+	.card{
+		width:100% !important;
+	}
+
+	.card-inner img{
+		width:100% !important;
+		height: auto !important
+	}
+
+	.ml-2-mbl-ml-0{
+		margin-left: 0px !important;
+	}
+	.p-tb-10{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left:0px
+	}
+}
+
+@media (min-width: 576px){
+	.ht-30-lg{
+		height:auto;
+	}
+
+	.fl-rt-lg{
+		float: left;
+	}
+	.sm-100{
+		width: 100% !important;
+	}
+	.px-lg-x0-sm-x15{
+		padding-left:15px; 
+		padding-right:15px; 
+	}
+	.pl-lg-x20-sm-5{
+		padding-left:5px;
+	}
+
+	.ml-2-mbl-ml-0{
+		margin-left: 0px !important;
+	}
+	.p-tb-10{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left:0px
+	}
+}
+
+@media (min-width:991px){
+	.dd-browse{
+		left:-600px;
+	}
+	.ml-2-mbl-ml-0 {
+	    margin-left: .5rem !important;
+	}
+}
+@media (min-width:1100px){
+	.dd-browse{
+		left:-700px;
+	}
+}
+

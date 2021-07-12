@@ -1,0 +1,391 @@
+{% extends 'head1.html'%}
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+{% block content %} {% load static %}
+
+
+
+<style>
+    body.dragging,
+    body.dragging * {
+        cursor: move !important;
+    }
+    
+    .dragged {
+        position: absolute;
+        opacity: 0.5;
+        z-index: 2000;
+    }
+    
+    ol.example li.placeholder {
+        position: relative;
+        /** More li styles **/
+    }
+    
+    ol.example li.placeholder:before {
+        position: absolute;
+        /** Define arrowhead **/
+    }
+</style>
+
+<div id="content" class="pmd-content inner-page">
+
+    <div class="container-fluid full-width-container data-tables">
+
+        <h1 class="section-title" id="services">
+            <span>{{desc}}</span>
+        </h1>
+
+        <!-- End Title -->
+
+        <!--breadcrum start-->
+        <ol class="breadcrumb text-left">
+            <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+            <li class="active">{{ desc }}</li>
+        </ol>
+        <!--breadcrum end-->
+
+        <!-- table card -->
+        <section class="row component-section">
+
+
+            {% ifequal object_list|length 0 %}
+            <p>&nbsp;&nbsp;There is no topic available</p>
+            {% endifequal %}
+
+
+            <div class="" style="float:right">
+                <a style="background: #05ed3f;color:black;
+            text-decoration:none; padding:10px; 
+            margin:8px;" href="{% url 'customadmin:add_topic' %}"> ADD Topic </a>
+            </div><br/><br/>
+
+
+
+
+            <script src="{% static 'js/sortable.js' %}"></script>
+
+            <div class="col-md-12">
+
+                <div class="list-group pmd-z-depth pmd-list pmd-card-list">
+
+                    <ol class="example" style="list-style: none;">
+                        {% for obj,child in object_list.items %}
+
+                        <li tid="{{ obj.id }}" style="background:#e6e6e6;color:black;padding:10px;border-radius:3px;margin:10px;">
+                            <tr>
+
+                                <th scope="row">{{ forloop.counter }}</th> &nbsp;
+                                <td>{{ obj.name }}</td> &nbsp;
+                                <td>{{ obj.about }}</td>&nbsp;
+                                <td>{{ obj.course }}</td> &nbsp;
+                                <td>
+                                    <a class="add_video" title="add video" data-href="{{obj.id}}" data-toggle="tooltip">Add Video</a> &nbsp;
+
+                                </td>
+                                <td>
+                                    <a class="add_subtopic" title="add subtopic" data-href="{{obj.id}}" data-toggle="tooltip">Add Subtopic</a> &nbsp;
+                                </td>
+
+                                <td>
+                                    <a class="add_activity" title="add activity" data-href="{{obj.id}}" data-toggle="tooltip">Add Activity</a> &nbsp;
+                                </td>
+
+                                <td>
+
+                                    <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip">
+                                        <i class="material-icons">&#xE254;</i>
+                                    </a>
+
+                                    <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip">
+                                        <i class="material-icons">&#xE872;</i>
+                                    </a>
+
+                                </td>
+
+                                {% ifequal child|length 0 %} {% else %}
+                                <ol class="example_inside">
+
+                                    {% for ch in child %}
+                                    <li tid="{{ ch.id }}">
+                                        <tr>
+                                            <td></td>
+                                            <td>{{ ch.name }}</td>&nbsp;
+                                            <td>{{ ch.about }}</td>&nbsp;
+                                            <td>{{ obj.course }}</td>&nbsp;
+                                        </tr>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+                                {% endifequal %}
+                            </tr>
+                        </li>
+
+                        {% endfor %}
+                    </ol>
+
+
+
+                    </ol>
+                </div>
+            </div>
+
+
+
+            <!--  <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">S.N.</th>
+                <th scope="col">Name</th>
+                <th scope="col">About</th>
+                <th scope="col">Course</th> 
+                <th scope="col"> Subtopic <i class="material-icons fa fa-plus"></i></th>
+
+                <th scope="col">Activity<i class="material-icons fa fa-plus"></i></th>
+
+                <th scope="col">Video Activity<i class="material-icons fa fa-plus"></i></th>
+
+                
+                
+                <th scope="col">Action</th>
+
+              </tr>
+            </thead>
+            <tbody>
+            <ol class="example">
+            {% for obj,child in object_list.items %}
+             
+              <li>
+                <tr >
+                
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ obj.name }}</td>
+                <td>{{ obj.about }}</td>
+                <td>{{ obj.course }}</td>
+                <td>
+                  <a class="add_video" title="add video" data-href="{{obj.id}}" data-toggle="tooltip">Add Video</a>
+
+                </td>
+                <td>
+                  <a class="add_subtopic" title="add subtopic" data-href="{{obj.id}}" data-toggle="tooltip">Add Subtopic</a>
+                </td>
+              
+                
+
+                <td>
+                 <a class="add_activity" title="add activity" data-href="{{obj.id}}" data-toggle="tooltip">Add Activity</a>
+                </td>
+
+                <td>
+
+            <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+
+                </td>
+                 
+                    {% ifequal child|length 0 %}
+                      {% else %}
+                        <ol class="example_inside">
+
+                          {% for ch in child %}
+                             <li><tr>
+                                <td></td>
+                                <td>{{ ch.name }}</td>
+                                <td>{{ ch.about }}</td>
+                                <td>{{ obj.course }}</td>
+                                
+                              </tr></li>
+                          {% endfor %}
+                        </ol>
+                    {% endifequal %}
+
+
+                
+                  
+              </tr>
+            </li>
+          </ol>
+
+
+              {% endfor %}
+              
+              </tbody>
+          </table> -->
+
+
+
+
+
+        </section>
+
+    </div>
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    var $sortableList = $("ol.example");
+
+    var sortEventHandler = function(event, ui) {
+        var listElements = $sortableList.children();
+        var listValues = [];
+        console.log(listElements);
+        // listElements.forEach(function(element)
+        // {
+
+        //   listValues.push(element.innerHTML);
+        // });
+        input_data = {}
+        for (var i = 0; i < listElements.length; i++) {
+            input_data[listElements[i].getAttribute("tid")] = i + 1;
+            //listValues.push(listElements[i].getAttribute("tid"));
+        }
+
+        // $.post("{% url 'customadmin:set_order_topic' %}", function(data)
+        // {
+        //     alert(data);
+        // });
+
+        $.ajax({
+            url: "/customadmin/set_order_topic/",
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(data) {
+                alert(data);
+            },
+            data: JSON.stringify(input_data)
+        });
+        //alert(listValues); 
+    };
+
+    $sortableList.sortable({
+        stop: sortEventHandler
+    });
+
+    $sortableList.on("stop", sortEventHandler);
+
+    // $(function  () {
+    //     $("ol.example").sortable(
+    //       //   stop: function(event, ui) {
+    //       //     var data = "";
+    //       //     //$(".sortable li").each(function(i, el){
+    //       //         //var p = $(el).text().toLowerCase().replace(" ", "_");
+    //       //         //data += p+"="+$(el).index()+",";
+    //       //     //});
+    //       //     //$("form > [name='new_order']").val(data.slice(0, -1));
+    //       //     //$("form").submit();
+    //       //   //});
+    //       // }
+    //       );
+    //   });
+
+    $(function() {
+        $("ol.example_inside").sortable();
+    });
+    /*var oldContainer;
+    $("ol.example").sortable({
+      group: 'nested',
+      afterMove: function (placeholder, container) {
+        if(oldContainer != container){
+          if(oldContainer)
+            oldContainer.el.removeClass("active");
+          container.el.addClass("active");
+
+          oldContainer = container;
+        }
+      },
+      onDrop: function ($item, container, _super) {
+        container.el.removeClass("active");
+        _super($item, container);
+      }
+    });
+
+    $(".switch-container").on("click", ".switch", function  (e) {
+      var method = $(this).hasClass("active") ? "enable" : "disable";
+      $(e.delegateTarget).next().sortable(method);
+    });*/
+</script>
+<script>
+    $('.edit').click(function() {
+
+        var objid = $(this).attr('data-href');
+        window.location.href = "{% url 'customadmin:all_topic' %}" + objid + "/edit/";
+
+    });
+
+    $('.add_video').click(function() {
+
+        var objid = $(this).attr('data-href');
+        window.location.href = "{% url 'customadmin:add_video' %}" + objid;
+
+    });
+
+
+    $('.add_subtopic').click(function() {
+        var objid = $(this).attr('data-href');
+        window.location.href = "{% url 'customadmin:add_subtopic' %}" + objid;
+    });
+
+    $('.add_activity').click(function() {
+        //alert('dgdgdg');
+        var objid = $(this).attr("data-href");
+        window.location.href = "{% url 'customadmin:add_activity' %}" + objid;
+        alert(objid);
+    });
+
+
+    $('.delete').click(function() {
+        var objid = $(this).attr('data-href');
+        if (confirm('Are you sure you want to delete this category ?')) {
+
+            window.location.href = "{% url 'customadmin:all_topic' %}" + objid + "/delete/";
+
+        } else {
+            console.log('category is not deleted');
+        }
+
+    });
+
+    // $( function() {
+    //     $( ".sortable" ).sortable(
+    //       stop: function(event, ui) {
+    //         var data = "";
+
+    //         $(".sortable li").each(function(i, el){
+    //             var p = $(el).text().toLowerCase().replace(" ", "_");
+    //             data += p+"="+$(el).index()+",";
+    //         });
+
+    //         $("form > [name='new_order']").val(data.slice(0, -1));
+    //         $("form").submit();
+    //     }
+    //     );
+    //     //$( ".sortable" ).disableSelection();
+    // });
+</script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

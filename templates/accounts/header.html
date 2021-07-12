@@ -1,0 +1,161 @@
+{% load static %}
+
+{% load mytag %}
+
+
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Propeller Admin Dashboard">
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+
+<title>Admin - Material Design Responsive Dashboard Template Preview - Propeller</title>
+<meta name="description" content="Admin is a material design and bootstrap based responsive dashboard template created mainly for admin and backend applications."/>
+
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'themes/images/favicon.ico' %}">
+
+<!-- Google icon -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Bootstrap css -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+
+<!-- Propeller css -->
+<!-- build:[href] assets/css/ -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/propeller.min.css' %}">
+<!-- /build -->
+
+<!-- Propeller date time picker css-->
+<link rel="stylesheet" type="text/css" href="{% static 'components/datetimepicker/css/bootstrap-datetimepicker.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'components/datetimepicker/css/pmd-datetimepicker.css' %}" />
+
+<!-- Propeller theme css-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/propeller-theme.css' %}" />
+
+<!-- Propeller admin theme css-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/propeller-admin.css' %}">
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
+<!-- Propeller dataTables css-->
+
+<link rel="stylesheet" type="text/css" href="{% static 'components/data-table/css/pmd-datatable.css' %}">
+
+<!-- Datatable js -->
+</head>
+
+<body>
+<!-- Header Starts -->
+<!--Start Nav bar -->
+<nav class="navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth">
+
+  <div class="container-fluid">
+    <div class="pmd-navbar-right-icon pull-right navigation">
+      <!-- Notifications -->
+            <div class="dropdown notification icons pmd-dropdown">
+      
+        <a href="javascript:void(0)" title="Notification" class="dropdown-toggle pmd-ripple-effect"  data-toggle="dropdown" role="button" aria-expanded="true">
+          <div data-badge="3" class="material-icons md-light pmd-sm pmd-badge  pmd-badge-overlap">notifications_none</div>
+        </a>
+      
+        <div class="dropdown-menu dropdown-menu-right pmd-card pmd-card-default pmd-z-depth" role="menu">
+          <!-- Card header -->
+          <div class="pmd-card-title">
+            <div class="media-body media-middle">
+              <a href="notifications.html" class="pull-right">3 new notifications</a>
+              <h3 class="pmd-card-title-text">Notifications</h3>
+            </div>
+          </div>
+          
+          <!-- Notifications list -->
+          <ul class="list-group pmd-list-avatar pmd-card-list">
+            <li class="list-group-item" style="display:none">
+              <p class="notification-blank">
+                <span class="dic dic-notifications-none"></span> 
+                <span>You don´t have any notifications</span>
+              </p>
+            </li>
+            <li class="list-group-item unread">
+              <a href="javascript:void(0)">
+                <div class="media-left">
+                  <span class="avatar-list-img40x40">
+                    <img alt="40x40" data-src="holder.js/40x40" class="img-responsive" src="" data-holder-rendered="true">
+                  </span>
+                </div>
+                <div class="media-body">
+                  <span class="list-group-item-heading"><span>Prathit</span> posted a new challanegs</span>
+                  <span class="list-group-item-text">5 Minutes ago</span>
+                </div>
+              </a>
+            </li>
+            <li class="list-group-item">
+              <a href="javascript:void(0)">
+                <div class="media-left">
+                  <span class="avatar-list-img40x40">
+                    <img alt="40x40" data-src="holder.js/40x40" class="img-responsive" src="" data-holder-rendered="true">
+                  </span>
+                </div>
+                <div class="media-body">
+                  <span class="list-group-item-heading"><span>Keel</span> Cloned 2 challenges.</span>
+                  <span class="list-group-item-text">15 Minutes ago</span>
+                </div>
+              </a>
+            </li>
+            <li class="list-group-item unread">
+              <a href="javascript:void(0)">
+                <div class="media-left">
+                  <span class="avatar-list-img40x40">
+                    <img alt="40x40" data-src="holder.js/40x40" class="img-responsive" src="" data-holder-rendered="true">
+                  </span>
+                </div>
+              
+                <div class="media-body">
+                  <span class="list-group-item-heading"><span>John</span> posted new collection.</span>
+                  <span class="list-group-item-text">25 Minutes ago</span>
+                </div>
+              </a>
+            </li>
+            <li class="list-group-item unread">
+              <a href="javascript:void(0)">
+                <div class="media-left">
+                  <span class="avatar-list-img40x40">
+                    <img alt="40x40" data-src="holder.js/40x40" class="img-responsive" src="" data-holder-rendered="true">
+                  </span>
+                </div>
+                <div class="media-body">
+                  <span class="list-group-item-heading"><span>Valerii</span> Shared 5 collection.</span>
+                  <span class="list-group-item-text">30 Minutes ago</span>
+                </div>
+              </a>
+            </li>
+          </ul><!-- End notifications list -->
+
+        </div>
+        
+        
+            </div> <!-- End notifications -->
+    </div>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      
+      <a href="{% url 'userlms:home' %}" class="navbar-brand">LMS
+
+      </a>
+    </div>
+  </div>
+
+</nav><!--End Nav bar -->
+<!-- Header Ends -->
+
+<!-- Sidebar Starts -->
+
+
+
+
+{% block content %}
+
+{% endblock %}

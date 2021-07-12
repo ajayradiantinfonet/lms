@@ -1,0 +1,538 @@
+{% extends 'head1.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+<style>
+
+/*form css */
+    .custom-control-input{
+        z-index:9999;
+      }
+
+
+    .table-responsive {
+    
+    border: 1px solid;
+    }
+    .custom-control-inline {
+    padding: 8px 25px;}
+    .form_check{
+      width: 80%;
+    /*border: 1px solid;
+*/    padding: 12px 65px;
+    }
+       .form_head{
+        font-weight: bold;}
+        .material-icons {
+    font-size: 16px;}
+       }
+
+         /*table form css*/
+      
+          .table-responsive{
+            border: 1px solid;
+          }
+             .form_btn{
+              border: 1px solid;
+                border-radius: 3px;
+             }
+             .form_btn1{
+              border: 1px solid;
+                border-radius: 3px;
+                margin-left: 10px;
+             }
+ @media only screen and (min-device-width:320px) and (max-device-width:480px) {
+    .material-icons{
+      display: initial;
+    }
+     .form_btn{
+      width: 70px;
+     }
+       .form_btn1{
+               margin-left: 0px;
+            margin: 5px 1px;
+             }
+ }
+</style>
+
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+
+    </h1>
+
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol>
+
+
+
+
+  <section class="row component-section" style="">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-dismissible alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert">
+                <i class="fa fa-close"></i>
+            </button>
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
+  {% endif %}
+
+
+    <div class="col-md-12 col-sm-12"> 
+                <div class="component-box">
+
+
+
+<div class="pmd-card pmd-z-depth"> 
+            <div class="pmd-tabs pmd-tabs-bg">
+              <div class="pmd-tab-active-bar" style="width: 106px; left: 0px;"></div><ul class="nav nav-tabs" role="tablist" style="width: 325.333px;">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Details</a></li>
+                {% if not create %}
+                <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">Roles And Permission</a></li>
+                {% endif %}
+                
+              </ul>
+            </div>
+            <div class="pmd-card-body">
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                  
+
+                <div class="container bootstrap snippet">
+                    <div class="row">
+                    <div class="col-sm-10"><h2>Hi !  {{ cuser.email }}</h2></div>
+      
+                    </div>
+                <div class="row">
+
+                 <div class="col-sm-3">
+                  
+                <form class="form" action=""  enctype="multipart/form-data" method="post" id="registrationForm">
+                <!-- <img src="" alt="avatar" width="150px" height="150px"> -->
+                {% if cuser.image %}
+                <img src="{{cuser.image.url}}" alt="avatar" style="border-radius:50%;"width="150px" height="150px">
+                {% else %}
+                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" width="150px" height="150px">
+                {% endif %}
+                <h6>Upload a different photo...</h6><br/>
+                <input type="file" name="image" style="overflow: hidden">
+             
+              </hr>
+              <br> 
+
+        
+          
+          </div><!--/col-3-->
+        <div class="col-sm-8">
+             
+                  
+                    
+                        <div class="form-group">
+                            
+                            <div class="col-xs-6">
+                                <label for="first_name"><h4>First name</h4></label>
+                                <input type="text" class="form-control" name="first_name" id="first_name" value="{{cuser.first_name}}" required="" placeholder="first name" title="enter your first name if any.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            <label for="last_name"><h4>Last name</h4></label>
+                              <input type="text" class="form-control" name="last_name" id="last_name"  value="{{cuser.last_name}}" placeholder="last name" title="enter your last name if any.">
+                          </div>
+                      </div>
+          
+                     
+                      
+                      <div class="form-group">
+                          
+                          <div class="col-xs-6">
+                              <label for="email"><h4>Email</h4></label>
+                              <input type="email" class="form-control"
+                               name="email" id="email"  value="{{cuser.email}}" required placeholder="you@email.com" title="enter your email.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-xs-4">
+                             <label for="mobile"><h4>Mobile</h4></label>
+                              <input type="text" class="form-control" name="phone" id="mobile" placeholder="enter mobile number"  value="{{cuser.phone}}" required title="enter your mobile number if any." maxlength="10">
+                          </div>
+                      </div>
+
+                      {% if not create %}
+                        <div class="form-group"> 
+                            <div class="col-xs-4">
+                                <label for="password"><h4>Organization</h4></label>
+                                <input type="text" class="form-control" name="" id="password"  value="{{cuser.organization_student.all.0}}" placeholder="Organization" title="enter your organization." readonly>
+                                <input type="hidden" class="form-control" name="organization" id="password"  value="{{cuser.organization_student.all.0}}" placeholder="Organization" title="enter your organization." readonly>
+                            </div>
+                        </div>
+                      
+                      <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            <label for="password2"><h4>Registration Date:</h4></label>
+                              <input type="text" class="form-control" name="registration_date" id="password2" value="{{cuser.registration_date}}" placeholder="" title="" readonly>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            <label for="password2"><h4>Role:</h4></label>
+                              <input type="text" class="form-control" name="position" id="password2" value="{{cuser.position}}" required readonly placeholder="" title="" readonly>
+                          </div>
+                      </div>
+
+                      <input type="hidden" name="password" value="{{cuser.password}}" />
+                      <input type="hidden" name="password_again" 
+                      value="{{cuser.password}}" />
+
+                      <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            {{ form.gender|as_crispy_field }}
+                          </div>
+                      </div>
+
+                      
+                      {% else %}
+
+                        {% if user.is_superuser %}
+                          <div class="col-xs-6">
+                                {{ form.organization|as_crispy_field }}
+                          </div>
+                        {% endif %}
+
+                         <div class="form-group">
+                          
+                          <div class="col-xs-3">
+                            <!-- <label for="password2"><h4>Position:</h4></label> -->
+                              {{ form.position|as_crispy_field }}
+                          </div>
+
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            
+                              {{ form.password|as_crispy_field }}
+                          </div>
+
+                        </div>
+                        <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            
+                              {{ form.password_again|as_crispy_field }}
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          
+                          <div class="col-xs-4">
+                            {{ form.gender|as_crispy_field }}
+                          </div>
+                      </div>
+                      
+                      {% endif %}
+
+                  </div>
+
+                      <div class="row">
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                              <label for="password2"><h4>Address Line *:</h4></label>
+                                <input type="text" class="form-control" 
+                                name="address" id="address" value="{{cuser.address}}" required="" placeholder="" title="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                              <label for="password2"><h4>Address Line 1:</h4></label>
+                                <input type="text" class="form-control" 
+                                name="address1" id="address1" value="{{cuser.address1}}" placeholder="" title="">
+                            </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group">
+                            
+                            <div class="col-xs-4">
+                              <label for="password2"><h4>House No:</h4></label>
+                                <input type="text" class="form-control" 
+                                name="houseno" id="password2" value="{{cuser.houseno}}" placeholder="" title="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            
+                            <div class="col-xs-4">
+                              <label for="password2"><h4>Pin code:</h4></label>
+                                <input type="text" class="form-control" 
+                                name="pincode" id="pincode" value="{{cuser.pincode}}" placeholder="" title="" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                             <div class="col-xs-12">
+                                  <br>
+                                  <!-- <input class="btn btn-lg btn-success" type="submit" value="submit" /> -->
+                                  <button class="btn btn-lg btn-success create_user" >Submit</button>
+                                  <!-- <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button> -->
+                              </div>
+                        </div>
+                    </div>
+
+                </form>
+              
+            </div>
+          </div>
+          
+              <hr>
+            </div>
+
+              
+
+        <div role="tabpanel" class="tab-pane" id="about">
+          <div style="float:right; padding-right:20px;">
+            <button type="button" id="add_role" data-toggle="modal" class="btn pmd-btn-outline pmd-ripple-effect btn-primary" data-target="#rolemodal"><i class="material-icons">add_box</i>Add Role</button>
+
+            
+          </div>
+
+          <!-- <div style="float:right; padding-right:20px;">
+            <button type="button" id="add_role" data-toggle="modal" class="btn pmd-btn-outline pmd-ripple-effect btn-primary" data-target="#rolemodal"><i class="material-icons">add_box</i>Edit Role</button>  
+          </div> -->
+
+
+          <div style="float:right;margin-right:20px;">
+            <button type="button" id="add_perm" class="btn pmd-btn-outline pmd-ripple-effect btn-primary">
+              <i class="material-icons">add_box</i>
+            Add Permission
+            </button>
+
+          </div>
+
+                  <div class="container">
+                      <div class="form_check">
+                   <h3 class="form_head">User Role Permissions</h3>
+
+                   <hr color="grey" width="3px" ><hr/>
+                   <h3 class="form_head">Roles</h3>
+                  
+                    <div class="row">
+
+
+                
+                {% for role in roles %}
+                  <div class="col-md-4" style="height: auto;">
+                      
+                      <input class="custom-control-input" type="checkbox" value="" name="role" data-attr="{{role.id}}" id="checkbox1" {% if role in user_group %} checked {% endif %}>
+                      <label  class="custom-control-label pmd-checkbox-ripple-effect" value="{{role.name}}" for="checkbox1">
+                          {{ role.name }}
+                      </label>
+                 
+                 </div>
+               {% endfor %}
+            
+                
+          </div>
+
+          <hr color="grey" width="3px" ><hr/>
+
+          <h3 class="form_head">Permission</h3>
+            <div class="row">
+
+              {% for perm in permissions %}
+
+                <div class="col-md-6">
+                  <div class="">
+                      <input class="custom-control-input" type="checkbox" value="{{ perm.codename }}" data-attr="{{ perm.id }}" name="checkbox" id="checkbox5" {% if perm in user_permission %} checked {% endif %} >
+                      <label class="custom-control-label pmd-checkbox-ripple-effect" for="checkbox5">
+                         {{ perm.codename }}
+                      </label>
+                  </div>
+                </div>
+
+              {% endfor %}
+
+          </div>
+          <br/><br/><br/>
+          <button class="btn btn-success submit_student" />Submit</button>
+      </form>
+
+
+                    
+               
+          
+</div>
+</div>
+                </div>
+               
+              </div>
+            </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" tabindex="-1" role="dialog" id="rolemodal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title">Add Role</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow-y:scroll;">
+          Enter Role Name: <input type="text" class="form-control" maxlength="30" name="role" id="role_id" /><br/>
+
+          <div class="row">
+
+        {% if user|check_permission:'generic.can_see_all_custompermission' %}
+
+              {% for perm in permissions %}
+
+                <div class="col-md-6">
+                  <div class="">
+                      <input class="custom-control-input" type="checkbox" value="{{ perm.codename }}" data-attr="{{ perm.id }}" name="checkbox" id="checkbox6" {% if perm in user_permission  %} checked {% endif %} >
+                      <label class="custom-control-label pmd-checkbox-ripple-effect" for="checkbox5">
+                         {{ perm.codename }}
+                      </label>
+                  </div>
+                </div>
+
+
+
+              {% endfor %}
+            {% endif %}
+
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="submit-role">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $('#submit-role').click(function()
+  {
+      var role_name=$('#role_id').val();
+      permission_arr=[];
+      $("input:checkbox[id=checkbox6]:checked").each(function () {
+                permission_arr.push($(this).attr("data-attr"));
+      });
+
+      $.post({
+        url:'{% url "customadmin:add_role" %}',
+        data:{'name':role_name,'permission':permission_arr},
+        success:function(data)
+        {
+          if(data=='true')
+          {
+            alert("role has been created");
+            window.location.reload();
+          }
+          else{
+            alert(data);
+          }
+        }
+      });
+  });
+
+  
+</script>
+
+
+
+
+
+
+
+</section>
+
+
+    <script>
+
+        var userid="{{ cuser.id }}";
+
+        $('.create_user').click(function(){
+            
+            if(isNaN($('#mobile').val()))
+            {
+              alert("please enter number for mobile ");
+              return false;
+            }
+            $('#registrationForm').submit();
+        });
+
+        $('.submit_student').click(function(){
+           
+           permission_arr=[];
+            $("input:checkbox[id=checkbox5]:checked").each(function () {
+                permission_arr.push($(this).attr("data-attr"));
+             });
+
+            group_arr=[];
+            $("input:checkbox[id=checkbox1]:checked").each(function () {
+                group_arr.push($(this).attr("data-attr"));
+            });
+
+            $.ajax({
+              type:'post',
+              url:'{% url "customadmin:assign_permission_and_role" %}',
+              data:{'user':"{{ cuser.user.id }}",
+              'permission':permission_arr,
+              'group':group_arr},
+              success:function(data){
+                if (data=='true'){
+                  alert("assigned successfully");
+                }
+                else{
+                  alert(data);
+                }
+              }
+            });
+
+
+
+        });
+
+
+        $('#add_perm').click(function(){
+            window.location.href="{% url 'customadmin:create_permission' %}?next={{EXTRA_URL}}/admin/students/edit/{{cuser.id}}"
+        });
+    </script>
+
+</div>
+</div>
+
+
+
+
+{% endblock %}

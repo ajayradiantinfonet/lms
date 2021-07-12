@@ -1,0 +1,319 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'customadmin:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    
+    <section class="row component-section">
+
+
+
+     
+
+    
+      <!--  <a href="https://mdbootstrap.com/docs/standard/data/tables/"
+              target="_blank">Table Docs</a>  -->
+    
+        <hr>
+    
+<!-- <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">SN</th>
+        <th scope="col">Name</th>
+        <th scope="col">About</th>
+        <th scope="col">Organisation</th>
+        <th scope="col">Courses</th>
+        <th scope="col">Edit/Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for father,child in object_list.items %}
+          <tr class="accordion-toggle collapsed" id="accordion1" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+            <td class="expand-button">{{ forloop.counter }}</td>
+            <td>{{ father.name }}</td>
+            <td>{{ father.category_about }}</td>
+            <td>{{ father.organization }}</td>
+
+        </tr>
+
+
+        {% for f,c in child.items %}
+          <tr class="hide-table-padding">
+              <td class="expand-button"></td>
+                
+                <td>
+                      <div id="collapseOne" class="collapse in p-3">
+                        <div class="row">
+                          <div class="col-2">Sub category Name: {{ f.name }}</div>
+                          <div class="col-6">About: {{ f.category_about }}</div>
+                          /div>
+                       
+                        
+                </td>
+               
+                
+          </tr>
+      {% endfor %}
+
+     
+
+
+      {% endfor %}
+      
+      
+      
+    </tbody>
+  </table>
+</div> -->
+
+
+<div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+        <th >SN</th>
+        <th >Name</th>
+        <th >About</th>
+        <th >Organisation</th>
+        <th >Courses</th>
+        <th>Edit/Delete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+     <!-- jinja2 template recursive iteritems() 
+      {% for father,child in object_list.items %}
+         <tr class="clickable" data-toggle="collapse" id="{{ father.id }}" data-target=".{{father.id }}">
+          <td>{{ forloop.counter }}</td>
+          <td>{{ father.name }}</td>  
+          <td>{{ father.category_about }}</td>
+          <td>{{ father.organization }}</td>
+          <td>
+            <a class="courses" title="Courses" data-toggle="tooltip"><i class="material-icons fas fa-book-reader"></i>Go To Courses</a></td>
+          <td> <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+        </tr>
+
+
+            {% if child is mapping %}
+                  loop(child.iteritems())
+                <ul>{{  gg}}</ul>
+            {% else %} 
+                 YOU GET:  
+            {% endif %}</li>
+        {% endfor %} -->
+
+
+
+        
+      {% for father,child in object_list.items %}
+        <tr class="clickable" data-toggle="collapse" id="{{ father.id }}" data-target=".{{father.id }}">
+          <td>{{ forloop.counter }}</td>
+          <td>{{ father.name }}</td>  
+          <td>{{ father.category_about }}</td>
+          <td>{{ father.organization }}</td>
+          <td>
+            <a class="courses" title="Courses" data-href="{{ father.id }}"data-toggle="tooltip"><i class="material-icons fas fa-book-reader"></i>Go To Courses</a></td>
+          <td> <a class="edit" title="Edit" data-href="{{father.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-href="{{father.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a><!-- <button class="btn btn-default btn-sm">View More</button> --></td>
+        </tr>
+
+      
+
+              {% for f,c in child.items %}
+                  <tr class="collapse {{ father.id }}">
+                      <td></td>
+                      <td>{{ f.name }}</td>  
+                      <td>{{ f.category_about }}</td>
+                      <td>{{ f.organization }}</td>
+                       
+                      <td><a class="edit" title="Edit" data-href="{{f.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-href="{{f.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+            <!-- <button class="btn btn-default btn-sm">View More</button> --> 
+
+
+                      </td>
+                      <td></td>
+                  </tr>
+
+                    
+                {% for subsubf,subsubchild in c.items %}
+                        <tr class="collapse {{ father.id }}">
+                      <td></td>
+                      <td></td>
+                      <td>{{ subsubf.name }}</td>  
+                      <td>{{ subsubf.category_about }}</td>
+                        
+                      <td><a class="edit" title="Edit" data-href="{{subsubf.id}}"  data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-href="{{subsubf.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+            <!-- <button class="btn btn-default btn-sm">View More</button> --> 
+
+
+                  </td>
+                      <td></td>
+                  </tr>
+
+                  {% endfor %}
+
+                   
+              
+
+              {% endfor %}
+
+        {% endfor %}
+      </tbody>
+    </table>
+ 
+
+
+
+
+
+
+    
+      </div>
+
+      
+
+        <!-- 
+        {% for obj in object_list %}
+        <a href="{% url 'customadmin:course_detail' obj.id  %}">
+          <div class="col-md-4 col-sm-6 masonry-brick" style=" ">
+       <h3 class="text-muted">Media, Title, and Description area</h3> 
+        <div class="pmd-card pmd-card-default pmd-z-depth">
+          <div class="pmd-card-media">
+            {% if obj.thumbnail %}
+            <img src="{{ obj.thumbnail.url }}" class="img-responsive" width="1084" height="600">
+            {% else %}
+            <img src="" class="img-responsive" width="1084" height="600">
+            {% endif %}
+            
+          </div>
+          <div class="pmd-card-title">
+            <h2 class="pmd-card-title-text">{{ obj.name }}</h2>
+            <span class="pmd-card-subtitle-text">{{ obj.about }}</span>  
+          </div>  
+          <div class="pmd-card-actions">
+             <button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Enroll</button> 
+            <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_detail' obj.id  %}" type="button">View Details</a>
+
+            {% if obj.organization is None %}
+                   <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_allot' obj.id  %}" type="button">Allot Course</a>
+            {% endif %}
+          </div>
+        </div>
+      </div></a>
+      {% endfor %} -->
+
+
+  
+  </section>
+</div>
+           
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+
+
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+
+  $('.courses').bind('click',function(){
+      var category_id=$(this).attr('data-href');
+      window.location.href="{% url 'customadmin:all_course'%}?category="+category_id;
+  });
+  $(document).on("click", ".edit", function(){    
+        //$(this).parents("tr").find("td:not(:last-child)").each(function(){
+     // $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+       var categoryid=$(this).attr("data-href");
+
+       window.location.href="{% url 'customadmin:update_category' %}"+categoryid+'/';
+    }); 
+
+
+    //$(this).parents("tr").find(".add, .edit").toggle();
+   // $(".add-new").attr("disabled", "disabled");
+   // });
+
+
+  // Delete row on delete button click
+  $(document).on("click", ".delete", function(){
+        //$(this).parents("tr").remove();
+        if (confirm('subcategories of this category will also be deleted. Do you want to continue ?')) {
+            var categoryid=$(this).attr("data-href");
+            //alert(categoryid);
+           
+            var c="categoryid="+categoryid+"/";
+             window.location.href="{% url 'customadmin:delete_category' %}"+categoryid+"/";
+            
+
+           
+        } 
+        else {
+
+        
+        }
+        // $(".add-new").removeAttr("disabled");
+    });
+
+
+
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

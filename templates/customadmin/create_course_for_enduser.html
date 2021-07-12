@@ -1,0 +1,1311 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+
+
+<style>
+  ul li {
+    list-style: none;
+  }
+  .required:after {
+    content:" *";
+  }
+  /*:active {
+    display:block;
+    color:white;
+  }*/
+
+</style>
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+
+    </h1>
+
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol>
+
+
+ 
+
+  <section class="row component-section" style="">
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+  {% endif %}
+    <div class="col-md-12 col-sm-12"> 
+                <div class="component-box">
+                    <!--Default tab example -->
+                    <div class="pmd-card pmd-z-depth"> 
+                        <div class="pmd-tabs pmd-tabs-bg">
+
+                          <div class="pmd-tab-active-bar">
+                          </div>
+
+                          <ul class="nav nav-tabs" role="tablist" style="width: 323.017px;">
+                                
+                                <li role="presentation" class="active" ><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">Create Course</a>
+                                </li>
+                                
+                                <li role="presentation" class=""><a href="#about" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Description</a>
+                                </li>
+                               <!--
+                                  <li role="presentation" class=""><a href="#student" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Students</a>
+                                </li>
+
+                                <li role="presentation" class="">
+                                  <a href="#collab" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">collaborators</a>
+                                </li> -->
+                               {% if is_editing is True %} 
+
+                                <li role="presentation" class="">
+                                  <a href="#topics" aria-controls="topics" role="tab" data-toggle="tab" 
+                                  aria-expanded="false">
+                                  Topics/Modules/Activities
+                                  </a>
+                                </li>
+
+                                
+                                {% if object.access == "STUDENTS_ONLY" %}
+                                <li role="presentation" class="">
+                                  <a href="#students" aria-controls="students" role="tab" data-toggle="tab" 
+                                  aria-expanded="false">
+                                   Students
+                                  </a>
+                                </li>
+                                {% endif %}
+
+
+                               
+                                
+                               
+
+
+                                {% endif %}
+                                <!-- 
+                                <li role="presentation" class="">
+                                  <a href="#activity" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Activities</a>
+                                </li> -->
+
+                                <!-- <li role="presentation" class=""><a href="#work" aria-controls="work" role="tab" data-toggle="tab" aria-expanded="false">Add Tags</a>
+                                </li> -->
+                            </ul>
+                        </div>
+
+<div class="pmd-card">
+  <div class="pmd-card-body">
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home" style="">
+        {{ msg }}
+
+        {% if form.errors %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <p> {{field.name}} </p><strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{field.name}} <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+        {% endif %}
+
+                <form method="post" id="cform" action="" 
+                enctype="multipart/form-data">
+                   {{ form.name|as_crispy_field }} <br/>
+
+                   {{ form.about|as_crispy_field}}<br/>
+
+                   {{ form.overview|as_crispy_field }}<br/>
+
+                   {{ form.highlights|as_crispy_field }}<br/>
+
+                   {{ form.thumbnail|as_crispy_field }}<br/>
+ 
+                   {{form.price|as_crispy_field}} <br/>
+
+                   {{ form.discount_price|as_crispy_field }} <br/>
+
+                   <div class="form-group">
+                   {{ form.category|as_crispy_field }}
+                   <!-- data-target="#formsdialog" data-toggle="modal" type="button" -->
+                    {% if user.is_authenticated %}
+                     {% if user|check_permission:'generic.can_create_category' %}
+
+                      <span>
+                      <a class="add_category"  data-target="#formsdialog" data-toggle="modal" type="button" style="float:left;margin-left:300px;margin-top:-35px;padding:5px;">
+                        <i class="material-icons md-dark pmd-md">add_circle</i>
+                      </a>
+                    </span>
+                    {% endif %}
+                    {% endif %}
+                  </div>
+                   <br/><br/>
+
+                   {{ form.post_achievement|as_crispy_field }} <br/>
+
+                   {{ form.star|as_crispy_field }} <br/>
+
+                   {{ form.duration|as_crispy_field }} <br/>
+                   {{form.author }}
+
+                   {{ form.web }}
+                   {{ form.link|as_crispy_field }} <br/>
+
+
+                   {{ form.course_tag|as_crispy_field }} <br/>
+
+                     
+                    <!-- Course Languages:  -->
+                    <div style="margin-left:20px;">
+                      {{ form.language|as_crispy_field }}
+                    </div> 
+                    <!-- {% for value, text in form.language.field.choices %}
+                        
+                        <div class="ui slider checkbox" style="margin-left:30px;">
+                          <input class="" id="id_language_{{ forloop.counter0 }}" name="{{ form.language.name }}" type="checkbox" value="{{ value }}" 
+
+                          {% if value in checked_language %} checked="checked"{% endif %}>
+                          <label>{{ text }}</label>
+                        </div>
+                    {% endfor %} -->
+
+                    {% csrf_token %}
+
+                    <br/>
+
+                    <!-- <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
+
+                       
+                      </div>
+                    </div> -->
+
+                     <!-- <button id="next-b" formnovalidate>Next</button> -->
+
+                  </script>
+                  <script>
+                      CKEDITOR.replace( 'about' );
+                      CKEDITOR.replace( 'overview' );
+                      CKEDITOR.replace( 'highlights' );
+                      CKEDITOR.replace( 'post_achievement' );
+                  </script>
+
+                  
+
+                   
+          </div> 
+
+
+        <div role="tabpanel" class="tab-pane second-tab" id="about" >
+            {{ form.state|as_crispy_field }} <br/> 
+
+            {{ form.access|as_crispy_field }} <br/> 
+
+           <!--  Registration Enabled: {{ form.registration_enabled }}  -->
+
+            
+
+            <input type="button" value="submit" id="next-b" />
+           
+        </form>
+        </div>
+
+       <!--  <div role="tabpanel" class="tab-pane second-tab" id="student" >
+            
+        </div> -->
+<!-- 
+        <div role="tabpanel" class="tab-pane second-tab" id="collab" >
+            
+        </div> -->
+
+        <div role="tabpanel" class="tab-pane second-tab" id="topics" >
+
+          <!-- <div class="list-group pmd-z-depth pmd-list pmd-card-list"> -->
+
+            <button  style="float:right"
+            class="add_topic" 
+            data-href="{{ courseid }}"
+            >
+              Add Topic 
+            </button>
+              <br/><br/>
+
+              <p>
+                {% if course_topic_list %}
+                {% ifequal course_topic_list|length 0 %}
+                  There is no available topic of this course
+                {% else %}
+                    <!-- <ol class="example" style="list-style: none;">
+                      {% for obj,child in course_topic_list.items %}
+
+
+                
+              
+                <li tid="{{ obj.id }}" style="background:#e6e6e6;color:black;padding:10px;border-radius:3px;margin:10px;">
+                <tr >
+                
+                  <th scope="row">{{ forloop.counter }}</th> &nbsp;&nbsp;
+                  <td>{{ obj.name }}</td> &nbsp;&nbsp;
+                
+                  
+
+                   <td>{% if obj.course is None %}<a href="#" >Copy And Assign</a>{% else %}
+                  {{ obj.course }} {% endif %}</td>
+                   &nbsp;&nbsp;&nbsp;
+                  <td>
+                    <a class="add_video" title="add video"
+                     data-href="{{obj.id}}" data-toggle="tooltip">Add Video</a> &nbsp;&nbsp;
+
+                  </td>
+                  <td>
+                   <a class="add_subtopic" title="add subtopic" data-href="{{obj.id}}" data-toggle="tooltip">Add Subtopic</a> &nbsp;&nbsp;
+                  </td>
+
+                  <td>
+                    <a class="add_activity" title="add activity" data-href="{{obj.id}}" data-toggle="tooltip">Add Activity</a> &nbsp;
+                  </td>
+
+                  <td>
+
+                    <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip">
+                      <i class="material-icons">&#xE254;</i>
+                    </a>
+
+                    <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip">
+                      <i class="material-icons">&#xE872;</i>
+                    </a>
+
+                  </td>
+                    {% ifequal child|length 0 %}
+                      {% else %}
+                        <ol class="example_inside">
+
+                          {% for f,ch in child.subtopic.items %}
+                             <li tid="{{ f.id }}" ><tr>
+                                <td></td>
+                                <td>{{ f.name }}</td>&nbsp;
+                                <td>{{ f.about }}</td>&nbsp;
+                                <a class="add_activity" title="add activity" data-href="{{f.id}}" data-toggle="tooltip">Add Activity</a>&nbsp;
+                                                              </tr></li>
+                          {% endfor %}
+                        </ol>
+                    {% endifequal %}
+
+                    {% ifequal child|length 0 %}
+                      {% else %}
+                        <ol class="example_inside">
+
+                          {% for f,ch in child.subtopic.items %}
+                            {% for ac in ch %}
+                             <li tid="{{ ac.id }}" ><tr>
+                                <td></td>
+                                <td>{{ ac.name }}</td>&nbsp;
+                                <td>{{ ac.about }}</td>&nbsp;
+                                
+                                                              </tr></li>
+                            {% endfor %}
+                          {% endfor %}
+                        </ol>
+                    {% endifequal %}
+              </tr>
+            </li>
+            
+            {% endfor %}
+          </ol>
+
+
+              
+          </ol> 
+ -->
+
+
+          
+          <!--Accordion with colored icon example -->
+          <div class="panel-group pmd-accordion pmd-accordion-inbox" id="accordion6" role="tablist" aria-multiselectable="true"> 
+
+            {% for obj,child in course_topic_list.items %}
+
+
+            <div class="panel panel-default" style="overflow: hidden;"> 
+
+              <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion6" href="#collapseOne{{obj.id}}" aria-expanded="false" aria-controls="collapseOne{{obj.id}}" data-expandable="false" class="collapsed" style="font-size:15px;" >
+                <!-- <i class="material-icons pmd-sm pmd-accordion-icon-left">mood</i>  -->
+                <i class="material-icons pmd-sm pmd-accordion-icon-left">fiber_manual_record</i>
+                 {{ obj.name }}  <i class="material-icons md-dark pmd-sm pmd-accordion-arrow">keyboard_arrow_down</i>
+                 <button class="add_subtopic" style="font-size:15px;padding:-5px;float:right;margin-bottom:1px;" 
+                 data-href="{% url 'customadmin:add_subtopic' %}{{obj.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics">Add Subtopic  
+                 </button> 
+
+                 <button style="float:right;margin-right:40px;" data-href="{% url 'customadmin:add_video' %}{{obj.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics" class="add_video_topic" >Add Video
+                 </button>
+
+
+
+                 <!--  <button style="float:right;margin-right:40px;" data-href="{{obj.id}}" class="add_activity_topic" data-target="#form-dialog{{obj.id}}" data-toggle="modal" type="button">Add Activity</button> -->
+
+                 <button style="float:right;margin-right:40px;"
+                  data-target="#activity-dialog" data-toggle="modal" 
+                  class="open_activtiy_modal" type="button" data-href="{{obj.id}}">Add Activity</button>
+
+                      <span style="float:right;margin-right:40px;"><i class="material-icons md-dark pmd-sm edit_topic" data-type="topic" data-href="{{obj.id}}">edit</i> 
+                  <i class="material-icons md-dark pmd-sm delete_topic" data-href="{{obj.id}}">delete</i>
+
+                    &nbsp;&nbsp;&nbsp;
+                  
+                 </span>
+
+
+
+
+
+               </a> 
+              </h4>
+              
+              </div>
+
+              <div id="collapseOne{{obj.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;" style="font-size:14px;">
+                <div class="panel-body"> 
+
+
+
+                
+                    <table class="table pmd-table">
+
+                          <!-- {% for v in obj.get_all_video %}
+                              <tr>
+                               <td> <i class="material-icons md-dark pmd-sm">play_circle_filled</i></td>
+                              <!-- <i class="material-icons md-dark pmd-md">format_list_bulleted</i> 
+                              <td data-title="Name">{{ v.description }}</td>
+                               <td> <i class="material-icons md-dark pmd-sm edit_video_ac" data-href="{{v.id}}">edit</i> 
+                                <i class="material-icons md-dark pmd-sm delete_video_ac" data-href="{{v.id}}">delete</i>  
+                                </td>
+                             
+                              </tr>
+                          {% endfor %} -->
+
+                          {% for v in child.activities %}
+
+                              <tr>
+                               <td> <i class="material-icons md-dark pmd-sm">play_circle_filled</i></td>
+                              
+                              <td data-title="Name">{{ v.activity_name }}</td>
+                              <td data-title="Name">{{ v.activity_type }}</td>
+                               <td> <i class="material-icons md-dark pmd-sm edit_video_ac" data-href="{{v.content_id}}">edit</i> 
+                                <i class="material-icons md-dark pmd-sm delete_video_ac" data-href="{{v.content_id}}">delete</i>  
+                                </td>
+                             
+                              </tr>
+
+                          {% endfor %}
+                          
+                          {% for key,val in child.subtopic.items %}
+                            <tr>
+                              <td>
+                               <!--  <i class="fal fa-grip-lines"></i> -->
+                               <!--  <i class="material-icons md-dark pmd-md">drag_handle</i> -->
+
+
+                              <!-- <i class="material-icons md-dark pmd-md">format_list_bulleted</i> --></td>
+                              <td data-title="Name">{{ key.name }}</td>
+                              <td data-title="video">
+                      
+
+
+                      <button data-target="#form-dialog{{key.id}}" data-toggle="modal" type="button" data-href="{{key.id}}">Add Video
+                      </button>
+                      
+                         <div tabindex="-1" class="modal fade" id="form-dialog{{key.id}}" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header bordered">
+                                      <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                      <h2 class="pmd-card-title-text">Upload Video</h2>
+                                    </div>
+                                    <div class="modal-body">
+
+                                      <form action="{% url 'customadmin:madd_video' %}" 
+                                      class="video_forms" method="post"> 
+                                     
+                                      {{ video_form.video|as_crispy_field }}
+                                      
+                                      {{ video_form.description|as_crispy_field }}
+                                      {{ video_form.thumbnail|as_crispy_field }}
+                                      {{ video_form.language|as_crispy_field }}
+                                    
+                                      <input type="hidden" id="topic_for_video"name="topic" value="{{key.id}}" />
+
+                                      <br/>
+                                      <input class="btn pmd-ripple-effect btn-primary" value="save" type="submit"/>
+                                    </form>
+                                    </div>
+                                  </div>
+                          </div>
+                      </div>
+                           
+
+                              </td>
+                              <td data-title="activity">
+                               <!--  <a class="add_activity" 
+                                title="add activity" data-href="{{key.id}}"
+                                data-toggle="tooltip">
+                                Add Activity
+                                </a> -->
+
+                                 <button data-target="#activity-dialog{{key.id}}" data-toggle="modal" type="button" data-href="{{key.id}}">Add Activity</button>
+
+
+                                <div tabindex="-1" class="modal fade" id="activity-dialog{{key.id}}" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header bordered">
+                                      <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                      <h2 class="pmd-card-title-text">
+                                      Add Activity
+                                      </h2>
+                                    </div>
+                                    <div class="modal-body">
+
+                                         <img src="{% static 'pix/quiz.jpeg' %}" width="60px" height="60px" />
+                                         <span>
+                                         <a href="{% url 'assesment:add_quiz' 0 key.id %}?next=/admin/all_course_user/{{courseid}}/edit" class="activity_quiz_link">
+                                          MCQ
+                                         </a></span>
+                                          &nbsp;&nbsp;&nbsp;
+                                          <img src="{% static 'pix/spin.jpeg' %}" width="60px" height="60px" /><span> <a href="{% url 'customadmin:spin_activity_topic' key.id %}" class="activity_spin_link">Spin</a></span>
+                                          &nbsp;&nbsp;&nbsp;
+
+                                          <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href="{% url 'customadmin:add_assignment' key.id %}?next=/admin/all_course_user/{{courseid}}/edit/$topics"
+                                            class="activity_assignment_link">Assignment</a></span>
+
+                                          <img src="{% static 'pix/drag.webp' %}" width="60px" height="60px" /><span><a href="{% url 'customadmin:add_drag' key.id %}" class="activity_drag_link">Drag And Drop</a></span>
+                                        
+                                          <!-- <button data-target="#quizactivity" data-toggle="modal" class="btn pmd-ripple-effect btn-primary pmd-z-depth" >MCQ</button> -->
+                                      
+                                    </div>
+                                    <!-- <div class="pmd-modal-action">
+                                      
+                                      <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
+                                    </div> -->
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              </td>
+                             
+                              <!-- <td data-title=""><a href="javascript:void(0);"><i class="material-icons md-dark pmd-sm">more_vert</i></a></td> -->
+
+                              <td>
+                                 <span style="float:right;margin-right:40px;"><i class="material-icons md-dark pmd-sm edit_topic" data-type="subtopic" data-href="{{key.id}}">edit</i> 
+                  <i class="material-icons md-dark pmd-sm delete_topic" data-href="{{key.id}}">delete</i>
+                 </span>
+                              </td>
+                              {% ifequal val|length 0 %}
+                                {% else %}
+                                <!-- {% for ac in val.video %}
+                                    <tr>
+                                      <td></td>
+                                      <td>
+                                        <i class="material-icons md-dark pmd-sm">play_circle_filled</i>
+                                      </td>
+                                      <td> {{ ac.description }} </td>
+                                       <td> <i class="material-icons md-dark pmd-sm edit_video_ac" data-href="{{ac.id}}">edit</i> 
+                                        <i class="material-icons md-dark pmd-sm delete_video_ac" data-href="{{ac.id}}">delete</i>  
+                                         </td>
+                                    </tr>
+                                  {% endfor %} -->
+
+                                  {% for ac in val.activities %}
+                                    <tr>
+                                      <td></td>
+                                      {% if ac.activity_type == "video" %}
+                                        <td>
+                                          <i class="material-icons md-dark pmd-sm">play_circle_filled</i>
+                                        </td>
+                                      {% endif %}
+                                      <td> {{ ac.activity_name }} </td>
+                                      <td> {{ ac.activity_type }} </td>
+
+                                      <td>
+                                        {% if ac.activity_type == "quiz" %}
+                                        <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
+                                        {% endif %}
+                                        {% if ac.activity_type == "mcq" %}
+                                        <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
+                                        {% endif %}
+                                        
+                                      </td> 
+
+                                      <td> 
+                                        <i class="material-icons md-dark pmd-sm 
+                                        {% if ac.activity_type == 'video' %}edit_video_ac {% else %}edit_ac_ac {% endif %}"
+                                        {% if ac.activity_type == "quiz" %} activity_type="quiz" {% endif %} 
+                                        {% if ac.activity_type == "spin_activity" %} 
+                                        activity_type="spin_activity"
+                                        {% endif %}
+                                        {% if ac.activity_type == "Assignment" %} 
+                                        activity_type="Assignment"
+                                        {% endif %}
+                                              data-href="{{ac.id}}" activity-id="{{ac.content_id}}">edit</i> 
+                                        <i class="material-icons md-dark pmd-sm delete_ac_ac" data-href="{{ac.id}}">delete</i>  
+                                      </td>
+
+                                    </tr>
+                                  {% endfor %}
+
+
+                                 <!--  {% for ac in val.activity %}
+                                    <tr>
+                                      <td></td>
+                                      <td> {{ ac.activity_name }} </td>
+                                      <td> {{ ac.activity_type }} </td>
+                                      {% if ac.content_id %}
+                                      <td>
+                                        {% if ac.activity_type == "quiz" %}
+                                        <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
+                                        {% endif %}
+                                        {% if ac.activity_type == "mcq" %}
+                                        <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
+                                        {% endif %}
+                                        
+                                      </td> 
+                                      <td> <i class="material-icons md-dark pmd-sm edit_ac_ac" 
+                                        {% if ac.activity_type == "quiz" %} activity_type="quiz" {% endif %} 
+                                        {% if ac.activity_type == "spin_activity" %} 
+                                        activity_type="spin_activity"
+                                        {% endif %}
+                                        {% if ac.activity_type == "Assignment" %} 
+                                        activity_type="Assignment"
+                                        {% endif %}
+                                              data-href="{{ac.id}}" activity-id="{{ac.content_id}}">edit</i> 
+                                        <i class="material-icons md-dark pmd-sm delete_ac_ac" data-href="{{ac.id}}">delete</i>  
+                                      </td>
+                                      {% endif %}
+                                    </tr>
+                                  {% endfor %} -->
+
+
+                              {% endifequal %}
+                            </tr>
+
+                            {% endfor %}
+
+                            
+                          
+                           
+                          
+                     </table>
+                 
+                </div>
+              </div>
+
+
+            </div>
+          
+           {% endfor %}
+           
+          </div> 
+       
+
+
+
+                     
+                {% endifequal %}
+                {% endif %}
+
+
+              </p>
+
+
+              <!-- All Topic: <br/>
+
+
+              <ol class="example" style="list-style: none;">
+                {% for obj,child in topic_activity_list.items %}
+              
+                <li tid="{{ obj.id }}" style="background:#e6e6e6;color:black;padding:10px;border-radius:3px;margin:10px;">
+                <tr >
+                
+                  <th scope="row">{{ forloop.counter }}</th> &nbsp;&nbsp;
+                  <td>{{ obj.name }}</td> &nbsp;&nbsp;
+                
+                  
+
+                   <td>{% if obj.course is None %}<a href="#" >Copy And Assign</a>{% else %}
+                  {{ obj.course }} {% endif %}</td>
+                   &nbsp;&nbsp;&nbsp;
+                  <td>
+                    <a class="add_video" title="add video"
+                     data-href="{{obj.id}}" data-toggle="tooltip">Add Video</a> &nbsp;&nbsp;
+
+                  </td>
+                  <td>
+                   <a class="add_subtopic" title="add subtopic" data-href="{{obj.id}}" data-toggle="tooltip">Add Subtopic</a> &nbsp;&nbsp;
+                  </td>
+
+                  <td>
+                    <a class="add_activity" title="add activity" data-href="{{obj.id}}" data-toggle="tooltip">Add Activity</a> &nbsp;
+                  </td>
+
+                  <td>
+
+                    <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip">
+                      <i class="material-icons">&#xE254;</i>
+                    </a>
+
+                    <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip">
+                      <i class="material-icons">&#xE872;</i>
+                    </a>
+
+                  </td>
+                 
+                    {% ifequal child|length 0 %}
+                      {% else %}
+                        <ol class="example_inside">
+
+                          {% for ch in child.subtopic.topic %}
+                             <li tid="{{ ch.id }}" ><tr>
+                                <td></td>
+                                <td>{{ ch.name }}</td>&nbsp;
+                                <td>{{ ch.about }}</td>&nbsp;
+                                <td>
+                                  <a class="add_activity" title="add activity" data-href="{{ch.id}}" data-toggle="tooltip">Add Activity</a>
+                                </td>&nbsp;
+                                                              </tr></li>
+                          {% endfor %}
+                        </ol>
+                    {% endifequal %}
+              </tr>
+            </li>
+            
+            {% endfor %}
+          </ol>
+
+
+              
+          </ol>  -->
+
+         
+
+          
+
+          <script>
+
+            // $(document).ready(function(){
+            //     var url = window.location.href;
+            //     window.location.href=url.replace("$",'#');
+            // });
+
+        $('.open_activtiy_modal').click(function(event){
+                //alert();
+              // 'customadmin:spin_activity_topic' "+dataid+"/?next=/admin/all_course_user/{{courseid}}/edit/
+              //event.preventDefault();
+              var dataid=$(this).attr("data-href");
+              var spin_url ="";
+              
+              $('.activity_spin_link').attr("href","");
+              $('.activity_quiz_link').attr("href","");
+              $('.activity_assignment_link').attr("href","");
+              //$('#collapseOne51').toggle();
+              //$('#activity-dialog').modal('show');
+              //$('#activity-dialog').css('z-index','99999');
+              
+
+        });
+            
+            $('.edit_video_ac').click(function(){
+                
+                var dataid=$(this).attr("data-href");
+                window.location.href="{% url 'customadmin:all_video' %}"+dataid+'/edit/?next={{EXTRA_URL}}/admin/all_course_user/'+dataid+"/edit/$topics";
+            });
+
+            $('.add_video_topic').click(function(){
+              //alert();
+            });
+
+            $('.delete_topic').click(function(){
+              //alert();
+                var dataid=$(this).attr("data-href");
+                $.ajax({
+                    url:'{% url "customadmin:delete_topic" %}',
+                    method:"post",
+                    data:{"topicid":dataid},
+                    success:function(data){
+                      if(data=="true"){
+                        alert("topic has been deleted");
+                        window.location.reload();
+
+                        $div = $('a[href="#topics"]');
+            
+            
+                        $lip=$div.parent();
+                        console.log($lip.attr('class'));
+                        $('.pmd-tabs .nav-tabs > li').attr('class','');
+                        
+                        $('.pmd-tabs .nav-tabs > li > a').attr("aria-expanded","false");
+                        $lip.attr('class','active'); 
+                        $div.attr("aria-expanded","true");
+                        $('#home').removeClass('active');
+                        $('#about').removeClass('active');
+                        $('#students').removeClass('active');
+                        $('#topics').addClass('active');
+                        $('.pmd-tabs').pmdTab();
+
+                      }
+                    }
+                });
+            });
+
+            $('.edit_topic').click(function(){
+                var topicid=$(this).attr("data-href");
+                var data_type=$(this).attr("data-type");
+                
+                window.location.href="{% url 'customadmin:all_topic' %}"+topicid+"/edit/?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+                
+
+                
+            });
+
+            $('.add_category').click(function(){
+                var dataid=$(this).attr("data-href");
+                //$('#forms-dialog').show();
+                //alert();
+                //$('#formsdialog').show();
+
+                
+            });
+
+            // $('#formsdialogclose').click(function(){
+            //     alert();
+            //      $('#formsdialog').hide();
+            // });
+
+            $('.edit_ac_ac').click(function(){
+                var dataid=$(this).attr("data-href");
+                var acid= $(this).attr("activity-id");
+                
+                var activity_type = $(this).attr("activity_type");
+                
+                if(activity_type=="spin_activity"){
+                     window.location.href="{% url 'customadmin:edit_spin_activity' %}"+dataid+"/?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+                }
+                else if(activity_type=="quiz")
+                {
+
+                   var url= "{% url 'assesment:edit_quiz_ac' 0 0 1 %}".replace('1',parseInt(acid));
+
+                   window.location.href=url+"?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+                }
+                else if(activity_type =="Assignment")
+                {
+                  var url = "{% url 'customadmin:edit_assignment' 0 %}".replace('0',acid);
+                    window.location.href=url+"?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+                }
+               
+            });
+
+            $('.delete_video_ac').click(function(){
+               if(confirm("this will delete the video")){
+                var dataid=$(this).attr("data-href");
+                window.location.href="{% url 'customadmin:all_video' %}"+dataid+'/delete/?next=/admin/all_course_user/{{courseid}}/edit/$topics';
+              }
+            });
+
+            $('.delete_ac_ac').click(function(){
+                if(confirm("this will delete the activity"))
+                {
+                  var dataid=$(this).attr("data-href");
+                  $.ajax({
+                    url :"{% url 'customadmin:delete_activity' %}"+dataid+"/delete/?next=/admin/all_course_user/{{courseid}}/edit/$topics",
+                    type:'get',
+                    success:function(data){
+                      if(data=='true'){
+                         alert("activity has been deleted");
+                         window.location.reload();
+
+                         $div = $('a[href="#topics"]');
+            
+            
+                        $lip=$div.parent();
+            
+                      $('.pmd-tabs .nav-tabs > li').attr('class','');
+                      
+                      $('.pmd-tabs .nav-tabs > li > a').attr("aria-expanded","false");
+                      $lip.attr('class','active'); 
+                      $div.attr("aria-expanded","true");
+                      $('#home').removeClass('active');
+                      $('#about').removeClass('active');
+                      $('#students').removeClass('active');
+                      $('#topics').addClass('active');
+                      $('.pmd-tabs').pmdTab();
+
+                         //window.location.reload();
+
+                         
+                      }
+                      else{
+                        alert('ERROR: either some student already enrolled in this activity , or activity not found ');
+                      }
+                     
+                      
+                    }
+
+                  });
+                // window.location.href="{% url 'customadmin:delete_activity' %}"+dataid+'/delete/';
+                }
+            });
+          </script>
+                
+        </div>
+
+
+        
+        <div role="tabpanel" class="tab-pane second-tab" id="students" >
+
+            Add Student By Email: <input type="text" onkeyup="get_student()" placeholder="Search for student.." id="student_search" class="form-control" name="student_search" />
+
+            
+              
+            <table class="table table-striped">
+                <thead>
+
+                  <tr>
+                    <th scope="col">S.N.</th>
+                    
+                    <th scopr="col">Position</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Organization</th>
+                    <th scope="col">Action</th>
+                  </tr>
+
+                </thead>
+              <tbody>
+              {% for student in student_list %}
+                <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ student.position }}</td>
+                <td>{{ student.email}}</td>
+                <td>{{ student.phone}}</td>
+                <td>{{ student.organization }}</td>
+                <td>{% if student.user_id|check_student_in_course:courseid %}
+                  <span data-href="{{student.id}}">Added</span>
+                {% else %}
+                  <button class="add_student" data-href="{{student.id}}">Add</button>
+                  {% endif %}
+                </td>
+                
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+
+        </div> 
+
+
+
+        <script>
+
+              $('.add_student').click(function(){
+                  var ui_id=$(this).attr('data-href');
+                  var courseid ="{{ courseid }}";
+                  $.ajax({
+                    url:'{% url "customadmin:add_student_to_course" %}',
+                    data:{'student_id':ui_id,"course_id":courseid},
+                    method:"post",
+                    success:function(data){
+                      alert(data);
+                      window.location.reload();
+                    }
+                  });
+              });
+              $(document).ready(function (e) {
+                $(".video_forms").on('submit',(function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                      url:"{% url 'customadmin:madd_video' %}",
+                      data:new FormData(this),
+                      type:"post",
+                      contentType:false,
+                      cache:false,
+                      processData:false,
+                      success:function(data){
+                        //alert('<html>'+data+'</html>');
+                        alert(data);
+
+                        $('.close').click();
+                        window.location.reload();
+                        $div = $('a[href="#topics"]');
+                        $lip=$div.parent();
+           
+            $('.pmd-tabs .nav-tabs > li').attr('class','');
+           
+            $('.pmd-tabs .nav-tabs > li > a').attr("aria-expanded","false");
+            $lip.attr('class','active'); 
+            $div.attr("aria-expanded","true");
+            $('#home').removeClass('active');
+            $('#about').removeClass('active');
+            $('#students').removeClass('active');
+            $('#topics').addClass('active');
+            $('.pmd-tabs').pmdTab();
+                         }
+                    });
+                  }
+                ));
+             });
+                                       
+    </script>
+
+
+   <script>
+          var $sortableList = $("ol.example");
+
+          var sortEventHandler = function(event, ui)
+          {
+                var listElements = $sortableList.children();
+                var listValues = [];
+                console.log(listElements);
+              
+                input_data={}
+                for (var i = 0; i < listElements.length; i++)
+                {
+                    input_data[listElements[i].getAttribute("tid")]=i+1;
+                    //listValues.push(listElements[i].getAttribute("tid"));
+                }
+                // $.post("{% url 'customadmin:set_order_topic' %}", function(data)
+                // {
+                //     alert(data);
+                // });
+                $.ajax({
+                  url: "/customadmin/set_order_topic/",
+                  type: 'post',
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  success: function (data) {
+                    alert("fhfh");
+                  },
+                  data: JSON.stringify(input_data)
+                });
+                //alert(listValues); 
+          };
+
+          $sortableList.sortable({
+              stop: sortEventHandler
+          });
+
+          $sortableList.on("stop", sortEventHandler);
+
+        
+
+          $(function() {
+              $("ol.example_inside").sortable();
+          });
+
+
+            </script>
+            
+        </div>
+ 
+
+      
+          </div>
+    </div>
+
+        <!-- <script>alert("{{category_form.as_p}}"");</script> -->
+        
+
+       <div tabindex="-1" class="modal fade" id="quizactivity" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bordered">
+                          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                      <h2 class="pmd-card-title-text">
+                                        Quiz Activity
+                                      </h2>
+                          </div>
+                          <div class="modal-body">
+                            <ul class="nav nav-tabs" role="tablist" style="width: 323.017px;">
+                                
+                                <li role="presentation" class="active"><a href="#quiz" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">Create Quiz</a>
+                                </li>
+
+                                <li role="presentation" class=""><a href="#questions" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Add Question</a>
+                                </li>
+                            </ul>
+
+                            <div class="pmd-card">
+                              <div class="pmd-card-body">
+                                <div class="tab-content">
+                                  <div role="tabpanel" class="tab-pane active" id="quiz">
+
+                                    <form action="{% url 'assesment:add_quiz' %}" method="post">
+                                      {{ quizform|crispy }}
+
+                                      <input type="submit" value="Save Quiz" />
+                                    </form>
+                                    <!-- <input type="button" value="Save And Next" /> --> 
+                                  </div>
+                                  <div role="tabpanel" class="tab-pane active" id="questions">
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+
+                 
+  </div>
+                        
+</div>
+
+
+<!-- video modal -->
+
+
+
+
+                    
+</div>
+</div>
+<!--  </div> -->
+
+ 
+</section>
+
+
+</div>
+</div>
+
+   <script>
+
+    function isNormalInteger(str) 
+    {
+      str = str.trim();
+      if (!str) {
+        return false;
+      }
+      str = str.replace(/^0+/, "") || "0";
+      var n = Math.floor(Number(str));
+      return n !== Infinity && String(n) === str && n >= 0;
+    }
+     $('#next-b').click(function()
+     {
+        //alert();
+        var id_price=$('#id_price').val();
+        var id_discount = $('#id_discount_price').val();
+        var id_duration = $('#id_duration').val();
+
+        if(id_duration!=''){
+          if(!isNormalInteger(id_duration)){
+            alert("duration should be a positive integer number");
+            $('#id_duration').val(id_duration);
+            return;
+          }
+        }
+
+        if(id_price < 0){
+          alert("price should not be negative value");
+          return ;
+        }
+        if(id_discount < 0){
+          alert("discount price should not be negative value");
+          return ;
+        }
+
+        if(id_discount > id_price){
+          alert("discount price should be less then price ");
+          return ;
+        }
+        else{
+
+        }
+        $('#cform').submit();
+   
+     });     
+    //});
+   </script>
+<!-- 
+<script src="{% static 'js/jquery-1.12.2.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script> -->
+<script src="{% static 'js/propeller.min.js' %}"></script>
+    
+<script>
+
+  $('.add_activity').on('click',function(){
+    var topic_id=$(this).attr('data-href');
+    //alert(topic_id);
+    window.location.href="{% url 'customadmin:add_activity' %}"+topic_id+"/";
+  });
+
+  $('.add_topic').on('click',function(){
+    var courseid=$(this).attr('data-href');
+    var obj_id="{{object.id}}"
+    if(courseid)
+    {
+      // window.open("{% url 'customadmin:add_topic' %}"+parseInt(courseid),"Add Topic",menubar=0,resizable=1);
+      window.location.href="{% url 'customadmin:add_topic' %}"+parseInt(courseid)+"?next=/admin/all_course_user/"+obj_id+"/edit/$topics";
+    }
+    else
+    {
+      window.location.href="{% url 'customadmin:add_topic' %}";
+    }
+  //alert(topic_id);
+  });
+
+   $('.add_subtopic').on('click',function()
+   {
+        var topicid= $(this).attr('data-href');
+        window.location.href=topicid;
+   });
+
+   $('.add_video_topic').click(function(){
+        var topicid = $(this).attr('data-href');
+        window.location.href=topicid;
+   });
+
+   $('.add_activity_topic').click(function(){
+        var topicid = $(this).attr('data-href');
+        //window.location.href=topicid;
+   });
+
+// $(document).ready(function() {
+//     var sPath=window.location.pathname;
+//     var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+//     $(".pmd-sidebar-nav").each(function(){
+//       $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+//       $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+//       $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+//       $(this).find("a[href='"+sPage+"']").addClass("active");
+//     });
+//     $(".auto-update-year").html(new Date().getFullYear());
+//   });
+  
+</script>
+<div tabindex="-1" class="modal fade" id="formsdialog" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bordered">
+                          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                      <h2 class="pmd-card-title-text">
+                                        Create Category
+                                      </h2>
+                          </div>
+                          <div class="modal-body">
+                                     Category Name:
+                                     <span>*</span> <input type="text" name="category_name" class="form-control textinput textInput required" required="true" id="category_name" /><br/>
+                                      Category About: {{ category_form.category_about }} <br/>
+
+                                      <button  
+                                      class="btn btn-success userform_save" >Submit</button>
+                                     
+                                  </div>
+                                 
+                                </div>
+                              </div>
+    </div>
+
+    <script>
+        $('.userform_save').click(function(){
+            var user="{{user}}";
+            var userid="{{user.id}}";
+            var id_name=$('#category_name').val();
+            if(id_name==''){
+              alert("please enter category name");
+              return ;
+            }
+            if(id_name.length > 40){
+              alert("category name should be less than 40 character");
+              return ;
+            }
+            var id_category=$('#id_category_about').val();
+            $.ajax({
+              url:'{% url "customadmin:add_category_user" %}',
+              type:'post',
+              data:{'name':id_name,'req_type':'ajax','category_about':id_category,
+              'creator':userid },
+              success:function(data){
+                if(data=="true"){
+                  //$('#formsdialog').hide();
+                  $('#formsdialog').modal('hide');
+                  // $('#id_category').append($('<option>', {value: id_name,text: id_name}));
+                  
+
+                  alert('category has been created');
+                  window.location.reload();
+                  //return;
+                }
+                else{
+                  alert(data);
+                }
+              }
+            });
+        });
+    </script>
+
+
+    <script>
+      $(document).ready(function(){
+          var current_url=window.location.href;
+          //var current_url = current_url.replace("$","#");
+          urla=current_url.split("#");
+          if(urla.length > 1)
+          {
+          if(urla[1]=="topics"){
+            //var div =$("[area-controls='topics']");
+            $div = $('a[href="#topics"]');
+            console.log($div);
+            console.log("djdjdjdjj");
+            
+            $lip=$div.parent();
+            console.log($lip.attr('class'));
+            $('.pmd-tabs .nav-tabs > li').attr('class','');
+            //$('.pmd-tabs .nav-tabs > li > a').css('display','none');
+            $('.pmd-tabs .nav-tabs > li > a').attr("aria-expanded","false");
+            $lip.attr('class','active'); 
+            $div.attr("aria-expanded","true");
+            $('#home').removeClass('active');
+            $('#about').removeClass('active');
+            $('#students').removeClass('active');
+            $('#topics').addClass('active');
+            $('.pmd-tabs').pmdTab();
+            //$lip.attr('class','pmd-tab-active-bar');
+          }
+        }
+
+      });
+    </script>
+                      
+
+
+
+</body>
+
+</html>
+
+  {% endblock %}

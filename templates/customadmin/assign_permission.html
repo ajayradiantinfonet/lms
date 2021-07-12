@@ -1,0 +1,69 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+
+{% load static %}
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container ">
+
+
+<div class="col-lg-10">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Assign Permission</h1>
+                  </div>
+
+
+                  <form>
+
+                     <div class="col-md-6">
+                        <div class="dropdown" style="width:100%;">
+                          
+                                <button class="btn form btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Select
+                                </button>
+
+                                <div  style="width:100%;" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+
+                                  <a class="dropdown-item" href="#">Action</a>
+                                  <a class="dropdown-item" href="#">Another action</a>
+                                  <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                        </div>
+
+                      </div>
+
+                      <br/><br/>
+
+
+                      <div class="col-md-6">
+                        Select Permissions :
+                           <select class="form form-control js-example-basic-multiple" name="states[]" multiple="multiple">
+                              <option value="AL">Alabama</option>
+                                ...
+                              <option value="WY">Wyoming</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="form-group">
+                      <input type="submit" class="btn btn-primary btn-user btn-block" id="exampleInputPassword"  value="submit" name="submit" placeholder="Permission Description"/>
+                    </div>
+                  </div>
+
+                      
+                  </form>
+
+</div>
+
+</div>
+
+
+
+{% endblock %}

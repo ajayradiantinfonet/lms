@@ -1,0 +1,99 @@
+{% extends 'head1.html'%} {% block content %} {% load static %}
+
+
+<div id="content" class="pmd-content inner-page">
+
+    <div class="container-fluid full-width-container data-tables">
+
+
+
+
+        <h1 class="section-title" id="services">
+            <span>{{desc}}</span>
+        </h1>
+
+
+        <ol class="breadcrumb text-left">
+            <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+            <li class="active">{{ desc }}</li>
+        </ol>
+        <!--breadcrum end-->
+
+
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-dismissible alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+            <strong>{{ message }}</strong>
+        </div>
+        {% endfor %} {% endif %}
+
+
+
+        <!-- table card -->
+        <section class="row component-section">
+
+
+            <div class="row  component-section">
+                <div style="float:right; padding-right:20px;">
+                    <button type="button" id="add_country" class="btn pmd-btn-outline pmd-ripple-effect btn-primary">Add country</button>
+                </div>
+            </div>
+
+            {% ifequal object_list|length 0 %}
+            <p>&nbsp;&nbsp;There is no city available</p>
+            {% endifequal %}
+
+
+            <table class="table table-striped">
+
+                <thead>
+                    <tr>
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Country name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for obj in object_list %}
+                    <tr>
+                        <th scope="row"> {{ forloop.counter }} </th>
+                        <td> {{ obj.name }} </td>
+                        <td> {{ obj.status }} </td>
+
+
+                        <td>
+
+                            <a href="{% url 'customadmin:country_edit' obj.id %}" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i>
+                </a>
+
+
+
+                            <a onclick="return confirm('Are You sure about this!!')" href="{% url 'customadmin:country_delete' obj.id %}">
+                                <i class="material-icons">&#xE872;</i>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+    </div>
+
+    <script>
+        $('#add_country').click(function() {
+            window.location.href = "{% url 'customadmin:country_create' %}";
+        });
+    </script>
+
+    </section>
+
+
+
+
+    {% endblock %}

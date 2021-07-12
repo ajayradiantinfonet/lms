@@ -1,0 +1,167 @@
+{% extends 'head2.html' %}
+
+
+
+{% block inner_content %}
+{% load static %}
+
+{% load mytag %}
+
+
+
+
+
+
+<div class="right_col" role="main">
+
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-dismissible alert-{{ message.tags }}">
+              <button type="button" class="close" data-dismiss="alert">
+                  <i class="fa fa-close"></i>
+              </button>
+              <strong>{{ message }}</strong>
+          </div>
+          {% endfor %}
+        {% endif %}
+
+        
+        {% ifequal object_list|length 0 %}
+              <p>&nbsp;&nbsp;There is no organization  available</p>
+        {% endifequal %}
+                                
+            <!-- row courses-->
+          <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+              <div class="dashboard_graph companies-courses responsive-section">
+                <div class="x_title h2-size table-border1">
+                    <h2>Companies</h2>
+                      <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                          <div class="btn_dashgraph" data-toggle="buttons">
+                                       
+                            {% if not user.is_anonymous %}
+                              {% if user|check_permission:'generic.can_create_organization' %}
+                                <label class="btn btn_upload">
+                                <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
+                                </label>
+
+                        
+                               <label class="btn btn_add add_company">
+                                  <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Company</span>
+                              </label> 
+                              {% endif %}
+                            {% endif %}
+                               
+                          </div>
+                        </li>
+                      </ul>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="box_bottom">
+
+                    {% for obj in page_obj %}
+              
+                     <div id="cards_landscape_wrap-2">
+                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" style="margin-right:50px;">
+                          <div class="card-flyer height-card" style="height: 220px;">
+                            <div class="text-box">
+                                <div class="image-box img-height">
+                                    <img src="{{ obj.logo.url }}" alt="" style="height:150px;" /><i class="fa fa-ellipsis-v fa-img1 box_show" aria-hidden="true" >
+                                      <ul style="display:none;" class="box_hide box-ul">
+                                        <a href="{% url 'customadmin:view_organization' obj.id %}"><li>View</li></a>
+                                        <a href="{% url 'customadmin:edit_organization' obj.id %}"><li>Edit</li></a>
+                                        <li>Suspend</li>
+                                        <li>Delete</li>
+                                    </ul>
+                                    </i>
+                                </div>
+                                <div class="text-container">
+                                      <h6>{{ obj.organization_name }}</h6>
+                                      <!-- <h6>{{ obj.address }}</h6> -->
+                                       
+                                </div>
+
+                                 <div class="btn-view">
+                                    <a class="btn view_btn" obj_id="{{obj.id}}" href="{% url 'customadmin:view_organization' obj.id %}" >
+                                      <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i>
+                                      <span>View More</span>
+                                    </a>
+                            </div>
+                            </div>
+                           </div>
+                         </div>
+                        </div>
+
+                    {% endfor %}
+
+                      {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation example" style="float:right">
+                    <ul class="pagination">
+                      {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                      {% else %}
+                        <li class="disabled page-item"><span></span></li>
+                      {% endif %}
+                      {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                          <li class="active page-item"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                        {% else %}
+                          <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                      {% endfor %}
+                      {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                      {% else %}
+                        <li class="disabled"><span></span></li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                  {% endif %}
+                    <div class="clearfix"></div>
+
+              </div>
+                 
+          </div>
+        </div>
+</div>
+
+
+
+      
+
+
+{% endblock %}
+
+
+{% block inpage_script %}
+
+<script>
+  $(document).ready(function(){
+    $(".box_show").click(function(){
+      $(this).children(".box_hide").toggle();
+    });
+  });
+
+</script>
+
+  <script>
+
+      $('.add_company').click(function(){
+              window.location.href="{% url 'customadmin:create_organization' %}";
+      });
+
+
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

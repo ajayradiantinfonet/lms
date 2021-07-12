@@ -1,0 +1,99 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'customadmin:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    <section class="row component-section">
+
+     
+        {% ifequal object_list|length 0 %}
+              <p>&nbsp;&nbsp;There is no course  available</p>
+        {% endifequal %}
+        
+        {% for obj in object_list %}
+        <a href="{% url 'customadmin:course_detail' obj.id  %}">
+          <div class="col-md-4 col-sm-6 masonry-brick" style=" ">
+        <!-- <h3 class="text-muted">Media, Title, and Description area</h3> -->
+        <div class="pmd-card pmd-card-default pmd-z-depth">
+          <div class="pmd-card-media">
+            {% if obj.thumbnail %}
+            <img src="{{ obj.thumbnail.url }}" class="img-responsive" width="1084" height="600">
+            {% else %}
+            <img src="" class="img-responsive" width="1084" height="600">
+            {% endif %}
+            
+          </div>
+          <div class="pmd-card-title">
+            <h2 class="pmd-card-title-text">{{ obj.name }}</h2>
+            <span class="pmd-card-subtitle-text">{{ obj.about }}</span>  
+          </div>  
+          <div class="pmd-card-actions">
+            <!-- <button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Enroll</button> -->
+            <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_detail' obj.id  %}" type="button">View Details</a>
+
+            {% if obj.organization is None %}
+                   <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_allot' obj.id  %}" type="button">Allot Course</a>
+            {% endif %}
+          </div>
+        </div>
+      </div></a>
+      {% endfor %}
+
+
+  
+  </section>
+</div>
+           
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

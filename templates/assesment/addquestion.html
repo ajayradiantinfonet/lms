@@ -1,0 +1,230 @@
+{% extends "head1.html" %}
+{% load custom_filters %}
+
+
+{% block content %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+  <link rel="stylesheet" type="text/css" href="{% static 'assesment/css/autotaggit.css' %}">
+
+
+
+  <script type="text/javascript" src="{% static 'assesment/js/tinymce/js/tinymce/tinymce.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'assesment/js/add_question.js' %}"></script>
+  <script type="text/javascript" src="{% static 'assesment/js/mathjax/MathJax.js' %}?config=TeX-MML-AM_CHTML"></script>
+
+
+{% block onload %} onload='javascript:textareaformat();' {% endblock %}
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>Add Question</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">Add Question</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    <section class="row component-section">
+
+      <div class=" col-md-12">
+
+        <div class="section section-custom billinfo"> 
+      <!--section-title -->
+      <!-- <h2>Permission Form</h2> --><!--section-title end -->
+      <!-- section content start-->
+      <div class="pmd-card pmd-z-depth">
+
+        {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-dismissible alert-{{ message.tags }}">
+          <button type="button" class="close" data-dismiss="alert">
+              <i class="fa fa-close"></i>
+          </button>
+          <strong>{{ message }}</strong>
+      </div>
+      {% endfor %}
+  {% endif %}
+
+
+  <div class="pmd-card-body"> 
+  
+  <form action="{% if question %}{% url 'assesment:add_question' question.id %}{% endif %}" method="post" id="question_form" name=frm onSubmit="return autosubmit();" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table table-responsive-sm">
+      {% if qform.errors %}
+        {% for field in qform %}
+            {% for error in field.errors %}
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="fa fa-close"></i>
+                    </button>
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in qform.non_field_errors %}
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="fa fa-close"></i>
+                </button>
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+      {% endif %}
+
+      {% for field in qform %}
+          <!-- <tr> -->
+            <!-- <td>{{ field.label }}</td>  -->
+            <!-- <td> -->{{ field|as_crispy_field }} <small>{{ field.help_text }}</small><br/><!-- </td> -->
+          <!-- </tr> -->
+      {% endfor %}
+
+      {% for field in form1 %}
+          {{ field|as_crispy_field }} <small>{{ field.help_text }}</small>
+      {% endfor %}
+
+
+            <!-- test -->
+
+            <!-- <a class="add_topic" data-href="{{ object.id }}">
+              <label class="btn btn_add btn-right">
+                 <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Topic</span>
+              </label> 
+            </a> -->
+            <!-- <button id="add-ques" name="add-ques" class="btn btn-success pull-right" onclick="showDiv()">
+              Add more questions
+            </button>
+
+
+            <script>
+
+              function showDiv(){
+                var newtextbox ='';
+                // if (!document.getElementById("textInput")) {
+                newtextbox += '<input type="text" id="textInput" value="..." />'; 
+                document.getElementById('tbox_div').innerHTML+=newtextbox;
+                // }   
+              }
+
+
+            </script> -->
+
+
+
+
+          <!-- end test -->
+
+
+
+
+      <tr>
+        <td> File: </td>
+        <td>
+
+          
+
+
+          <div class="input-group mb-3">
+            <div class="custom-file">
+              {{ fileform.file_field }}{{ fileform.file_field.errors }}
+                <label class="custom-file-label" for="id_file_field">
+                    Choose file
+                </label>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    {% if uploaded_files %}
+      <div class="card">
+        <div class="card-header">
+          <h3>Uploaded files</h3>
+        </div>
+        <div class="card-body">
+          <div>
+          <p>Check on <b>Delete</b> to delete files,
+          <b>Extract</b> to extract files and <b>Hide</b> to hide files
+          </p>
+          <a href="" class="btn btn-primary" target="blank">
+            <i class="fa fa-info-circle"></i>&nbsp;More info
+          </a>
+          </div>
+          <br>
+          <ul class="list-group">
+            {% for file in uploaded_files %}
+            <li class="list-group-item">
+              <input type="checkbox" name="clear" value="{{file.id}}">
+                Delete
+              </input>
+              <input type="checkbox" name="extract" value="{{file.id}}">
+                {% if file.extract %} Dont extract {% else %} Extract {% endif %}
+              </input>
+              <input type="checkbox" name="hide" value="{{file.id}}">
+                {% if file.hide %} Show {% else %} Hide {% endif %}
+              </input>
+              <a href="{{file.file.url}}">{{ file.file.name|file_title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+    <br>
+    <div class="card">
+      
+        {% for formset in formsets %}
+          {{ formset.management_form }}
+          <div id="accordion">
+            {% for form in formset %}
+              <div class="card">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span class="badge badge-info">
+                        Test case {{forloop.counter}}.
+                      </span>
+                    </div>
+                    <div class="ml-auto">
+                      <a class="card-link" data-toggle="collapse" href="#collapse{{form.instance.id}}">
+                        Details&nbsp;<i class="fa fa-angle-down"></i></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div id="collapse{{form.instance.id}}" class="collapse {% if formset.extra == 1 %} show {% else %} hide {% endif %}" data-parent="#accordion">
+                  <div class="card-body">
+                    {% autoescape off %}
+                      {{form.as_p}}
+                      {{ form1.as_p }}
+                    {% endautoescape %}
+                  </div>
+                </div>
+              </div>
+              <br>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <br>
+    <center>
+      <button class="btn btn-lg btn-success" type="submit" name="save_question">
+        <i class="fa fa-save"></i>&nbsp;Save
+      </button>
+    </center>
+  </form>
+</div>
+
+{% endblock %}

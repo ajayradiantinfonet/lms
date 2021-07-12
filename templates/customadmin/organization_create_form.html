@@ -1,0 +1,886 @@
+
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+
+{% block content %}
+{% load static %}
+
+{% load i18n %}
+
+  <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+  
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  
+
+  {% load crispy_forms_tags %}
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+
+
+    <style>
+     .resizer .top-left 
+     {
+      left: -5px;
+      top: -5px;
+      cursor: nwse-resize; /*resizer cursor*/
+      }
+
+    .resizer .resizer.top-right 
+    {
+      right: -5px;
+      top: -5px;
+      cursor: nesw-resize;
+    }
+     .resizer .resizer.bottom-left 
+    {
+      left: -5px;
+      bottom: -5px;
+      cursor: nesw-resize;
+    }
+    .resizer .bottom-right {
+      right: -5px;
+      bottom: -5px;
+      cursor: nwse-resize;
+    }
+
+
+    </style>
+
+    
+  
+   
+    <section class="row component-section">
+        <div class="col-md-12 col-sm-12"> 
+                <div class="component-box">
+                    <!--Default tab example -->
+                    <div class="pmd-card pmd-z-depth"> 
+                        <div class="pmd-tabs pmd-tabs-bg">
+
+                            <div class="pmd-tab-active-bar">
+                            </div>
+
+                            <ul class="nav nav-tabs" role="tablist" style="width: 323.017px;">
+                                  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">Desc</a>
+                                  </li>
+
+                                  <li role="presentation" class=""><a href="#about" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Add Certificate</a>
+                                  </li>
+
+                                 <!--  <li role="presentation" class=""><a href="#work" aria-controls="work" role="tab" data-toggle="tab" aria-expanded="false">Add Tags</a>
+                                  </li> -->
+                            </ul>
+                        </div>
+
+
+
+                <div class="pmd-card">
+                  <div class="pmd-card-body">
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="home">
+                        {{ msg }}
+
+                        <!-- {{ form.errors }} -->
+
+                <form method="post" id="form_org" enctype="multipart/form-data">
+                      {{ form.organization_name|as_crispy_field }} <br/>
+
+                      {% if editing %}
+
+                        Contact Person Name: <input type="text" class="form-control" name="contact_person_name" value="{{ obj.contact_person_name }}"  readonly/>
+
+                        Contact Person Email: <input type="text" class="form-control" name="contact_person_email" value="{{ obj.contact_person_email }}"  readonly/>
+
+                        Contact Person Phone: <input type="text" class="form-control" name="contact_person_phone" value="{{ obj.contact_person_phone }}"  readonly/>
+
+                      {% else %}
+
+
+                      {{ form.contact_person_name|as_crispy_field }}<br/>
+
+                      {{ form.contact_person_email|as_crispy_field }}<br/>
+
+                      {{ form.contact_person_phone|as_crispy_field }}<br/>
+
+                      {% endif %}
+
+                      {% if editing %}
+                       {% trans 'Password' %}<input type="password" class="form-control" id="id_password" name="password" value="{{ obj.password}}" /><br/>
+
+                       Password Again: <input type="password" class="form-control" id="id_password_again"name="password_again" value="{{ obj.password }}" />
+
+                      {% else %}
+                        {{ form.password|as_crispy_field}} <br/>
+
+                        {{ form.password_again|as_crispy_field }} <br/>
+
+                      {% endif %}
+
+
+                      {{ form.end_date|as_crispy_field }}<br/>
+
+                      {{ form.address|as_crispy_field }}<br/>
+
+                      {{ form.website|as_crispy_field }}<br/>
+
+                      No Of Users :{{ form.no_of_candidates }}<br/>
+
+                      {{ form.logo|as_crispy_field }}
+
+                      Another Logo :{{ form.logo1 }}<br/><br/>
+
+                      Show Partner Logo :{{ form.show_second_logo }}<br/><br/>
+
+                      Sector Type :{{ form.sector_type }}<br/>
+
+                      {{ form.pin|as_crispy_field }} <br/>
+
+                      State :{{ form.state }}<br/>
+
+                      City :{{ form.city }}<br/>
+
+                      {{ form.certificate }}
+
+                      {% csrf_token %}
+
+                        <br/>
+
+                        <!-- <div class="form-group">
+                          <input type="submit" class="btn btn-primary btn-user btn-block" id="exampleInputPassword"  value="submit" name="submit" placeholder="Permission Description"/>
+                        </div> -->
+
+                     <!--  <div class="form-group"> -->
+                       <!--  <div class="col-sm-offset-2 col-sm-10"> -->
+                         <!--  <button class="btn btn-primary pmd-checkbox-ripple-effect" id="next">Next</button> -->
+                        <!-- </div> -->
+                      <!-- </div> -->
+
+
+                 
+
+
+                  </div>
+
+                    <div role="tabpanel" class="tab-pane second-tab" id="about">
+                      <!-- border:red 6px groove; -->
+
+                      <div class="certificate_upper" id="certificate_upper"style="width:800px;height: 600px;padding:10px;">
+
+                          
+                        <div class="certificate" data-href='{{ obj.certificate | safe }}' id="certificate" style="height: 580px;width:780px;">
+
+                               
+
+
+                            
+                        </div>
+
+                      </div>
+
+                      <script>
+
+
+                      </script>
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+                          
+                          Logo :<input name="logo" id="logo" type="file" /> <br/>
+
+                          Background Image : <input type="file"  name="bi" id="bi"  /><br/>
+
+
+                         Text:<input type="text" class="form-control" name="text"  id="text"  /> <br/>
+
+
+                         Font Family :<select id="fonttype" class="form-control">
+        
+                          <option>Sans-serif</option>
+                          <option>Sancreek</option>
+
+                        </select>
+
+
+                          <br/>
+
+                           Font Weight: <select  id="fontstyle" class="form-control">
+                                <option value="400">Normal</option>
+                                <option value="700">Bold</option>
+                                <option value="1300">Bolder</option>
+
+                            </select><br/>
+
+                           Font Size: <select  id="fontsize" class="form-control">
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15</option>
+                                <option>16</option>
+                                <option>18</option>
+                                <option>19</option>
+                                <option>20</option>
+                                <option>21</option>
+                                <option>22</option>
+                                <option>23</option>
+                                <option>24</option>
+                                <option>25</option>
+                                <option>26</option>
+                                <option>27</option>
+                                <option>28</option>
+
+                                <option></option>
+                                </select>
+                            <br/>
+
+
+                          Select Color: <input type="color" class="form-control" id="favcolor" name="favcolor" value="#ff0000"/> <br/>
+
+                          Border Color:<input type="color" class="form-control" id="bordercolor" name="bordercolor" value="#ff0000"/> <br/>
+
+                          Candidate Name : <input type="text" class="form-control"
+                         id="canname" placeholder="please write a sample name or  anything"/> <br/>
+
+
+
+     
+                      Signature :<input type="file"  name="sig" id="sig"   />
+                       <br/>
+
+                      <input type="button" id="submit_ajax" class="btn-green" value="Submit" />
+
+                    </form>
+
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+
+      
+    </script>
+     
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      $('#datepicker-default').datepicker({
+         "dateFormat":"mm/dd/yy",
+         'minDate' :'+0d',
+          'changeYear':'true',
+      });
+
+     
+
+      //document.getElementById("certificate").innerHTML = document.getElementById("certificate").getAttribute("data-attr");
+
+      var logourl = '';
+      var bgurl='';
+      var sigurl ='';
+
+      function readURL(input,is_background) 
+      {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+    
+          reader.onload = function(e) {
+            doctorUrl1 = e.target.result;
+            if(is_background==false)
+            {
+              //alert("logo");
+              appendDraggableImage(doctorUrl1,[50,50],false);
+            }
+            else if(is_background==true){
+              //alert(reader.result);
+              // $('.certificate').css('background-image',"url(" + reader.result + ")");   
+                appendDraggableImage(doctorUrl1,[0,0],true);
+            }
+            else if(is_background=='sig'){
+                appendDraggableImage(doctorUrl1,[500,500],false);
+            } 
+            else{
+            }
+            //$('#blah').attr('src', e.target.result);
+          }
+          reader.readAsDataURL(input.files[0]); // convert to base64 string
+      }
+    }
+
+    $("#logo").change(function() {
+        readURL(this,false);
+    });
+
+    $('#bi').change(function(){
+        readURL(this,true);
+    });
+
+    $('#sig').change(function(){
+        readURL(this,true);
+    });
+
+    var theInput = document.getElementById("favcolor");
+    var bordercolor = document.getElementById("bordercolor");
+    var theColor = theInput.value;
+    var bordercolorvalue = bordercolor.value;
+
+    //alert(bordercolorvalue);
+
+    bordercolor.addEventListener("change", function() {
+        bordercolorvalue = bordercolor.value;
+        //alert(bordercolorvalue);
+        $('.certificate').css('borderColor',bordercolorvalue);
+        //alert(theColor);
+    },false);
+
+    theInput.addEventListener("change", function() {
+        theColor = theInput.value;
+        //alert(theColor);
+    },false);
+    
+
+    $('#text').on('keyup',function(e){
+        //e.preventDefault();
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          //e.preventDefault();
+          var fonttype = $('#fonttype').find(":selected").text();
+          var fontsize = $('#fontsize').find(":selected").text();
+          //var c='';
+      
+          if(fonttype==undefined && fontsize==undefined){
+            alert("please select font type and size");
+            return;
+          }
+          if(fonttype==""&& fontsize==""){
+            alert("please select font type and size");
+            return;
+          }
+          var textv=$(this).val();
+         // alert(textv);
+          appendDraggableImage(textv,[100,100],'text',fonttype,fontsize);
+          $(this).val('');
+
+        }
+    });
+    $('#canname').on('keyup',function(e){
+        //e.preventDefault();
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          //e.preventDefault();
+          var fonttype = $('#fonttype').find(":selected").text();
+          var fontsize = $('#fontsize').find(":selected").text();
+          //var c='';
+      
+          if(fonttype==undefined && fontsize==undefined){
+            alert("please select font type and size");
+            return;
+          }
+          if(fonttype==""&& fontsize==""){
+            alert("please select font type and size");
+            return;
+          }
+          var textv=$(this).val();
+         // alert(textv);
+          appendDraggableImage(textv,[100,100],'canname',fonttype,fontsize);
+        }
+    });
+
+
+  </script>
+
+
+  <script>
+
+    var id = "{{ obj.id }}";
+    console.log(id);
+    //var height = $('.certificate').attr("height");
+    //var width = $('.certificate').attr("width");
+    var zoom = d3.zoom();
+
+    var svg = d3.select("div.certificate").append("svg")
+    .attr("width", "780px")
+    .attr("height", "580px")
+    
+      var image = {
+        size: 150
+      }
+    
+      var defs = svg.append("defs");
+
+
+    // if(id)
+    // {
+        
+    //     var svg=d3.select("svg");
+    //     //console.log(svg);
+    // }
+    // else
+    // {
+    //   var svg = d3.select("div.certificate").append("svg")
+    //   .attr("width", "780px")
+    //   .attr("height", "580px")
+    
+    //   var image = {
+    //     size: 150
+    //   }
+    
+    //   var defs = svg.append("defs");
+    // }
+    
+    // var clipPath = defs.append("clipPath")
+    //   .attr("id", "clip")
+    //   .append("circle")
+    //   .attr("cx", image.size / 2)
+    //   .attr("cy", image.size / 2)
+    //   .attr("r", image.size / 2);
+    
+    // var glow = defs.append("filter")
+    //   .attr("id", "glow");
+
+
+    // glow.append("feGaussianBlur")
+    //   .attr("class", "blur")
+    //   .attr("stdDeviation", 3.5)
+    //   .attr("result","coloredBlur");
+    
+    // var feMergeGlow = glow.append("feMerge");
+    // feMergeGlow.append("feMergeNode")
+    //   .attr("in","coloredBlur");
+    // feMergeGlow.append("feMergeNode")
+    //   .attr("in","SourceGraphic");
+    
+  function appendDraggableImage(url, position,is_background,fonttype,fontsize)
+    {
+      var imageGroup = svg.append("g")
+        .datum({position: position})
+        .attr("transform", d => "translate(" + d.position + ")");
+
+        if(is_background=="text")
+        {
+         //alert(position);
+        }
+       //alert("fjfjff");
+         clsbtn1 = new d3CloseButton();
+         var size=100;
+         //clsbtn1.size(30).isCircle(true).borderStrokeWidth(3).crossStrokeWidth(5);
+
+     
+
+      //alert(is_background);
+      if(is_background==false)
+      {
+        //var imageELEM = imageGroup.append("div").css({position:position});
+        var imageElem = imageGroup.append("image")
+        .attr("xlink:href", url)
+        .attr("height", image.size)
+        .attr("width", image.size);
+        //imageELEM.append("div").attr("class","resizer top-left");
+       // imageELEM.append("div").attr("class","resizer top-right");
+       // imageELEM.append("div").attr("class","resizer bottom-left");
+       // imageELEM.append("div").attr("class","resizer bottom-right");
+        //.attr("class","top-left top-right bottom-left bottom-right")
+        //.attr("clip-path", "url(#clip)");
+      }
+      else if(is_background == true){
+        //alert("going to here")
+        var imageElem = imageGroup.append("image")
+        .attr("xlink:href", url)
+        .attr("height","570")
+        .attr("width", "770")
+        .attr("background",true)
+        //.attr("clip-path", "url(#clip)");
+      }
+      else if(is_background =='text')
+      {
+          fontsize = fontsize+"px";
+          var theInput = document.getElementById("favcolor");
+          var color = theInput.value;
+          //alert(color);
+          //alert(typeof(color));
+          var fontstyle = $('#fontstyle').find(":selected").val();   
+        
+        imageGroup.append("text").style("font-size",fontsize).style('fill',color).style("font-weight",fontstyle).style('font-family',fonttype).text(url).attr("text-anchor","start").style('alignment-baseline', 'hanging');
+          function type(d) {
+            return d;
+          }
+
+      }
+      else if(is_background =='canname')
+      {
+          fontsize = fontsize+"px";
+          var theInput = document.getElementById("favcolor");
+          var color = theInput.value;
+          var fontstyle = $('#fontstyle').find(":selected").val();
+          imageGroup.append("text").style("font-size",fontsize).
+          style('fill',color).style("font-weight",fontstyle).
+          style('font-family','Times New Roman').text(url).attr("id","candidatename").
+          attr("text-anchor","start").style('alignment-baseline', 'hanging');
+          // function type(d) {
+          //   return d;
+          // }
+
+      }
+        imageGroup.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+      
+      //selection.call(d3.zoom().on("zoom", zoomed));
+
+      var zoom = d3.zoom().scaleExtent([0.5, 8]).on("zoom", zoomed);
+      
+      // imageGroup.call(d3.zoom().on('zoom',e=>{ 
+      //       console.log("djfndefnjden");
+      // }));
+
+      imageGroup.call(zoom);
+
+
+
+      imageGroup.each(function (d,i) {
+          var g = d3.select(this);
+          //console.log(d.position[0]);
+          //g.attr("d",{})
+          clsbtn1.x(d.position[0]/12).y(3).isCircle(true).clickEvent(function(){ g.remove(); });
+          g.call(clsbtn1);
+      });
+
+
+      
+    }
+    
+    function dragstarted(d) 
+    {
+//       d3.select(this).raise();    
+//       d3.select(this).select(".circle-outline")
+//        .transition()
+//        .attr("r", 1 + image.size / 3);
+//       d3.select(this).select(".circle-fill")
+//        .transition()
+//        .attr("r", 1 + image.size / 3);
+//       d3.select(this).select("image")
+//        .attr("x", image.size / 6)
+//        .attr("y", image.size / 6)
+//        .attr("height", image.size * 2 / 3)
+//         .attr("width", image.size * 2 / 3)
+//       clipPath.attr("r", image.size / 3)
+    }
+    function zoomed(){
+      //console.log("succc");
+      // parent.select("svg").attr("transform", d3.event.transform);
+      //console.log(d.transform);
+    }
+    
+    function dragged(d) 
+    {
+      var newX = d3.event.x - image.size / 2,
+          newY = d3.event.y - image.size / 2; 
+      
+      d3.select(this)
+        .attr("transform", "translate(" + (d.position = [newX, newY]) + ")");
+    }
+    
+    function dragended(d) {
+      d3.select(this).lower();
+      
+    }
+
+
+
+    $('#submit_ajax').click(function(event){
+           event.preventDefault();
+           var noc=$('#id_no_of_candidates').val();
+            if(noc!==''){
+              if(noc <= 1){
+                alert("no of candidate either will be blank or greater than 1");
+                return;
+              }
+            }
+
+            var pass= $('#id_password').val();
+            var pass_again = $('#id_password_again').val();
+            if(pass==''){
+              alert("Password can not be blank");
+              return;
+            } 
+            if(pass!=pass_again){
+              alert("Password and password again field value should match");
+              return;
+
+            }
+           //d3.selectAll("#crossline").remove();
+           //d3.selectAll("#crossbutton").remove();
+
+          var gi=document.getElementById("certificate_upper");
+          var div=document.createElement('div')
+          div.style.display="none";
+          document.body.appendChild(div);
+        //alert(gi);
+        //alert(gi.getRootNode());
+          html2canvas(gi).then( 
+                function (canvas) { 
+                  //document.getElementById('output').appendChild(canvas); 
+                    alert("checking ...");
+                    div.appendChild(canvas);
+                    var imgData = canvas.toDataURL('image/png');
+                    //  $.ajax({
+                    //     url :'{% url "customadmin:save_org_cer_img" %}',
+                    //     type:'post',
+                    //     data:{'image':imgData},
+                    //     success:function(data){
+                    //       alert(data);
+                    //     }
+                    // });
+                    var doc = new jsPDF('p','mm','a4');
+                    doc.addImage(imgData, 'PNG', 0, 0);
+                    doc.save('certificate.pdf');
+        });
+          //var certificate = document.getElementById("id_certificate");
+          $('#id_certificate').val($("#certificate_upper").clone().html());
+          // var organization_name=$('#id_organization_navame').val();
+          // var person_name = $('#person_name').val();
+          // var person_email = $('#person_email').val();
+          // var person_phone = $('#id_password').val();
+
+          $('#form_org').submit();
+
+          // $.ajax({
+          //   type:'post',
+          //   url:"{% url 'customadmin:create_organization' %}",
+          //   data:{""},
+          //   success:function(msg){
+
+          //   }
+          // })
+
+    });
+
+    
+
+
+
+  function d3CloseButton () {
+
+    var size = 20,
+        x = 0,
+        y = 0,
+        rx = 0,
+        ry = 0,
+        isCircle = false,
+        isBorderShown = true,
+        borderStrokeWidth = 1.5,
+        crossStrokeWidth = 1.5,
+        g,
+        event;
+
+    function button (selection) {
+
+        //Styling for the border of the button
+        var buttonStyle = {
+                "fill-opacity": 0,
+                "stroke-width": borderStrokeWidth,
+                "stroke": (isBorderShown)? "none" : "black" },
+        //for the cross
+            crossStyle = {
+                "stroke-width": crossStrokeWidth,
+                "stroke": "black"
+            },
+            r = size / 2,
+            ofs = size / 6,
+            cross;
+
+        g = selection.append("g").on("click", event);
+        cross = g.append("g");
+
+        if (isCircle) 
+        {
+            g.append("circle")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", r).attr("id","crossbutton")
+                .style("fill-opacity",0).
+                style("stroke-width",1.5).style("stroke","none");
+
+            cross.append("line")
+                .attr("x1", x - r + ofs)
+                .attr("y1", y)
+                .attr("x2", x + r - ofs)
+                .attr("y2", y).attr("id","crossline");
+
+            cross.append("line")
+                .attr("x1", x)
+                .attr("y1", y - r + ofs)
+                .attr("x2", x)
+                .attr("y2", y + r - ofs).attr("id","crossline");
+
+            // // Make '+' to 'x'
+            cross.attr("transform", "rotate (45," + x + "," + y + ")");
+            console.log(cross);
+
+        } 
+        else 
+        {
+            g.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("rx", rx)
+                .attr("ry", ry)
+                .attr("width", size)
+                .attr("height", size)
+                .style(buttonStyle);
+
+            cross.append("line")
+                .attr("x1", x + ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", (x + size) - ofs)
+                .attr("y2", (y + size) - ofs);
+
+            cross.append("line")
+                .attr("x1", (x + size) - ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", x + ofs)
+                .attr("y2", (y + size) - ofs);
+        }
+
+        cross.style("stroke-width",1.5).style("stroke","black");
+
+    }
+
+    button.x = function (val) {
+        x = val;
+        return button;
+    }
+
+    button.y = function (val) {
+        y = val;
+        return button;
+    }
+
+    button.size = function (val) {
+        size = val;
+        return button;
+    }
+
+    button.rx = function (val) {
+        rx = val;
+        return button;
+    }
+
+    button.ry = function (val) {
+        ry = val;
+        return button;
+    }
+
+    button.borderStrokeWidth = function (val) {
+        borderStrokeWidth = val;
+        return button;
+    }
+
+    button.crossStrokeWidth = function (val) {
+        crossStrokeWidth = val;
+        return button;
+    }
+
+    //If true, the border of the button becomes a circle instead of a rectangle
+    button.isCircle = function (val) {
+        isCircle = val;
+        return button;
+    }
+
+    button.isBorderShown = function (val) {
+        isBorderShown = val;
+        return button;
+    }
+
+    button.clickEvent = function (val) {
+        event = val;
+        return button;
+    }
+
+    //Remove the whole button if one already exists
+    button.remove = function () 
+    {
+        if (g) 
+        {
+            g.remove();
+            g = undefined;
+        }
+        return button;
+    }
+
+    return button;
+  }
+    
+  </script>
+
+
+  
+  <!-- <script src='dist/jspdf.min.js' type='text/javascript'></script> -->
+
+    <script src= 
+"https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"> 
+    </script> 
+
+                    </div>
+
+
+                     <!--  <div role="tabpanel" class="tab-pane" id="work">
+                      </div>  -->
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+    <script>
+     $('#next-b').click(function()
+     {
+         var sPath=window.location.pathname;
+         var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+         $(".pmd-sidebar-nav").each(function(){
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+              $(this).find("a[href='"+sPage+"']").addClass("active");
+       });      
+    });
+
+
+  
+  
+   </script>
+
+<!-- <script src="{% static 'js/jquery-1.12.2.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/propeller.min.js' %}"></script> -->
+
+</body>
+
+</html>
+
+  {% endblock %}

@@ -1,0 +1,208 @@
+{% extends 'head2.html'%}
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+{% block inner_content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+
+  
+</script>
+
+
+<div class="right_col" role="main">
+
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-dismissible alert-{{ message.tags }}">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="fa fa-close"></i>
+                    </button>
+                    <strong>{{ message }}</strong>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+             <div class="row">
+              <div class="col-md-9 col-sm-9">
+                <div class="x_panel">
+                  <div id="calendar"></div>
+                </div>
+ 
+              </div> 
+                
+             <div class="col-md-3 col-sm-3">
+              <div class="up_comimg">
+                     <p>Upcoming Session</p>
+                   </div>
+                <div class="panel-up">
+                 <div class="dashboard-card upcoming1" id="upcoming0" style="display:none">
+            <span class="title title00">Labour law</span>
+            <span class="title1 title01">Prof Siddartha shu.....</span>
+            <span class="title-p title02">ipsum dolor sit amet,consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.</span>
+            <span class="value date0">15-Dec 2020<span style="padding: 20px;">9:30 AM</span></span>
+            <div style="text-align: center;"><label class="btn btn_calender">
+            <span>Start Session</span>
+           </label></div>
+        </div>
+        <div class="dashboard-card upcoming2" id="upcoming1" style="display:none">
+             <span class="title title10">Labour law</span>
+            <span class="title1 title11">Prof Siddartha shu.....</span>
+            <span class="title-p title13">ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.</span>
+            <span class="value date1">15-Dec 2020<span style="padding: 20px;">9:30 AM</span></span>
+            <div style="text-align: center;"><label class="btn btn_calender1">
+            <span>Start Session</span>
+            </label></div>
+        </div>
+              </div>
+            </div>
+                </div><!-- /row 1 -->
+              
+
+
+
+
+            </div>
+
+
+{% endblock %}
+
+
+{% block inpage_script %}
+<link href="{% static 'main.css' %}" rel='stylesheet' />
+<script src="{% static 'main.js' %}"></script>
+<script>
+
+
+  function goto(url){
+    window.location.href=url;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    /* initialize the external events
+    -----------------------------------------------------------------*/
+
+    // var containerEl = document.getElementById('external-events-list');
+    // new FullCalendar.Draggable(containerEl, {
+    //   itemSelector: '.fc-event',
+    //   eventData: function(eventEl) {
+    //     return {
+    //       title: eventEl.innerText.trim()
+    //     }
+    //   }
+    // });
+
+    //// the individual way to do it
+    // var containerEl = document.getElementById('external-events-list');
+    // var eventEls = Array.prototype.slice.call(
+    //   containerEl.querySelectorAll('.fc-event')
+    // );
+    // eventEls.forEach(function(eventEl) {
+    //   new FullCalendar.Draggable(eventEl, {
+    //     eventData: {
+    //       title: eventEl.innerText.trim(),
+    //     }
+    //   });
+    // });
+
+    /* initialize the calendar
+    -----------------------------------------------------------------*/
+
+    var calendarEl = document.getElementById('calendar');
+    var calendar_events=[]
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      timezone:'local',
+      //themeSystem: 'bootstrap',
+      customButtons: {
+        reload: {
+            text: 'Create Event',
+            click: function() {
+              window.location.href="{% url 'customadmin:schedule_session' %}";
+            }
+        }
+      },
+      headerToolbar: {
+        //center: 'prev,next,title',
+        center: 'prev,next',
+        right:'reload',
+        //right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        left: 'dayGridMonth,timeGridWeek,listWeek'
+      },
+      events: {
+          url: '{% url "customadmin:schedule_session" %}?upcoming_session=true',
+          method: 'GET',
+          // extraParams: {
+          //   custom_param1: 'something',
+          //   custom_param2: 'somethingelse'
+          // },
+          failure: function() {
+            alert('there was an error while fetching events!');
+          },
+          color: 'blue',   // a non-ajax option
+          textColor: 'black' // a non-ajax option
+      },
+      // events: [
+      //   {
+      //     "title": 'Event1',
+      //     "start": '2021-01-20'
+      //   }
+      // ],
+      //events:calendar_events,
+      eventColor: '#378006',
+      eventBackgroundColor :'#f00',
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar
+      drop: function(arg) {
+        // is the "remove after drop" checkbox checked?
+        if (document.getElementById('drop-remove').checked) {
+          // if so, remove the element from the "Draggable Events" list
+          arg.draggedEl.parentNode.removeChild(arg.draggedEl);
+        }
+      }
+    });
+    calendar.render();
+
+  });
+
+</script>
+
+<script>
+        $(document).ready(function(){
+          $.ajax({
+            url:'{% url "customadmin:schedule_session" %}?upcoming_session=true',
+            type:'get',
+            success:function(data){
+              console.log(data);
+              var sd=JSON.parse(data);
+              //var str='<ul>';
+              var i=0;
+              for (i=0;i<sd.length;i++){
+                  $('#upcoming'+i).show();
+                  $('.title'+i+'0').text(sd[i].title);
+                   $('.title'+i+'1').text(sd[i].teacher);
+                   $('.title'+i+'2').text(sd[i].description);
+                   $('.date'+i).text(sd[i].start);
+                 //str+='<li>'+sd[i].title+'<br/>'+sd[i].start+'</li>';
+              }
+              //str+='</ul>';
+              //alert(str);
+              //alert(str);
+              document.getElementById('upcoming').innerHTML=str;
+              
+            }
+          });
+        });
+        
+</script>
+{% endblock %}

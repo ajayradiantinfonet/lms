@@ -1,0 +1,147 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Apprentissage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+	<link href="{% static 'user_lms/bootstrap-4/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/owl-carousel/owl.carousel.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/owl-carousel/owl.theme.default.min.css' %}" rel="stylesheet">
+	<link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
+	<link href="{% static 'user_lms/css/style.css' %}?{% now 'U' %}" rel="stylesheet">
+	<style type="text/css">
+		.owl-theme .owl-dots .owl-dot span{
+			width:30px;
+			background: #fff;
+			border:1px solid #28a745;
+		}
+
+		.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
+			background: #28a745;
+		}
+	</style>
+	<script type="text/javascript">
+		function refToLink(link){
+			window.location.href = link;
+		}
+	</script>
+</head>
+<body>
+	<div class="section-apprentissage-header" style="position: fixed; background: #fff; width: 100%;top:0px; z-index: 9999;">
+		<nav class="navbar navbar-expand-lg navbar-light nav-box">
+		  
+		<a class="navbar-brand ml-5" href="{% url 'userlms:home' %}">
+        {% if not user.is_superuser %}
+        	{% if user.user_info.organization.logo %}
+           	<img src="{{ user.user_info.organization.logo.url }}" width="120px" height="40px" alt="LMS"/>
+            
+            {% else %}
+            	 <img style="height: 40px;" src="{% static 'user_lms/img/Apprentissage-Logo.png' %}" width="120px" height="40px" alt="LMS"/> 
+            {% endif %}
+            {% else %}
+              <img style="height: 40px;" src="{% static 'user_lms/img/Apprentissage-Logo.png' %}" width="120px" height="40px" alt="LMS"/>
+        {% endif %}
+        
+
+        </a>
+
+        {% if user.user_info.organization.show_second_logo %}
+        <a class="navbar-brand ml-5" href="{% url 'userlms:home' %}" class="navbar-brand">
+         	{% if user.user_info.organization.logo1.url %}
+                <img style="height: 40px;" src="{{ user.user_info.organization.logo1.url }}" width="120px" height="40px" alt="LMS"/>
+            {% endif %}
+         
+
+        </a>
+        {% endif %}
+
+
+		  <!-- <a class="navbar-brand ml-5" href="https://apprentissage.in/">
+		  	<img style="height: 40px;" 
+		  	src="{% static 'user_lms/img/Apprentissage-Logo.png' %}"/></a> -->
+
+
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		  	
+		    
+		    <div class="ml-auto mr-5">
+			    <ul class="navbar-nav">
+			    	{% if sess.login == True %}
+			    		<li class="dropdown nav-item active wd-full fs-13-lg">
+					        <a class="dropdown-toggle nav-dd-item nav-link" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					        	<img alt="Profile Image" src="https://apprentissage.in/media/course_images/RSA.png" style="border-radius: 50%;width: 40px; height: 40px;">
+				    			<span class="fs-13 ml-3 pt-2">Profile</span>
+				    		</a>
+		        			<div class="dropdown-menu fs-13" aria-labelledby="navbarDropdownProfile">
+	        					<div class="px-3 py-1"><i class="far fa-user cta-color" aria-hidden="true" style="width:30px"></i> Profile</div>
+	        					<div class="px-3 py-1"><i class="far fa-file-video cta-color" aria-hidden="true" style="width:30px"></i> My Courses</div>
+	        					<div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Wishlist</div>
+	        					<div class="px-3 py-1"><i class="far fa-bookmark cta-color" aria-hidden="true" style="width:30px"></i> Grade</div>
+	        					<div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Certificate</div>
+	        					<div class="px-3 py-1"><i class="far fa-comments cta-color" aria-hidden="true" style="width:30px"></i> Chat</div>
+	        					<div class="px-3 py-1"><i class="far fa-question-circle cta-color" aria-hidden="true" style="width:30px"></i> FAQ</div>
+	        					<div class="px-3 py-1"><i class="fa fa-phone cta-color" aria-hidden="true" style="width:30px"></i> Contact Us</div>
+	        					<div class="px-3 py-1"><i class="fa fa-sign-out-alt cta-color" aria-hidden="true" style="width:30px"></i> Logout</div>
+		        			</div>
+					    </li>
+					    
+					    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-15-lg fw-800">
+					        <a class="nav-link" href="#">
+					        	<i class="far fa-bell cta-color" aria-hidden="true"></i>
+					        </a>
+					    </li>
+					{% else %}
+				    	
+					    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 pl-lg-x20-sm-5 fs-13-lg">
+
+
+					        {% if not user.is_anonymous %}
+				        <button class="login-btn py-1 fs-13" 
+				        onclick="refToLink('{% url "accounts:logout" %}')">
+				        	Logout
+				    	</button>
+				        {% else %}
+				        <!-- refToLink('https://learning.apprentissage.in/login/index.php') -->
+				    <button class="login-btn py-1 fs-13" 
+						onclick="refToLink('{% url "accounts:login" %}')">
+				        Login</button>
+				        {% endif %}
+					    </li>
+					    <!-- <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-13-lg">
+					        <button class="signup-btn py-1 fs-13" onclick="refToLink('{% url "userlms:my" %}')">Dashboard</button>
+					    </li> -->
+				    {% endif %}
+			    </ul>
+			</div>
+		  </div>
+		</nav>
+	</div>
+	<div class="my-3" style="min-height: 40px;"></div>
+	<div class="clearfix"></div>
+
+
+	
+{% block course_details %}
+
+{% endblock %}
+
+
+
+
+
+<!-- {% include 'user_lms/footer.html' %} -->
+
+{% block inpage_script %}
+
+{% endblock %}
+</body>
+</html>

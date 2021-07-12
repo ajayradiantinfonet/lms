@@ -1,0 +1,77 @@
+{% extends 'head1.html'%}
+        
+{% block content %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+  
+
+
+
+<h1 class="section-title" id="services">
+    <span>{{desc}}</span>
+</h1>
+
+    
+<ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+</ol><!--breadcrum end-->
+
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<section class="row component-section">
+
+      <div class=" col-md-12">
+
+        <div class="section section-custom billinfo"> 
+
+      <div class="pmd-card pmd-z-depth">
+
+
+        <div class="pmd-card-body"> 
+        <!-- left column -->
+        
+          <!-- general form elements -->
+         <!--  <div class="box box-primary">
+            <div class="box-header with-border">
+              
+            </div> -->
+            <!-- /.box-header -->
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}<br/>
+
+                <input class="btn btn-primary" type="submit" value="Submit" />
+            </form>
+
+          <!-- </div>
+          
+      </div> -->
+  </div>
+</div>
+</div>
+</div>
+
+</section>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.selectbox').select2();
+});
+</script>
+{% endblock %}

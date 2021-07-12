@@ -1,0 +1,329 @@
+{% extends 'head1.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{{ idx | json_script:'idx' }}
+
+{{ room_id | json_script:'room_id'}}
+
+{{ userFullName | json_script:'userFullName' }}
+
+{{ isTeacher | json_script:'isTeacher' }}
+<!-- $idx = "dsjhcgdskjfc";
+	//create string using Activity name + course name + course id
+	//$roomIdStr = $moduleinstance->name.$course->fullname.$cm->id;
+	$roomIdStr = "ndnbgfdashgnfsdfmgdvjdfagdnkjv";
+	$room_id = strtolower(str_replace(' ', '', $roomIdStr));//unique_id($l = 8).rand(10000,99999);
+
+	$userFullName = "zubair"; -->
+<!-- <div id="confirm-box-topper" style="display:none;z-index:99999999;top:0;left:0;bottom:0;right:0;width:100%;height:100%;position:fixed;background:#000000ad;"></div> -->
+
+<script src="{% static 'core-mod/js/jquery-3.5.1.slim.min.js' %}"></script>
+  <script src="{% static 'core-mod/js/popper.min.js' %}"></script>
+  <!-- <script src="{% static 'core-mod/js/bootstrap.min.js' %}"></script> -->
+  <script src="{% static 'core-mod/js/socket.io.js' %}"></script>
+<script src="{% static 'core-mod/dist/RTCMultiConnection.min.js' %}"></script>
+
+
+
+<div style='text-align:center;'>
+		<div style='padding:10px;'>
+			<h3>Text set_heading</h3>
+		</div>
+		<div style='padding:10px;'>
+			<img class='img-responsive' src='pix/icon.jpg'/>
+		</div>
+		<div style='padding:5px;'>
+			<button class='btn btn-success' id='btn-create-classroom'>Join Class</button>
+		</div>
+	</div>
+
+
+  <div id="alert-box" class="modal fade" style="display:none;z-index:999999999999999;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alert-title">Alert</h5>
+                        <button type="button" class="close btn-alert-close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="alert-message" class="model-list"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <p id="alert-special"></p>
+                        <button class="btn btn-primary btn-alert-close">Close</button>
+                    </div>
+                </div>
+            </div>
+  </div>
+
+  <div id="confirm-box" class="modal fade" style="display:none;z-index:999999999999999;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirm-title">Please Confirm</h5>
+                        <button type="button" class="close btn-confirm-close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="confirm-message" class="modal-body"></div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-confirm-close" id="btn-confirm-close">Cancel</button>
+                        <button class="btn btn-primary" id="btn-confirm-action">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script type="text/javascript">
+
+		var room_id=JSON.parse(document.getElementById('room_id').textContent);
+		var userFullName=JSON.parse(document.getElementById('userFullName').textContent);
+		var idx=JSON.parse(document.getElementById('idx').textContent);
+		var isTeacher = JSON.parse(document.getElementById('isTeacher').textContent);
+		console.log(room_id);
+
+		localStorage.setItem('canvas-designer-roomid',room_id);
+		localStorage.setItem('canvas-designer-user-full-name',userFullName);
+		
+		var publicRoomIdentifier = 'apprentisage_talentovcr';
+
+		var connection = new RTCMultiConnection();
+
+		connection.socketURL = 'https://wss.echel.in:8020/';
+		// connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+
+		/// make this room public
+		connection.publicRoomIdentifier = publicRoomIdentifier;
+		connection.socketMessageEvent = publicRoomIdentifier;
+
+		// keep room opened even if owner leaves
+		connection.autoCloseEntireSession = true;
+
+		connection.connectSocket(function(socket) {
+		    //looper();
+
+		    socket.on('disconnect', function() {
+		        location.reload();
+		    });
+		});
+
+	function looper() {
+	    if (!$('#rooms-list').length) return;
+	    connection.socket.emit('get-public-rooms', publicRoomIdentifier, function(listOfRooms) {
+	        updateListOfRooms(listOfRooms);
+
+	        setTimeout(looper, 3000);
+	    });
+	}
+
+
+	function updateListOfRooms(rooms) {
+	    $('#active-rooms').html(rooms.length);
+
+	    $('#rooms-list').html('');
+
+	    if (!rooms.length) {
+	        $('#rooms-list').html('<tr><td colspan=9>No active room found for this demo.</td></tr>');
+	        return;
+	    }
+
+	    rooms.forEach(function(room, idx) {
+	        var tr = document.createElement('tr');
+	        var html = '';
+	        if(!room.isPasswordProtected) {
+	          html += '<td>' + (idx + 1) + '</td>';
+	        }
+	        else {
+	          html += '<td>' + (idx + 1) + ' <img src="https://www.webrtc-experiment.com/images/password-protected.png" style="height: 15px; vertical-align: middle;" title="Password Protected Room"></td>';
+	        }
+
+	        html += '<td><span class="max-width" title="' + room.sessionid + '">' + room.sessionid + '</span></td>';
+	        html += '<td><span class="max-width" title="' + room.owner + '">' + room.owner + '</span></td>';
+
+	        html += '<td>';
+	        Object.keys(room.session || {}).forEach(function(key) {
+	            html += '<pre><b>' + key + ':</b> ' + room.session[key] + '</pre>';
+	        });
+	        html += '</td>';
+
+	        html += '<td><span class="max-width" title="' + JSON.stringify(room.extra || {}).replace(/"/g, '`') + '">' + JSON.stringify(room.extra || {}) + '</span></td>';
+
+	        html += '<td>';
+	        room.participants.forEach(function(pid) {
+	            html += '<span class="userinfo"><span class="max-width" title="' + pid + '">' + pid + '</span></span><br>';
+	        });
+	        html += '</td>';
+
+	        // check if room is full
+	        if(room.isRoomFull) {
+	          // room.participants.length >= room.maxParticipantsAllowed
+	          html += '<td><span style="border-bottom: 1px dotted red; color: red;">Room is full</span></td>';
+	        }
+	        else {
+	          html += '<td><button class="btn join-room" data-roomid="' + room.sessionid + '" data-password-protected="' + (room.isPasswordProtected === true ? 'true' : 'false') +'">Join</button></td>';
+	        }
+	        
+	        $(tr).html(html);
+	        $('#rooms-list').append(tr);
+
+	        $(tr).find('.join-room').click(function() {
+	            $(tr).find('.join-room').prop('disabled', true);
+
+	            var roomid = $(this).attr('data-roomid');
+	            $('#txt-roomid-hidden').val(roomid);
+
+	            $('#btn-show-join-hidden-room').click();
+
+	            if($(this).attr('data-password-protected') === 'true') {
+	              $('#txt-room-password-hidden').parent().show();
+	            }
+	            else {
+	              $('#txt-room-password-hidden').parent().hide();
+	            }
+
+	            $(tr).find('.join-room').prop('disabled', false);
+	        });
+	    });
+	}
+
+	function alertBox(message, title, specialMessage, callback) {
+	    callback = callback || function() {};
+
+	    $('.btn-alert-close').unbind('click').bind('click', function(e) {
+	        e.preventDefault();
+	        $('#alert-box').modal('hide');
+	        //$('#confirm-box-topper').hide();
+
+	        callback();
+	    });
+
+	    $('#alert-title').html(title || 'Alert');
+	    $('#alert-special').html(specialMessage || '');
+	    $('#alert-message').html(message);
+	    //$('#confirm-box-topper').show();
+
+	    $('#alert-box').modal({
+	        backdrop: 'static',
+	        keyboard: false
+	    });
+	}
+
+	function confirmBox(message, callback) {
+	    $('#btn-confirm-action').html('Confirm').unbind('click').bind('click', function(e) {
+	        e.preventDefault();
+	        $('#confirm-box').modal('hide');
+	        //$('#confirm-box-topper').hide();
+	        callback(true);
+	    });
+
+	    $('#btn-confirm-close').html('Cancel');
+
+	    $('.btn-confirm-close').unbind('click').bind('click', function(e) {
+	        e.preventDefault();
+	        $('#confirm-box').modal('hide');
+	        //$('#confirm-box-topper').hide();
+	        callback(false);
+	    });
+
+	    $('#confirm-message').html(message);
+	    $('#confirm-title').html('Please Confirm');
+	    //$('#confirm-box-topper').show();
+
+	    $('#confirm-box').modal({
+	        backdrop: 'static',
+	        keyboard: false
+	    });
+	}
+
+	function openCanvasDesigner() {
+	    //$('#startRoomModel').modal('hide');
+	    //connection.isInitiator = joinstate;
+	    // var href = './' + 'talentovcr-clsrm.php?id='+idx+'&open=' + connection.isInitiator + '&sessionid=' + connection.sessionid + '&publicRoomIdentifier=' + connection.publicRoomIdentifier + '&userFullName=' + connection.extra.userFullName;
+
+	    var href='/customadmin/'+'classroom?id='+idx+'&open=' +isTeacher + '&sessionid=' +room_id + '&publicRoomIdentifier=' + publicRoomIdentifier + '&userFullName=' + userFullName;
+
+	    
+	    if(!!connection.password) {
+	      href += '&password=' + connection.password;
+	    }
+
+	    var newWin = window.open(href);
+	    if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+	        var html = '';
+	        html += '<p>Please click following link:</p>';
+	        html += '<p><a href="' + href + '" target="_blank">';
+	        if(connection.isInitiator) {
+	          html += 'Click To Open The Room';
+	        }
+	        else {
+	          html += 'Click To Join The Room';
+	        }
+	        html += '</a></p>';
+	        alertBox(html, 'Popups Are Blocked');
+	    }
+	}
+
+
+	$(document).ready(function(){
+		$('#btn-create-classroom').click(function() {
+		    //var roomid = "<?= $room_id;?>";//$('#txt-roomid').val().toString();
+		    var roomid=room_id;
+		    if (!roomid || !roomid.replace(/ /g, '').length) {
+		        alertBox('Please enter room-id.', 'Room ID Is Required');
+		        return;
+		    }
+
+		    //var fullName = '<?= $userFullName;?>';//$('#txt-user-name').val().toString();
+		    var fullName = userFullName;
+		    if (!fullName || !fullName.replace(/ /g, '').length) {
+		        alertBox('Please enter your name.', 'Your Name Is Required');
+		        return;
+		    }
+
+		    connection.extra.userFullName = fullName;
+
+		    if($('#chk-room-password').prop('checked') === true){
+		      var roomPassword = $('#txt-room-password').val().toString();
+		      if (!roomPassword || !roomPassword.replace(/ /g, '').length) {
+		          alertBox('Please enter room password.', 'Password Box Is Empty');
+		          return;
+		      }
+
+		      connection.password = roomPassword;
+		    }    
+
+		    var initialHTML = $('#btn-create-room').html();
+
+		    $('#btn-create-room').html('Please wait...').prop('disabled', true);
+		    var isRoomInitiator = true;
+		    connection.checkPresence(roomid, function(isRoomExist) {
+		        if (isRoomExist === true) {
+		            isRoomInitiator = false;
+		            //return;
+		        }
+
+		        if ($('#chk-hidden-room').prop('checked') === true) {
+		            // either make it unique!
+		            // connection.publicRoomIdentifier = connection.token() + connection.token();
+
+		            // or set an empty value (recommended)
+		            connection.publicRoomIdentifier = '';
+		        }
+
+		        connection.sessionid = roomid;
+		        connection.isInitiator = isTeacher;
+		        openCanvasDesigner();
+		        $('#btn-create-room').html(initialHTML).prop('disabled', false);
+		    });
+		});
+	});
+</script>
+
+{% endblock %}

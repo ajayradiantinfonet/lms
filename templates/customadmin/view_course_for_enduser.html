@@ -1,0 +1,375 @@
+{% extends 'head2.html'%}
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+{% block inner_content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+
+
+
+
+<style>
+
+  .form-control{
+      font-size:15px;
+      
+      padding:2px;
+  }
+      @media only screen and (min-width:1030px) and (max-width:1366px) {
+    .btn_add1 {
+    width: 85px;
+    font-size: 9px;
+}
+  
+
+}
+     
+        .panel-heading a:before {
+          font-family: 'FontAwesome';
+          content: "\f078";
+          float: left;
+          transition: all 0.5s;}
+          .panel-heading.active a:before {
+          -webkit-transform: rotate(
+      180deg
+      );
+          -moz-transform: rotate(180deg);
+      transform: rotate(180deg);
+      }
+  
+</style>
+
+<div class="right_col" role="main">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-dismissible alert-{{ message.tags }}">
+          <button type="button" class="close" data-dismiss="alert">
+              <i class="fa fa-close"></i>
+          </button>
+          <strong>{{ message }}</strong>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+
+  <div class="row">
+    <div class="col-md-12 col-sm-12 ">
+      <div class="dashboard_graph border_radius">
+        <div class="col-md-6 col-sm-6 border_radius1">
+          <h2>Courses</h2>
+        </div>
+        <div class="col-md-6 col-sm-6 left-courses border_radius1">
+          <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+          <p>Courses<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+          <p>View Course<i></i></p>
+        </div>     
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+       <!--row 2  -->
+  <div class="row">
+    <div class="col-md-12 col-sm-12 ">
+      <div class="x_panel ">
+                   <!-- add skill -->
+        <div class="x_title table_head">
+          <h2 class="head-tag1" style="font-size: 20px;">{{ course_obj.name }}</h2>
+
+          <!-- <p style="float:right;">
+            <img src="{% static 'boimage/edit.svg' %}" class="edit_course"
+             obj_id="{{ course_obj.id }}" style="height: 25px;" alt="" />
+             <img src="{% static 'boimage/delete.svg' %}" 
+             obj_id="{{ course_obj.id }}" class="delete_course"  style="height: 25px;"  alt="" />
+          </p> -->
+
+          <ul class="nav navbar-right panel_toolbox">
+                              <li class="td_img-01">
+                                <img src="{% static 'boimage/edit.svg' %}" class="edit_course"
+             obj_id="{{ course_obj.id }}" style="height: 25px;" alt="" />
+             <img src="{% static 'boimage/delete.svg' %}" 
+             obj_id="{{ course_obj.id }}" class="delete_course"  style="height: 25px;"  alt="" />
+                              </li>
+           </ul>
+            <ul class="nav navbar-right panel_toolbox">
+              <li class="td_img-01"><img src="images/edit.svg" alt=""><img src="images/delete.svg" alt=""></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+           <!-- add skill -->
+                  <!-- 1 -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="x_panel left_column1">
+              <h2 class="Head-Tag">About</h2>
+                
+              <div class="x_content left_passage"  style="height:200px;">
+                <p>{{ course_obj.about }}
+                </p>
+              </div>
+            </div>
+
+            <div class="x_panel left_column1" >
+              <h2 class="Head-Tag">Description</h2>
+                    
+              <div class="x_content left_passage"  style="height:200px;" >
+                <p>{{ course_obj.overview }}
+                </p>
+              </div>
+            </div>
+            <div class="x_panel left_column1">
+              <h2 class="Head-Tag">Highlight</h2>
+                  
+              <div class="x_content left_passage" style="height:200px;">
+                <p>{{ course_obj.highlights }}
+                </p>
+              </div>
+            </div>
+          </div><!-- col-8 -->
+                 
+          <div class="col-md-4">
+              
+            <div class="thumb_nail_skill">
+              <img src="{{ course_obj.thumbnail.url }}" alt="">
+            </div>
+                  
+             <!-- category -->
+            <div class="x_panel thumb_nail category_height11">
+              <div class="x_title bg-clr">
+                <h2 class="head-tag">Category</h2>
+                  
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content dropdown_category">
+                {{ course_obj.category }}
+                <!-- <div class="dropdown">
+                  <button id="dLabel" class="dropdown-select dLabel-drop" type="button" aria-haspopup="true" aria-expanded="false">
+                          Select
+                    <span class="caret"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-select" aria-labelledby="dLabel">
+                        <li>Lorem Ipsum</li>
+                        <li>Lorem Ipsum</li>
+                        <li>Lorem Ipsum</li>
+                        <li>Lorem Ipsum</li>
+                        <li>Lorem Ipsum</li>
+                        <li>Lorem Ipsum</li>
+                  </ul>
+                </div> -->
+      
+              </div> 
+            </div>
+             <!-- tags -->
+            <div class="x_panel thumb_nail category_height11">
+                <div class="x_title bg-clr">
+                  <h2 class="head-tag">Tags</h2>
+                  
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content" style='height: 100px;border-bottom: 2px solid #E6E9ED;'>
+
+                  {% for t in course_obj.course_tag.all %}
+                     
+                     <span class="label label-primary" style="background: green;padding:5px;border-radius:2px;color:black;">{{ t }}</span>
+  
+                  {% endfor %}
+                
+                </div>
+<!--                 <div class="x_content">
+
+                 <div class="col-md-9" style='border-right: 2px solid #E6E9ED;'>select</div>
+                    <div class="col-md-3 add-line">Add Tags</div>
+                  
+                </div> -->
+            </div> <!-- /tags -->
+             <!-- shared with -->
+            <div class="x_panel thumb_nail category_height11">
+                <div class="x_title bg-clr">
+                  <h2 class="head-tag">Shared With</h2>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content dropdown_category">
+
+                        {% for obj in shared_org %}
+                          <span class="label label-primary" style="padding:5px;border-radius:2px;color:black; border:2px solid grey">{{ obj }}</span>
+
+                        {% endfor %}
+                        <!-- <div class="dropdown">
+                        <button id="dLabel" class="dropdown-select dLabel-drop" type="button" aria-haspopup="true" aria-expanded="false">
+                          Select
+                          <span class="caret"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                        </button>
+                      <ul class="dropdown-menu dropdown-select" aria-labelledby="dLabel">
+                        <li>Amity University</li>
+                        <li>Manipal University</li>
+                        <li>Amity University</li>
+                        <li>Manipal University</li>
+                         <li>Amity University</li>
+                        <li>Manipal University</li>
+                      </ul>
+                  </div> -->
+      
+                    </div>
+            </div> <!-- /shared with -->
+
+
+          </div>
+        </div>
+                     <!---course content--->
+
+
+        
+      <!--   <div class="row">
+          <div class="col-md-12 col-sm-12 ">
+            {% for topic,subtopic in all_topics.items %}
+            <div class="x_panel ">
+              <div class="col-md-4 over_view"><h2  class="head-tag">{{ topic }}</h2></div>
+                <div class="col-md-4"  style="text-align: center;padding: 5px;">
+                      <label class="btn btn_add1">
+                          <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Video</span>
+                        </label>  
+                         <label class="btn btn_add1">
+                           <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Activity</span>
+                        </label>  
+                </div>
+                <div class="col-md-3 sub_topic"><i class="fa fa-plus-circle" aria-hidden="true"></i><h2>Sub Topic</h2>
+                 </div>
+                <div class="col-md-1 panel-heading" role="tab" id="heading{{forloop.counter}}" style="padding: 10px;font-size: 10px;">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                </a>
+              </div>
+              <div class="clearfix"></div>
+
+              
+              <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}" style="padding: 15px;">
+                {% for sub,ac in subtopic.subtopic.items %}
+                 <div class="col-md-4" style="display: flex;padding: 10px;">
+                  <i class="fa fa-bars"></i>
+                  <p class="topic-size p-size">{{ sub }}</p></div>
+                   <div class="col-md-4"  style="text-align: center;padding: 5px;">
+                      <label class="btn btn_add1">
+                          <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Video</span>
+                        </label>  
+                         <label class="btn btn_add1">
+                           <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Activity</span>
+                        </label>  
+                   </div>
+                    <div class="col-md-4">
+                      <div class="time-input">
+                  <p class="topic-size">Time</p>
+                   <input type="text" id="fullname" class="form-control" name="fullname" required />
+                    <input type="text" id="fullname1" class="form-control" name="fullname" required />
+                   <i class="fa fa-cog cog-img" aria-hidden="true"></i>
+                   <i class="fa fa-ellipsis-v ellipsis-img  box_show">
+                     <ul style="display:none;" class="box_hide box-ul1">
+                      <li>View</li>
+                       <li>Edit</li>
+                        <li>Suspend</li>
+                         <li>Delete</li>
+                    </ul>
+                   </i>
+                 </div>
+                 </div>
+              </div>
+              {% endfor %}
+
+          </div>
+          {% endfor %}
+
+                 </div>
+                  </div> --><!-- /course content -->
+              </div>
+            </div>
+
+      </div><!-- /right col -->
+
+
+
+</div>
+
+
+
+
+
+{% endblock %} 
+
+
+{% block inpage_script %}
+<script src="{% static 'user_lms/js/bootstrap.min.js' %}"></script>
+
+<script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+
+<script type="text/javascript">
+      var about =CKEDITOR.replace('about');
+      about.setData("{{ course_obj.about }}");
+      CKEDITOR.replace('overview').setData("{{ course_obj.overview }}");
+      CKEDITOR.replace('highlights').setData("{{ course_obj.highlights }}");
+  //CKEDITOR.replace('post_achievement').setData("{{ course_obj.post_achievement }}");
+
+    
+
+
+
+</script>
+
+
+<script>
+  $('.edit_course').click(function(){
+      var obj_id=$(this).attr("obj_id");
+      window.location.href="{% url 'customadmin:all_course_user' %}"+obj_id+"/edit/";
+  });
+
+
+
+</script>
+
+
+<script>
+  $('.panel-collapse').on('show.bs.collapse', function () {
+    $(this).siblings('.panel-heading').addClass('active');
+  });
+        // $('.panel-collapse').collapse("hide");
+  $('.panel-collapse').on('hide.bs.collapse', function () {
+    $(this).siblings('.panel-heading').removeClass('active');
+  });
+
+  $(".dLabel-drop").click(function(e){
+    var x = $(this).attr('aria-expanded');
+    if(x == "false"){
+      $(this).parent('.dropdown').addClass('show');
+      $(this).siblings('.dropdown-menu').addClass('show');
+      $(this).attr('aria-expanded', "true");
+      
+    }
+    else{
+      $(this).parent('.dropdown').removeClass('show');
+      $(this).siblings('.dropdown-menu').removeClass('show');
+      $(this).attr('aria-expanded', "false");
+    }
+  });
+
+
+    </script>
+
+
+<script>
+  
+    $(document).ready(function(){
+      $(".box_show").click(function(){
+        $(this).children(".box_hide").toggle();
+      });
+    });
+
+
+</script>
+
+
+
+{% endblock %}

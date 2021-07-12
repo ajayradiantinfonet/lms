@@ -1,0 +1,325 @@
+{% extends 'assesment_header.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+
+{{ allq|json_script:"allquestions" }}
+<!-- {{ alltopics|json_script:"alltopics" }} -->
+
+
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">Configure Spin Activity</li>
+    </ol>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+  {% endif %}
+  
+
+    
+    <div class="page-content profile-edit section-custom">
+      <div class="pmd-card pmd-z-depth">
+        <div class="pmd-card-body">
+          <div class="row">
+            
+            <div class="col-lg-12 col-sm-12 custom-col-12">
+              <!-- <h3 class="heading">Course Info</h3> -->
+
+
+              <div class="row">
+
+            <div style="float:right">
+              
+              <button data-target="#form-dialog" data-toggle="modal" class="btn pmd-ripple-effect btn-primary pmd-z-depth" type="button">Add Question</button>
+
+              <div tabindex="-1" class="modal fade" id="form-dialog" style="display: none;" aria-hidden="true">
+
+              <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header bordered">
+                              <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                              <h2 class="pmd-card-title-text">Create Question</h2>
+                            </div>
+                            <div class="modal-body">
+                             <!--  <form class="form-horizontal"  
+                              action=""> -->
+                                {{question_form|crispy }}
+                              
+                            </div>
+                            <div class="pmd-modal-action">
+                              <button  
+                              class="btn pmd-ripple-effect btn-primary" onclick="add_que()">Submit</button>
+                                
+                            </div>
+                           
+                </div>
+              </div>
+            </div>
+
+
+            </div>
+
+
+              
+            <form name="" style="margin:10px;"  id="form_spin" method="post">
+
+            {% csrf_token  %}
+
+            <input type="hidden" name="next"  value="{{next}}" />
+            <div class="form-group">
+                    <label for="name" class="control-label">
+                    Spin Activity Name:</label>
+                    <input type="text" name="name" value="{{obj.name}}" class="form-control">
+            </div>
+
+             <div class="form-group">
+                    <label for="no_of_topic" class="control-label">
+                    No of Topic(s):</label>
+                    <input type="number"  value="{{obj.no_of_topic}}" id="id_no_of_topic" name="no_of_topic" class="form-control" readonly>
+            </div>
+
+            <div class="form-group">
+
+                     <input type="checkbox" value="{{obj.block_slice_after_open}}"  
+                    id="id_block_slice_after_open"
+                    name="block_slice_after_open" />
+                    <label for="block_slice_after_open" class="control-label">
+                    Disable Topic After Spin</label>
+                   
+            </div>
+
+            <!--<div class="form-group">
+
+                     <input type="checkbox" value="{{obj.question_in_seq}}"  
+                    id="id_question_in_seq"
+                    name="question_in_seq" />
+                    <label for="block_slice_after_open" class="control-label">
+                    Question In Seq</label>
+                   
+            </div> -->
+
+            <!-- <button id="show">Show More</button> -->
+
+            {% for topic in all_topic %}
+
+                   <div class="form-group">
+                    <label for="topics{{forloop.counter}}" class="control-label">
+                    Topic{{forloop.counter}}</label>
+                    <input type="text" value="{{topic}}" name="topics{{forloop.counter}}" class="form-control" />
+                   </div>
+
+                   <div class="form-group">
+                    <label for="topics{{forloop.counter}}questions" class="control-label">
+                    Question{{forloop.counter}} : &nbsp;&nbsp;</label>
+
+                    <select type="select" name="topics{{forloop.counter}}questions" class="multiple-checkboxes" class="form-control" multiple="multiple" >
+                      <!-- {% for q in topic.questions.all %}
+                        {% endfor %} -->
+                      {% for q in all_question %}
+                        {% if q in topic.questions.all %}
+                          <option value="{{ q.id }}" selected >{{q}}</option>
+                        {% else %}
+                          <option value="{{ q.id }}">{{q}}</option>
+                        {% endif %}
+
+                        
+                      {% endfor %}
+                      
+                    </select><br/>
+
+                   
+                   </div>
+                   <br/>
+                      
+
+
+            {% endfor %}<br/>
+
+             <input type="submit" id="submit_spin" value="submit" name="submit" />
+
+            <!-- Name: <input type="text" name="name" /><br/><br/> -->
+
+                 <!--   No Of Topic: <input type="number" id="id_no_of_topic" name="no_of_topic" /><br/><br/> -->
+
+                 <!--  Block Slice After Open: <input type="checkbox" name="block_slice_after_open" /><br/> -->
+                    <!-- <div class="fieldWrapper">
+                       {{ form.name.label_tag }}
+                      {{ form.name }}
+                    </div><br/>
+
+
+                     <div class="fieldWrapper">
+                      {{ form.no_of_topic.label_tag }}
+                    {{ form.no_of_topic }}
+                  </div><br/>
+
+                    <div class="fieldWrapper">
+
+                    
+                      {{ form.question_per_slices.label_tag }}
+                      {{ form.question_per_slices }}
+                    </div>
+                    <br/>
+
+                  <div class="fieldWrapper">
+                    {{ form.block_slice_after_open.label_tag }}
+                    {{ form.block_slice_after_open }}
+
+                  </div> -->
+                  
+        </form>
+
+       
+
+        </div>
+              
+                    
+                </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+      
+
+        
+               
+            
+    </div>
+    
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+
+
+<script>
+      $(document).ready(function() {
+        $('.multiple-checkboxes').multiselect({
+          includeSelectAllOption: true,
+        });
+    });
+
+
+      function add_que(){ 
+
+                  var question_name=$('#id_question_name').val();
+                  
+                  var option_a=$('#id_option_a').val();
+                  var option_b=$('#id_option_b').val();
+                  var option_c=$('#id_option_c').val();
+                  var option_d=$('#id_option_d').val();
+                  var answer_option=$('#id_answer_option').val();
+                  var start_date=$('#id_start_date').val();
+                  var author=$('#id_author').val();
+                  var ql=$('#id_question_language').val();
+                  //alert(1);
+                  $.post('{% url "customadmin:all_questions" %}',
+                  {
+                    'question_name':question_name,'option_a':option_a,
+                     'option_b':option_b,'option_c':option_c,
+                     'option_d':option_d,'answer_option':answer_option,'start_date':start_date,'author':author,'question_language':ql },
+                    function(data,status){
+                      alert("question has been added");
+                      window.location.reload();
+                    }
+                  );
+
+                 
+              }
+
+    $('#submit_spin').click(function(event){
+
+       //    event.preventDefault();
+       //    var no_of_topics=$('#id_no_of_topic').val();
+       //  if(no_of_topics=='' || no_of_topics==0){
+       //     alert('no of topic should be in number greater than zero');
+       //   return false;
+
+       // }
+       //  if (!isNormalInteger(no_of_topics)){
+       //    alert("no of topic should be integer value");
+       //    return false;
+       //   }
+
+         $('#form_spin').submit();
+    });
+
+    
+
+              
+    //alert("{{ obj.no_of_topic }}");
+
+    // var selectinput='<select name="" multiple><option>Select Question</option></select>';
+
+    	// for(var i=1;i<="{{obj.no_of_topic}}";i++)
+     //  {
+    	//     //var top='<ul>';
+     //      var top='<br/>';
+     //      //var upperdiv='<div class="upperdiv"></div>';
+    	//      //var top=top+'Topic'+i+' :<input type="text" id="topics'+i+'"/><br/>';
+     //       var top=top+'Topic'+i+' :<input type="text" id="topics'+i+'" name="topics'+i+'" class="form-control" /><br/>';
+           
+
+     //        var subque='Select Questions: <select class="form-control" name="topics'+i+'questions" id="topics'+i+'questions" multiple></select>';
+
+     //        top=top+subque+'<br/><br/>';
+
+     //        $('#form_spin').append(top);
+           
+     //  }
+		  //$(this).hide();
+      // $('#form_spin').append('');
+  
+	
+
+
+  
+
+  
+</script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+
+</body>
+
+</html>
+
+  {% endblock %}

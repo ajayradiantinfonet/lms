@@ -1,0 +1,729 @@
+
+
+{% extends 'user_lms/header_1.html' %}
+
+
+
+{% block course_details %}
+
+{% load static %}
+
+<link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
+
+
+
+<style>
+       
+
+.nav_h3 h3
+{
+  font-size: 20px;
+}
+.shadow_box
+{
+  padding: 9px 6px;
+  /*box-shadow: 0 7px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 transparent;*/
+}
+.btn_upload1 {
+    width: 105px;
+    height: 30px;
+    margin: 12px 50px;
+    background:#cbe5cb63;
+    /* box-shadow: 0px 3px 6px #00000029; */
+    border-radius: 3px;
+    opacity: 1;
+    color: #000;
+    padding: 1px;
+    border: 1px solid #80808073;
+}
+.part-1
+{
+  padding: 0px 46px;
+}
+.upload-img{
+  width: 12px;
+}
+.btn_upload1 span{
+  font-size: 12px;
+  padding: 4px;
+}
+
+.upload-img1
+{
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.card-margin{
+    position: relative;
+    padding: 4px 47px;
+}
+.rating_check span{
+  font-size: 13px;
+}
+.card_div
+{
+  margin-top: 23px;
+}
+.p-bar{
+  height: 5px;
+  width: 100%;
+}
+.p-complete{
+  background: #4CA64A;
+}
+.progress_bar{
+  padding: 10px 1px;
+}
+.upload-image{
+  width: 15px;
+}
+.img-part1 img
+{
+  width: 185px;
+  height: 126px;
+  border-radius: 8px;
+}
+.btn_close span{
+  font-size: 20px;
+}
+.dialog-margin{
+  margin-top: 240px;
+}
+.modal-height{
+  height: 246px;
+}
+.social-btn{
+  padding: 19px 36px;
+}
+
+
+@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css);
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web&subset=latin,latin-ext);
+@media (min-width: 768px) {
+    .onl_row-sm-offset-3 div:first-child[class*="col-"] {
+        margin-left: 25%;
+    }
+}
+
+.onl_login .onl_socialButtons a 
+{
+  color: white; // In yourUse @body-bg 
+  opacity:0.9;
+}
+.onl_login .onl_socialButtons a:hover 
+{
+  color: white;
+  opacity:1;      
+}
+.onl_login .onl_socialButtons .onl_btn-facebook 
+{background: #3b5998;border-color:#172d5e}
+.onl_login .onl_socialButtons .onl_btn-twitter 
+{background: #00aced;border-color:#043d52}
+.onl_login .onl_socialButtons .onl_btn-google-plus 
+{background: #c32f10;border-color:#6b1301}
+.onl_login .onl_socialButtons .onl_btn-linkedin 
+{background: #0976b4;border-color:#004269}
+
+body{
+  background-color:#f6f5f5;
+}
+
+
+</style>
+
+
+<div class="row" style="padding-top:1%;">
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+	
+</script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+	
+</script>
+
+
+{% ifequal all_course|length 0 %}
+	<p>&nbsp;&nbsp;There is no course available</p>
+{% endifequal %}
+
+
+
+
+{% for course in all_course %}
+<div class="card_div" style="width:50%;margin-left:15%;margin-top:2%;background-color: white;">
+  <div class="shadow_box" style="border-radius:2px;">
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="img-part1" style="height:100%;"> 
+          <img src="{{ course.thumbnail.url }}" style="height:100%;">
+        </div>
+      </div>
+
+
+      <div class="col-md-9 part-1">
+        <h6>{{ course.name }}</h6> 
+        <p style="font-size:12px;">Lesson 15 of 25</p>
+            
+        <div class="row">
+          <div class="col-md-1"><img src="{% static 'user_lms/img/eye-line.svg' %}" class='upload-image'>
+          </div>
+          <div class="col-md-11">
+          <p>{{ course.teacher }}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 part-2" style="font-size:12px;">{{course.percentage}}% Complete</div>
+            <div class="col-md-9 progress_bar">
+              <div class="progress p-bar">
+                <div data-percentage="0%" style="width: {{course.percentage}}%;" class="progress-bar p-complete" role="progressbar" aria-valuemin="{{ course.percentage }}" aria-valuemax="100">
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-sm-3"><img src="{% static 'user_lms/img/img1.jpg' %}" class='upload-img1'></div>
+            <div class="col-sm-3"><p style="font-size:12px;">John Doe</p></div>
+              <div class="col-sm-6 rating_check">
+                <span>Your Rating</span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+              </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+<!-- {% block course_details_old %}
+
+{% load static %}
+
+	<link src="{% static 'user_lms/css/course_list_css.css' %}" />
+	<link rel="canonical" href="https://pro.propeller.in/style/icons" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+{% load mytag %}
+
+
+
+<style>
+     .table-responsive {
+    border: 1px solid;
+    }
+   	.custom-control-inline {
+    padding: 8px 25px;}
+    .form_check{
+    	width: 80%;
+    border: 1px solid;
+    padding: 12px 65px;
+    }
+       .form_head{
+       	font-weight: bold;}
+       	.material-icons {
+    font-size: 16px;}
+       }
+
+         /*table form css*/
+      
+         	.table-responsive{
+         		border: 1px solid;
+         	}
+             .form_btn{
+             	border: 1px solid;
+                border-radius: 3px;
+             }
+
+             .form_btn1{
+              border: 1px solid;
+                border-radius: 3px;
+                margin-left: 10px;
+             }
+ @media only screen and (min-device-width:320px) and (max-device-width:480px) {
+    .material-icons{
+      display: initial;
+    }
+     .form_btn{
+      width: 70px;
+     }
+       .form_btn1{
+               margin-left: 0px;
+            margin: 5px 1px;
+             }
+ }
+@media (min-width: 576px){
+.form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: initial;
+}
+}
+ /*cards*/
+ .icon-control {
+    margin-top: 5px;
+    float: right;
+    font-size: 80%;
+}
+
+
+
+.btn-light {
+    background-color: #fff;
+    border-color: #e4e4e4;
+}
+
+.list-menu {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+.list-menu a {
+    color: #343a40;
+}
+
+.card-product-grid .info-wrap {
+    overflow: hidden;
+    padding: 18px 20px;
+}
+.card{
+  border: none;
+}
+[class*='card-product'] a.title {
+    color: #212529;
+    display: block;
+}
+
+.card-product-grid:hover .btn-overlay {
+    opacity: 1;
+}
+.card-product-grid .btn-overlay {
+    -webkit-transition: .5s;
+    transition: .5s;
+    opacity: 0;
+    left: 0;
+    bottom: 0;
+    color: #fff;
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+
+.form-inline img{
+ width: 19px;
+    vertical-align: initial;
+    border-style: none;
+       margin: 0px 5px;}
+
+       .form-control{
+        width: 164px;
+    height: 50px;
+       }
+
+.form-inline {  padding: 10px;}
+.btn_filter{
+  width: 114px;
+    height: 50px;
+    border-radius: 7px;
+}
+.result_col{
+  float: right;
+}
+.btn_filter span{
+  font-size: 20px;
+}
+.img-part img{
+  width: 200px;
+    height: 140px;
+}
+.fa {
+  font-size: 15px;
+}
+
+.checked {
+  color: orange;
+}
+.filter-button-container--button-bar--DU5FK>* {
+    margin: 0 .4rem;}
+
+    .udlite-btn-secondary, .udlite-btn-secondary.udlite-btn-disabled {
+    color: #0f7c90;
+    background-color: transparent;
+    border: 1px solid #2896a9;}
+.part-1 h2{
+  font-size: 15px;
+}
+.part-1 p{
+  font-size: 13px;
+}
+
+.wrapper{
+ 
+}
+@media(max-width:992px){
+ .wrapper{
+  width:100%;
+} 
+}
+.panel-heading {
+  padding: 0;
+  border:0;
+}
+.panel-title>a, .panel-title>a:active{
+  display:block;
+  padding:15px;
+  color:#555;
+  font-size:16px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  word-spacing:3px;
+  text-decoration:none;
+}
+.panel-heading  a:before {
+   font-family: 'FontAwesome';
+   content: "\f078";
+   float: right;
+   transition: all 0.5s;
+}
+.head_span{
+  float: right;
+}
+.panel-heading.active a:before {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  transform: rotate(180deg);
+} 
+.btnS{border: none;text-align: left;font-size: 13px; background: #fff;float: left;margin-top: -7px;}
+.btnS:focus{outline:none;}
+       .btnS:before {
+    font-family: 'FontAwesome';
+    content: "\f078";
+    float: right;
+    transition: all 0.5s;
+    padding: 2px 6px;
+    font-size: 10px;
+     }
+
+      #collapseThree .show-more:hover { 
+    color: #1779dd;
+}
+#collapseThree .show-more-height { 
+  height: 65px; 
+  overflow:hidden; 
+}
+
+</style>
+
+
+<div class="container" style="background-color:#f7f6e7;">
+	<div class="row">
+
+   		<div class="col-md-12">
+			<div class="form-inline">
+				<div class="col-md-5">
+					<button type="button" data-purpose="open-filters"  class="btn_filter"><img src="{% static 'user_lms/img/filter.png' %}" alt="">
+						<span>Filter</span></button>
+			
+					<select class="form-control">
+						<option>More Relevent</option>
+						<option>Trending</option>
+						<option>Most Popular</option>
+						<option>Cheapest</option>
+					</select>
+				</div>
+				<div class="col-md-7">
+					<span class="result_col">{{ total_course }} results</span>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+		
+
+			
+	<div class="row">		
+		<div class="col-md-3">
+			<div class="wrapper center-block">
+				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+					  	
+				<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingOne">
+				<h4 class="panel-title">
+				<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseO" aria-expanded="true" aria-controls="collapseOne">
+				         Topic
+				</a>
+				</h4>
+				    </div>
+    <div id="collapseO" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+      <label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1  
+				  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				  </div>
+				</label>
+				<div id="show-more" ><a href="javascript:void(0)" class="btnS">Show more</a></div>
+                  <div id="show-more-content">
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				 <div id="show-less"><a href="javascript:void(0)" class="btnS">Show less</a></div>
+          </div>
+      </div>
+    </div>
+  </div>
+        	
+	  <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         Level
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+      <label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1  
+				  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				  </div>
+				</label>
+				<div id="show-more1" ><a href="javascript:void(0)" class="btnS">Show more</a></div>
+                  <div id="show-more-content1">
+
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input">
+				  <div class="custom-control-label">Topic 1
+				 </div>
+				</label>
+				 <div id="show-less1"><a href="javascript:void(0)" class="btnS">Show less</a></div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div> 
+
+
+	<div class="col-md-9">
+		<div class="card card-product-grid" style="width:100%;margin-bottom: 3px;">
+			
+			{% for course in all_course %}
+				<div class="row" style="margin-bottom:5px;
+					padding-bottom: 5px;border-radius:3px;overflow:hidden;">
+						<div class="col-sm-3 col-md-3">
+				            <div class="img-part"> 
+								<img src="{% static 'user_lms/img/1.jpg' %}"  style="height: 170px;">
+							</div>
+						</div>
+						<div class="col-sm-9 col-md-9 part-1">
+								<h5>{{ course.name }}<span style='float: right;font-size:15px;'>{{ course.price }}</span></h5>	
+							<p><html>{{ course.about }}</html></p>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star checked"></span>
+								<span class="fa fa-star"></span>
+								<span>(96,5678)</span>
+								<p>4.1 average based on 254 reviews.</p>
+						</div>
+				</div>
+				<br/>
+				
+			{% endfor %}
+            </div>
+        </div>
+</div>  
+
+</div>
+{% endblock %} -->
+
+
+{% block inpage_script %}
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS, then Propeller js -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	
+    <script src="{% static 'user_lms/js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <script src="{% static 'user_lms/js/bootstrap/popper.min.js' %}"></script>
+	<script src="{% static 'user_lms/js/bootstrap/bootstrap.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'user_lms/js/propeller.min.js' %}"></script>
+    <script src="{% static 'user_lms/js/plugins.js' %}"></script>
+	<script src="{% static 'user_lms/js/active.js' %}"></script>
+
+
+	<script>
+
+  // panel dropdown
+
+	$('.panel-collapse').on('show.bs.collapse', function () {
+		$(this).siblings('.panel-heading').addClass('active');
+	});
+
+  $('.panel-collapse').on('hide.bs.collapse', function () {
+    $(this).siblings('.panel-heading').removeClass('active');
+  });
+
+
+
+  // show hide
+  // 1 panel
+
+$('#show-more-content').hide();
+
+$('#show-more').click(function(){
+	$('#show-more-content').show(300);
+	$('#show-less').show();
+	$('#show-more').hide();
+});
+
+$('#show-less').click(function(){
+	$('#show-more-content').hide(150);
+	$('#show-more').show();
+	$(this).hide();
+});
+
+// 2 panel
+$('#show-more-content1').hide();
+
+$('#show-more1').click(function(){
+	$('#show-more-content1').show(300);
+	$('#show-less1').show();
+	$('#show-more1').hide();
+});
+
+$('#show-less1').click(function(){
+	$('#show-more-content1').hide(150);
+	$('#show-more1').show();
+	$(this).hide();
+});
+
+	</script>
+  </body>
+</html>
+
+{% endblock %}

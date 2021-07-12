@@ -1,0 +1,74 @@
+{% extends 'head1.html'%}
+
+{% block content %}
+{% load static %}
+
+  <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+     
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol>
+    <section class="row component-section">
+
+      <div class=" col-md-12">
+
+        <div class="section section-custom billinfo"> 
+     
+      <div class="pmd-card pmd-z-depth">
+
+        {{ msg }}
+        <div class="pmd-card-body"> 
+
+            
+                  <form method="post" action="." enctype="multipart/form-data">
+
+
+                    {{ form.as_p }}
+
+                    {% csrf_token %}
+
+                    <br/>
+
+                  
+
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
+                      </div>
+                    </div>
+
+
+
+
+                  </form>
+                  
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+              </section>
+              </div>
+
+            </div>
+            
+  
+
+ <script>
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

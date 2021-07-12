@@ -1,0 +1,366 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+
+
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+  {% endif %}
+  
+    <!-- table card -->
+    <section class="row component-section">
+
+     
+        {% ifequal object_list|length 0 %}
+              <p>&nbsp;&nbsp;There is no course  available</p>
+        {% endifequal %}
+
+
+        <div class="" style="float:right" >
+            <a  style="background: #05ed3f;color:black;
+            text-decoration:none; padding:10px; 
+            margin:8px;" href="{% url 'customadmin:add_course_user' %}"> ADD Course </a>
+        </div><br/><br/>
+
+
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">S.N.</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Course About</th>
+                
+                <th scope="col">Organization</th>
+               
+              <!--   <th scope="col">Link</th> -->
+                <th scope="col">State</th>
+               <!--  <th scope="col">Sort Topic</th> -->
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for obj in object_list %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url 'customadmin:all_course_user' %}{{obj.id}}/edit/#topics">{{ obj.name }}</a></td>
+                <td><code>{{ obj.about }}</code></td>
+
+                <td> {{ obj.get_course_org_id }}</td>
+                
+                <!-- <td>{{ obj.link }}</td> -->
+                <td>{{ obj.state }}</td>
+               <!--  <td><a class="sort"  title="sort" data-href="{{obj.id}}">Sort Topic</a></td> -->
+                <!-- <td><a href="{{ obj.link }}">Enroll</a></td> -->
+                <td>
+
+            <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+            <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+
+            {% if user.is_superuser %}
+                {% if obj.state == "PUBLISHED" %}
+                    <a title="Assign course to company" class="assign" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">share</i></a>
+                {% endif %}
+            {% endif %}
+
+                </td>
+              </tr>
+              {% endfor %}
+              
+              </tbody>
+          </table>
+
+          
+
+          <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+            
+            {% if page_obj.has_previous %}
+                <a class="page-link" href="?page=1">&laquo; first</a>
+                <a class="page-link" href="?page={{page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+                <!-- <a href="?page={{ page_obj.previous_page_number }}">previous</a> -->
+            {% endif %}
+            </li>
+
+            <li class="page-item">
+                <!-- {{ page_obj.paginator.num_pages }} -->
+                  <a class="page-link" href="?page={{page_obj.number}}">{{ page_obj.number }}</a>
+              
+            </li>
+
+            <li class="page-item">
+
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">{{page_obj.next_page_number}}</a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+            </li>
+            
+          </ul>
+        </nav>
+        
+        {% for obj in object_list %}
+        <!--  <a href="{% url 'customadmin:course_detail' obj.id  %}">
+          <div class="col-md-4 col-sm-6 masonry-brick" style=" ">
+        
+        <div class="pmd-card pmd-card-default pmd-z-depth">
+          <div class="pmd-card-media">
+            {% if obj.thumbnail %}
+            <img src="{{ obj.thumbnail.url }}" class="img-responsive" width="1084" height="600">
+            {% else %}
+            <img src="" class="img-responsive" width="1084" height="600">
+            {% endif %}
+            
+          </div>
+          <div class="pmd-card-title">
+            <h2 class="pmd-card-title-text">{{ obj.name }}</h2>
+            <span class="pmd-card-subtitle-text">{{ obj.about }}</span>  
+          </div>  
+          <div class="pmd-card-actions">
+          
+            <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_detail' obj.id  %}" type="button">View Details</a>
+
+            {% if obj.organization is None %}
+                   <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_allot' obj.id  %}" type="button">Allot Course</a>
+            {% endif %}
+          </div>
+        </div>
+      </div></a> -->
+      {% endfor %}
+
+
+  
+  </section>
+
+</div>
+
+
+           
+  </div>
+</div>
+
+<div tabindex="-1" class="modal fade in" id="assign_course_modal" style="display: none;" obj-id="" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header bordered">
+                              <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                              <h2 class="pmd-card-title-text">Course Assign</h2>
+                            </div>
+                            <div class="modal-body">
+                                <table id="example" class="table" style="width: 100%;" width="100%" cellspacing="0">
+                               <thead>
+
+                              <tr>
+                               <!--  <th class="select-checkbox sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label=""></th> -->
+                    
+                                <th scope="col">Select</th>
+                                <th scope="col">S.N.</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Organization Name</th>
+                              </tr>
+
+                              </thead>
+                          <tbody>
+                            
+
+                          <!--  {% for obj in organization %}
+                           <tr>
+                            <td class="select-checkbox"></td>
+                          <td scope="row">{{ forloop.counter }}</td>
+                          {% if obj.logo %}
+                          <td><img src="{{ obj.logo.url }}" width="30" height="30" alt="no image found" /></td>
+                          {% else %}
+                            <td><img width="30" height="30" alt="no image found" /></td>
+                          {% endif %}
+                          <td>{{ obj.organization_name }}</td>
+
+                            </tr>
+                            {% endfor %} -->
+                           </tbody>
+                          </table>
+                      
+
+                
+                              
+                            </div>
+                            <div class="pmd-modal-action">
+                              <button data-dismiss="modal" class="btn pmd-ripple-effect btn-primary assign_course_submit" type="button" 
+                              >Save changes</button>
+                              <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
+                            </div>
+                          </div>
+                        </div>
+</div>
+            
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" >
+
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+  
+ <script>
+
+  $('.assign').click(function(){
+      var objid=$(this).attr('data-href');
+      var data="{{ organization }}";
+      var data= JSON.parse(data.replace(/&quot;/g,'"'));
+      //alert(data);
+      //var data = JSON.stringify(data);
+      //console.write(data);
+      
+      $('#assign_course_modal').modal('show');
+      $('#assign_course_modal').attr("obj-id",objid);
+      $('.assign_course_submit').attr("obj-id",objid);
+      var t=$('#example').DataTable({
+         data: data,
+         'processing':true,
+
+         "columnDefs": [
+            {
+                "render": function ( data, type, row ) {
+                    return '<img src="'+data+'" style="width=50px;height=50px;" width="50" height="50" alt="No image" />';
+                },
+                "targets": 2
+             }
+
+        ],
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+            $("td:nth-child(2)", nRow).html(iDisplayIndex +1);
+            $("td:first", nRow).html("<input type='checkbox' name='select-ch' id='select-ch' value='"+aData.id+"' />");
+            return nRow;
+        },
+        "columns": [
+            {data:"id"},
+            {data:"id"},
+            {data:"logo"},
+            {data:"name"},
+
+            
+            ]
+      });
+
+    //   t.on( 'draw.dt', function () {
+    //     var PageInfo = $('#example').DataTable().page.info();
+    //      t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+    //         cell.innerHTML = i + 1 + PageInfo.start;
+    //     });
+    // });
+  });
+  
+
+  $('.assign_course_submit').click(function(){
+        checked_org=[]
+        // if(t!='undefined' || t!=''){
+        //   t.destroy();
+        // }
+      var course_id=$(this).attr("obj-id");
+     // alert(course_id);
+      $("input:checkbox[name=select-ch]:checked").each(function(){
+          checked_org.push($(this).val());
+      });
+      //alert(checked_org);
+      if(checked_org.length < 1){
+        alert("please select at least one organization");
+        return;
+      }
+      $.ajax({
+          url:'{% url "customadmin:assign_course" %}',
+          type:'post',
+          data:{org_id:checked_org,'course_id':course_id},
+          success:function(data){
+            if(data=="true"){
+              alert("course assigned successfully");
+            }
+            else{
+               alert("something wrong happened");
+            }
+           
+          }
+      });
+
+  });
+
+
+
+$('.edit').click(function(){
+
+  var objid=$(this).attr('data-href');
+  window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/edit/";
+
+});
+
+$('.sort').click(function(){
+
+  var objid=$(this).attr('data-href');
+  window.location.href="{% url 'customadmin:all_topic' %}"+'?courseid='+objid;
+
+});
+
+
+$('.delete').click(function(){
+    
+  var objid=$(this).attr('data-href');
+  if (confirm('Are you sure you want to delete this course ?')) {
+  
+      window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/delete/";
+
+    } else {
+  
+        console.log('course is not deleted');
+  }
+  
+});
+
+
+
+
+
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

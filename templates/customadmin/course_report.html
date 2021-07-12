@@ -1,0 +1,201 @@
+{% extends 'head2.html' %}
+
+
+
+{% block inner_content %}
+
+{% load static %}
+
+{% load mytag %}
+
+
+
+
+
+<div class="right_col" role="main">
+
+	{% if messages %}
+	    {% for message in messages %}
+	    <div class="alert alert-dismissible alert-{{ message.tags }}">
+	        <button type="button" class="close" data-dismiss="alert">
+	            <i class="fa fa-close"></i>
+	        </button>
+	        <strong>{{ message }}</strong>
+	    </div>
+	    {% endfor %}
+	{% endif %}
+
+	<div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph companies-courses">
+
+            	<h3>Course Wise Report Of User</h3>
+                
+				<div class="box_bottom1">
+					<form class="form-inline" method="post" action="{% url 'customadmin:course_report' %}">
+						 <!--  <div class="form-group mb-2">
+						    <label for="staticEmail2" class="sr-only">Email</label>
+						    <select>
+						    	<option>Select User</option>
+						    </select>
+						  </div> -->
+						    <div class="col-md-5">
+							  <select class="col-md-12 course-options" name="courseid"  style="margin:2px;padding:4px;font-size:15px;">
+
+								  <option  value="" selected>Select Course</option>
+								  {% for course in courses %}
+								  	<option value="{{course.id}}">{{ course.name }}</option>
+								  
+								  {% endfor %}
+							  </select>
+							</div>
+
+							<div class="col-md-5">
+							  <select class="col-md-12 user-options" name="userid" style="margin:2px;padding:4px;font-size:15px;">
+								  <option selected value="">Select User</option>
+								  {% for user in users %}
+								  	<option value="{{user.id}}">{{ user.get_full_name }} &nbsp;({{ user.email }})</option>
+								  
+								  {% endfor %}
+							  </select>
+							</div>
+
+							<div class="col-md-2">
+							 	<button type="submit" value="submit" class="btn btn-primary submit">Submit</button>
+							</div>
+
+						  
+				  		
+					</form>
+				</div><br/><br/><br/>
+
+				<div class="container">
+					{% if report %}
+
+					{% ifequal report|length 0 %}
+
+						<p>There is no report availabe</p>
+
+					{% else %}
+					<table id="example" class="table table-striped dt-responsive nowrap table_content" cellspacing="0" width="100%" style="width:100%">
+        				<thead>
+            				<tr>
+				                <th>Topic</th>
+				                <th>Subtopic</th>
+				                <th>Activity</th>
+				                <th>Activity Type</th>
+				                <th>Status</th>
+				                <th>Start Date</th>
+				                <th>Time Taken</th>
+				                <th>User</th>
+            				</tr>
+        				</thead>
+        				<tbody>
+        					
+        						{% for data in report %}
+        							<tr>
+        							{% for d in data %}
+        								<th>{{ d }} </th>
+        							{% endfor %}
+        							</tr>
+        						{% endfor %}
+        					
+        				</tbody>
+        			</table>
+
+        			{% endifequal %}
+        		
+
+        			{% else %}
+
+
+
+        			{% endif %}
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block inpage_script %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
+</script>
+
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+
+
+
+<script>
+
+	
+	// $(document).ready(function() {
+
+	// });
+
+
+
+	$(".course-options").change(function(){
+		courseid=$(this).val();
+		if(courseid!=="")
+		{
+	  		$.ajax({
+	  			url:'{% url "customadmin:get_enrolled_user_list" %}',
+	  			data:{'courseid':courseid},
+	  			type:'post',
+	  			success:function(data){
+	  				var res=JSON.parse(data);
+	  				console.log(res);
+	  				if(res.message==true){
+	  					$('.user-options').find('option').remove();
+	  					for(var i=0;i<res.users.length;i++){
+	  						console.log(res.users[i]);
+	  						$('.user-options').append(`<option value="${res.users[i][2]}">
+                                       ${res.users[i][0]+"&nbsp;("+res.users[i][1]+")"}
+                                  </option>`);
+	  					}
+	  				}
+	  			}
+	  		});
+	  	}
+	});
+
+
+	$('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+
+
+	// $(".submit").click(function(event){
+	// 	event.preventDefault();
+	// 	$.ajax({
+	//   			url:'{% url "customadmin:get_enrolled_user_list" %}',
+	//   			data:{'courseid':courseid},
+	//   			type:'post',
+
+	//   	});
+	// });
+
+
+</script>
+
+{% endblock %}

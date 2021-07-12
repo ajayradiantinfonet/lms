@@ -1,0 +1,2173 @@
+{% extends 'user_lms/header_1.html' %}
+
+{% block course_details %}
+
+{% load static %}
+<!-- {% get_media_prefix %} 
+ -->
+{% load mytag %}
+{% load userlmstag %}
+
+{{ object.about|json_script:'course_about' }} 
+{{ object.id|json_script:'object_id' }} 
+{{ object.highlights|json_script:'course_highlights' }}
+{{ object.overview|json_script:'course_overview' }}
+
+
+<style>
+	 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+.container-x {
+    background-color: #555;
+    color: #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 700px
+}
+
+.container-x>p {
+    font-size: 32px
+}
+
+.question {
+    width: 75%
+}
+
+.options {
+    position: relative;
+    padding-left: 40px
+}
+
+#options label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 14px;
+    cursor: pointer
+}
+
+.options input {
+    opacity: 0
+}
+
+.checkmark {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #555;
+    border: 1px solid #ddd;
+    border-radius: 50%
+}
+
+.options input:checked~.checkmark:after {
+    display: block
+}
+
+.options .checkmark:after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: block;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 300ms ease-in-out 0s
+}
+
+.options input[type="radio"]:checked~.checkmark {
+    background: #21bf73;
+    transition: 300ms ease-in-out 0s
+}
+
+.options input[type="radio"]:checked~.checkmark:after {
+    transform: translate(-50%, -50%) scale(1)
+}
+
+.options input[type="checkbox"]:checked~.checkmark {
+    background: #21bf73;
+    transition: 300ms ease-in-out 0s
+}
+
+.options input[type="checkbox"]:checked~.checkmark:after {
+    transform: translate(-50%, -50%) scale(1)
+}
+
+.btn-primary-x {
+    background-color: #555;
+    color: #ddd;
+    border: 1px solid #ddd
+}
+
+.btn-primary-x:hover {
+    background-color: #21bf73;
+    border: 1px solid #21bf73
+}
+
+.btn-success-x {
+    padding: 5px 25px;
+    background-color: #21bf73
+}
+
+@media(max-width:576px) {
+    .question {
+        width: 100%;
+        word-spacing: 2px
+    }
+}
+ </style>
+ 
+
+<!-- <link href="{% static 'user_lms/css/forum.css' %}" /> -->
+
+<section class="course-details">
+	<div class="course-dashboard-cover row" style="margin: 0;">
+		<div class="container pt-4 pb-1" style="min-height: 360px;">
+			<div class="row">
+				<div class="col-md-12">
+					<h2 style="font-size:35px; font-weight: 600; font-family: sans-serif;">
+					{{ object.name }}</h2>
+				</div>
+				<div oncontextmenu="return false;" class="col-md-8 col-sm-12 mt-1 p-0" style="float: left;height: 500px;border:1px black dotted">
+					<div class="row m-0" id="activity_area">
+					<button class="screen-resize-btn" data-fullscreen="False" id="activity_screen_resize"><span class="fa fa-expand"></span>
+						</button>
+						<!-- <video id="my-player"
+						    class="video-js"
+						    controls
+						    preload="auto"
+						    poster="//vjs.zencdn.net/v/oceans.png"
+						    data-setup='{}' width="800px;" height="400px;"> -->
+						<video id="my-player" 
+						    class="video-js"
+						    controls
+						    preload="auto"
+						    data-setup='{}'  height="500px;">
+						 <!--  <source src="" type="video/mp4">
+						  	
+						  </source> -->
+						  <!-- <source src="" type="video/ogg"></source> -->
+						  <source src="//vjs.zencdn.net/v/oceans.ogv" type="video/ogg"></source>
+						  <p class="vjs-no-js">
+						    To view this video please enable JavaScript, and consider upgrading to a web browser that
+						    <a href="https://videojs.com/html5-video-support/" target="_blank">
+						      supports HTML5 video
+						    </a>
+						  </p>
+						</video>
+
+						
+					</div>
+
+					<div class="row m-0" id="spin_activity_area" style="display: none">
+
+						
+							<div class="col-md-6">
+							      <div id="chart"></div>
+							</div>
+
+							<div class="col-md-6" style="">
+						    <div id="question" style="margin-top:50px;">
+						      <h3 id="questionheader" style="font-size:17px;"data-qid=""></h3>
+
+						      <div class="options" style="padding:10px;">
+						        <p style="list-style: none">
+						          <input type="radio" name="op" data-aid="" id="op1">
+						            <label id="label_op1" for="op1"></label> 
+						            <br/>
+						          <input type="radio" name="op"  data-aid="" id="op2">
+						            <label id="label_op2" for="op2"></label>
+						            <br/>
+						          <input type="radio" name="op"  data-aid="" id="op3">
+						          <label id="label_op3" for="op3"></label>
+						          <br/>
+						          <input type="radio" name="op" data-aid="" id="op4">
+						            <label id="label_op4" for="op4"></label>
+						            <br/>
+						           </p>
+
+						          <button class="btn btn-success" id="saveanswer" data-sid="" value="saveanswer">Save Answer</button>
+						        
+						      </div>
+						    </div>
+							</div>
+						
+
+					</div>
+
+					<div id="assignment_activity_area" style="display: none;padding-top:200px;">
+						<!-- <pre id="assignment_content" style="height:500px;width:inherit;"></pre>
+						<object id="assignment_file_obj" style="height:500px;width:inherit;" data="" type="application/pdf">
+    					<embed src="" id="assignment_file" type="application/pdf" />
+    					</object> -->
+    					<center>
+    						<a style="" id="assignment_file_iframe" href="" target="_blank">Click To download Assignment</a>
+    						<br/>
+
+    						<p>
+    						Please Submit File below After Assignment is complete 
+    						</p>
+    						<br/>
+
+    						&nbsp;&nbsp;&nbsp;
+
+    						<input type="file" data-attr="" name="assignment_file" 
+    						id="assignment_file" accept=".pdf,.doc,.docx" />
+    						<button class="btn btn-success" onclick="submit_assignment()"> Submit</button>
+    						
+    					</center>
+    					 <!--  <iframe id="assignment_file_iframe" frameborder="0" scrolling="no"
+    					 style="height:500px;width:100%;" 
+     					src="http://www.africau.edu/images/default/sample.pdf">
+  						</iframe> -->
+					</div>
+
+					<div id="drag_activity_area" style="display: none;">
+						<div style="margin: 0px;"><h2 style="margin: 0px; text-align: center;" id="activity_title"></h2></div>
+
+						  <div class="wrapper" id="activityPlayer" style="width:500px;">
+						    
+						  </div>
+
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-12 mt-1 px-2" style="float: left;">
+				<div class="col-sm-12px-0" style="height: 500px;overflow-y: auto; background: #fff; box-shadow: 0px 0px 5px #00000066; border-radius:2px;margin-bottom:10px;">
+					<div class="row m-0">
+						<div class="fs-15 py-1 col-sm-12" style="width: 100%; display: block;">
+							<!-- <span>{{ content_length }} Lessons</span> -->
+							<span class="fl-rt">Total Duration : {{ total_minute}} minutes {{ total_second }} seconds </span>
+						</div>
+
+						{% for content,childs in all_content.items %}
+						<br/>
+						<div class="timeline mx-3" style="width: 100%; display: block;">
+						{% if user.id|is_learningunit_open:content.id %}
+						  <div class="fa timeline-container timeline-right">
+						{% else %}
+						<!-- <div class="fa timeline-container timeline-right"> -->
+						  <div class="fa timeline-container-lock timeline-right">
+						{% endif %}
+					<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+						    <div class="content p-1" style="font-weight: 400;">
+						      <h6 class="fw-800">{{ content.name }}</h6>
+						     
+						      {% for v in childs.video %}
+								<div class="content p-1" style="">
+									<span class=""  topicid="{{content.id}}" videoid="{{v.id}}" atype="video" onClick="changevideo(this)" video-href="{{v.video}}">
+										<i class="far fa-play-circle"></i>
+										{{ v.description }}
+									</span><!-- <h6 class="fw-800"><i class="far fa-play-circle"></i> &nbsp;{{ v.description }}</h6> -->
+								</div>
+							   {% endfor %}
+						      
+						    {% for subtopic,inside in childs.subtopic.items %}
+						      		<div class="pl-2 py-1">
+								      	<div class="py-1">
+								      		<!-- <span class="far fa-check-circle"> -->
+							{% if user.id|is_learningunit_open:subtopic.id %}
+								      		<span class="far fa-check-circle">
+								      			{{ subtopic.name }}
+								      		</span>
+
+							{% else %}
+								    	<span class="fa fa-lock">
+								      			{{ subtopic.name }}
+								      		</span>
+							{% endif %}
+								      			
+								      	</div>
+								      	
+								      	<div class="pl-4">
+								      		{% for subact in inside.video %}
+									      	<div class="py-1" >
+										      	<span class=""  topicid="{{subtopic.id}}" videoid="{{subact.id}}" atype="video" onClick="changevideo(this)" video-href="{{subact.video}}">
+										      	<i class="far fa-play-circle"></i>
+										      		{{ subact.description }}
+										      	</span>
+									      		
+									      	</div>
+									      	{% endfor %}
+								      		{% for subact in inside.activity %}
+									      	<div class="py-1">
+										      	<span class="">
+										    {% if subact.activity_type == "quiz" %}
+										      		<i class="fas fa-question"></i>
+
+										    {% elif subact.activity_type == "spin_activity" %}
+										      		<i class="fas fa-spinner"></i>
+
+										     {% elif subact.activity_type == "Assignment" %}
+										      		<i class="fas fa-tasks"></i>
+										    {% else %}
+										      		<i class="fas fa-question"></i>
+										    {% endif %}
+										      		<!-- <i class="material-icons md-light pmd-sm">local_activity</i> -->
+								{% if user.id|is_activity_open:subact.id %}
+
+										{% if subact.activity_type == "quiz"  %}
+										
+								
+									<a style="text-decoration:none;color:green" target="_blank" href="{% url 'assesment:start_quiz' subact.content_id|get_questionpaper_id %}">
+									{{ subact.activity_name }}
+									</a>
+								
+									
+
+
+										{% elif subact.activity_type == "spin_activity" %}
+											
+											<a style="text-decoration:none;color:green" target="_blank" data-href="{% url 'customadmin:spin_activity' subact.content_id %}" data-attr="{{subact.content_id}}" class="show_spin_activity" >{{ subact.activity_name }}</a>
+
+										{% elif subact.activity_type == "Assignment" %}
+											
+											<a style="text-decoration:none;color:green" target="_blank" data-href="{% url 'customadmin:spin_activity' subact.content_id %}" data-attr="{{subact.id}}" class="show_assignment_activity" >{{ subact.activity_name }}</a>
+
+										{% elif subact.activity_type == "mcq" %}
+											
+											<a style="text-decoration:none;color:green" target="_blank" data-href="{% url 'assesment:start_quiz' subact.content_id|get_questionpaper_id %}" class="open_popup">{{ subact.activity_name }}</a>
+
+										{% elif subact.activity_type == "drag_and_drop" %}
+
+											<a style="text-decoration:none;color:green" target="_blank" data-href="{{subact.content_id}}" class="show_drag_activity">{{ subact.activity_name }}</a>
+
+										{% else %}
+												
+										{{ subact.activity_name }}
+												<!-- {{ subact.activity_type }} -->
+										{% endif %}
+
+								{% else %}
+
+										{{ subact.activity_name }}
+								{% endif %}
+										      	</span>
+									      		
+									      	</div>
+									      	{% endfor %}
+									      </div>
+									     
+									      	
+								      	
+							      	</div>
+
+							     {% endfor %}
+							      	
+							      	<!-- <div class="py-1">
+							      		<span class="far fa-check-circle"></span>
+							      		Lorem ipsum dolor sit
+							      	</div> -->
+						      
+						    </div>
+						  </div>
+						</div>
+						  {% endfor %}
+						 
+						  
+				</div>
+				</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+
+	<script>
+
+		// $('.subtopic_video').click(function(){
+		// 		alert();
+		// });
+	// document.getElementById('my-player_html5_api').addEventListener('contextmenu',event=>event.preventDefault());
+	//document.addEventListener('contextmenu', event => event.preventDefault());
+		function get_video(url){
+			var xhr = new XMLHttpRequest();
+				xhr.responseType = 'blob';
+
+				xhr.onload = function() {
+				  
+				  var reader = new FileReader();
+				  
+				  reader.onloadend = function() {
+				  
+				    var byteCharacters = atob(reader.result.slice(reader.result.indexOf(',') + 1));
+				    
+				    var byteNumbers = new Array(byteCharacters.length);
+
+				    for (var i = 0; i < byteCharacters.length; i++) {
+				      byteNumbers[i] = byteCharacters.charCodeAt(i);
+				    }
+				    var byteArray = new Uint8Array(byteNumbers);
+				    var blob = new Blob([byteArray], {type: 'video/ogg'});
+				    var urls = URL.createObjectURL(blob);
+
+				    
+				    //document.getElementById('_video').src = url;
+				    $('.video-js video').attr('src', urls);
+				    $('.video-js video source').attr('src', urls);
+					$(".video-js")[0].load();
+					 
+				    
+				  }
+				  
+				  reader.readAsDataURL(xhr.response);
+				  
+				};
+
+				xhr.open('GET', url);
+				xhr.send();
+
+
+
+
+		}
+
+
+
+
+		var subtopicid,videoid,activityid;
+		var changevideo=function changeVideo(param) {
+			var subtopicid=$(param).attr('topicid');
+			var activity_type=$(param).attr('atype');
+			var videoid=$(param).attr('videoid');
+			var activityid=$(param).attr('activityid');
+			if(activity_type=="video")
+			{
+				
+				$.ajax({
+					url:'{% url "userlms:is_open" %}',
+					type:'post',
+					data: {'topic':subtopicid,'video':videoid},
+					success:function(data){
+						
+						if(data=="Yes")
+						{
+							var video=$(param).attr("video-href");
+							var media_url ="{{ media_url }}";
+							//alert(media_url);
+							// $('.video-js video').attr('src', "{{ media_url }}"+video);
+							$('#assignment_activity_area').hide();
+							$('#drag_activity_area').hide();
+							$("#spin_activity_area").hide();
+							$("#activity_area").show();
+							$('#my-player_html5_api').attr('topicid',subtopicid);
+							$('#my-player_html5_api').attr('videoid',videoid);
+								// $('.video-js video source').attr('src', "{{ media_url }}"+video);
+								// $(".video-js")[0].load();
+								get_video("{{ media_url }}"+video)
+								
+						}
+						else{
+							alert("module is locked");
+						}
+
+					}
+				});
+			}
+			else
+			{
+				$.ajax({
+					url:'{% url "userlms:is_open" %}',
+					type:'post',
+					data:{'topic':subtopicid,'activity':activityid},
+					success:function(data){
+						
+						if(data=="Yes"){
+							var video=$(param).attr("video-href");
+							var media_url ="{{ media_url }}";
+							//alert(media_url);
+							$('.video-js video').attr('src', "{{ media_url }}"+video);
+						
+								$('.video-js video source').attr('src', "{{ media_url }}"+video);
+								$(".video-js")[0].load();
+								//$('.video-js').show();
+						}
+						else{
+							alert("module is locked");
+						}
+
+					}
+				});
+			}
+		}
+
+		// $('.video-js').onended = function() {
+  //   		alert("The audio has ended");
+		// };
+
+
+</script>
+
+	<div class="container py-4 px-0">
+		<div class="col-md-12 col-sm-12 pl-0 pr-0">
+			<div class="col-md-8 col-sm-12 px-0" style="float: left;">
+				<div class="tabs">
+					<div class="tab-heading px-3">
+						<label class="course-overview px-3 brd-btm2 fs-20" style="font-weight: 600; font-family: sans-serif;" onclick="tabCourseTabChange(this, '#contentForWatchingLive')"> Watching Live</label>
+						<label class="course-about px-4 fw-800 fs-20" style="font-weight: 600; font-family: sans-serif;" onclick="tabCourseTabChange(this, '#contentForNotes')"> Notes</label>
+						<label class="course-about px-4 fw-800 fs-20" style="font-weight: 600; font-family: sans-serif;" onclick="tabCourseTabChange(this, '#contentForQA')"> Q&A</label>
+						<label class="course-about px-4 fw-800 fs-20" style="font-weight: 600; font-family: sans-serif;" onclick="tabCourseTabChange(this, '#contentForAbout')"> About</label>
+					</div>
+					<div class="tab-content brd-rds-5" style="box-shadow: 0px 0px 15px #00000029;">
+						<div id="contentForWatchingLive" style="height:300px;overflow-y: scroll; scrollbar-width: none;" class="px-5 py-4 fs-15 check-list">
+							<!-- {% for obj in online %}
+							<p><div class="row">
+			                            	'<div class="col-md-2">
+			                                	'<img src="{% static 'user_lms/img/user.png' %}" class="img-circle img-responsive" style="border-radius: 50%;" height="50" width="50"  alt="" />
+			                            	</div><div class="col-md-10"><div class="mic-info"><a href="#"></a> </div> <div class="comment-text" style="float: right;margin-right:70px;"><button>Chat</button></div></div></div>
+			                </p>
+			                {% endfor %} -->
+
+									
+						</div>
+						<div id="contentForNotes" style="height:300px;overflow-y: scroll; scrollbar-width: none;display: none;" class="px-5 py-4 fs-15" >
+								 <div class="form-group">
+	   							 <label for="notes">Please record all your notes here for future references </label>
+	    							<textarea class="form-control" id="notes" name="notes" rows="3" placeholder="enter note">
+	    								
+	    							</textarea>
+	    							
+
+	  						    </div>
+	  						    <!-- <input type="hidden" name="author" value="{{user.id}}" id="author_notes"/>
+	    							<input type="hidden" name="course" value="{{object.id}}" id="author_course" /> -->
+
+	  						    <div class="form-group" style="float: right">
+	  						    	<button class="btn btn-success send_notes" >Submit</button>
+	  						    </div> 
+
+						</div>
+
+						<div id="contentForQA" class="px-5 py-4 fs-15" style="display: none;height: 300px;overflow-y: scroll; scrollbar-width: none;">
+
+
+				 <!-- <ul style="list-style:none !important;" class="fff"> -->
+
+					{% for d in discussions %}
+                    <p style="list-style:none" class="jgj">
+                        <div class="row">
+                            <div class="col-md-2">
+                            	{% if d.author|get_image_url %}
+                                <img src="{{d.author|get_image_url}}" class="img-circle img-responsive" width="50" height="50" alt="" style="border-radius:50%;" />
+                                {% else %}
+                                <img src="{% static 'user_lms/img/user.png' %}" class="img-circle img-responsive" width="50" height="50" alt="" style="border-radius:50%;" />
+                                {% endif %}
+                            	
+                            </div>
+                            <div class="col-md-10" style="float: right">
+                                
+                                    
+                                    <div class="mic-info">
+                                        By: <a href="#">
+                                       {{ d.author|get_first_name }}</a>  &nbsp;&nbsp; {{d.created_date|date:'d/m/y h:m:s'}}
+                                    </div>
+                                
+                                <div class="comment-text">
+                                    {{ d.discuss }}
+                                </div>
+                                <!-- <div class="action">
+                                    
+                                    <button type="button" class="btn btn-danger btn-xs" title="Delete">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </p>
+                    {% endfor %}
+               <!--  </ul>
+                	 -->
+						<div class="input-group mb-3">
+							  <input type="text" id="qa-discuss" class="form-control" placeholder="write your query"/>
+							  <div class="input-group-append">
+							    <button class="btn btn-success" id="qa-submit" type="button">Submit</button>
+							  </div>
+						</div>
+<!-- <div class="be-comment-block" style="overflow: scroll">
+	<h4 class="comments-title">Comments (3)</h4>
+	<div class="be-comment" style="background: grey;padding:3px;border-radius: 3px;">
+		<div class="be-img-comment">	
+			<a href="blog-detail-2.html">
+				<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="be-ava-comment" width="30" height="30">
+			</a>
+		</div>
+		<div class="be-comment-content">
+			
+				<span class="be-comment-name">
+					<a href="">Ravi Sah</a>
+					</span>
+				<span class="be-comment-time">
+					<i class="fa fa-clock-o"></i>
+					May 27, 2015 at 3:14am
+				</span>
+
+			<p class="be-comment-text">
+				Pellentesque gravida tristique ultrices. 
+				Sed blandit varius mauris, vel volutpat urna hendrerit id. 
+				
+			</p>
+		</div>
+	</div>
+	
+	
+	<form>
+		<div class="form-group">
+	   		<label for="exampleFormControlTextarea1">
+	   		Question:</label>
+
+	   	</div>
+		<input class="form-control" name="text" />
+			
+		<a class="btn btn-primary pull-right">submit</a>
+		
+	</form>
+</div> -->
+
+							
+						</div>
+						<div id="contentForAbout" class="px-5 py-4 fs-15" style="display: none;">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-12 px-2" style="float: left;">
+				<div class="brd-rds-5 px-3 pb-3" style="background: transparent linear-gradient(1deg, #F3E6E8 0%, #D7E1EC 100%) 0% 0% no-repeat padding-box; opacity: 1;border-radius: 5px;">
+					<h6 style="text-align: center; padding: 5px;">Course Achievements</h6>
+
+					<div class="brd-rds-5" style="background: #fff;">
+						<div class="fs-13 py-2" style="text-align: center;width:100%;">
+							Badges
+						</div>
+						<div class="row mx-0 pb-2" style="width: 100%;">
+							<div class="col-sm-4 px-1" style="float: left; text-align:center;">
+								<img src="{% static 'user_lms/img/medal.png' %}" alt="badge image" class="img-responsive" />
+							</div>
+							<div class="col-sm-8 px-0" style="float: left;">
+								<div class="py-2">
+					    			<div>
+					    				<span style="font-size:11px;color:#666;">Complete next module to earn your second badge</span>
+					    			</div>
+					    		<div class="mt-2 row mx-0">
+					    			<div class="col-sm-1 px-0" style="font-size:11px;">
+					    				<img src="{% static 'user_lms/img/course_badge.png' %}" alt="badge icon" />
+					    				</div>
+					    				<div class="col-sm-11 px-1">
+						    				<div class="progress brd-rds-5 mt-1" style="height: 10px;">
+											  <div class="progress-bar cta-color brd-green brd-rds-5" style="width: 20%; background: #28a745;" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>	
+											</div>
+
+											<div class="px-2 py-1" style="font-size:11px;">1 of 5 badges earned</div>
+										</div>
+					    			</div>
+					    		</div>
+							</div>
+						</div>
+					</div>
+					<div class="brd-rds-5 row my-2 mx-0 pb-2" style="background: #fff;">
+						<div class="fs-13 py-2" style="text-align: center; width: 100%;">
+							Certificates
+						</div>
+						<div class="col-sm-4 px-1" style="float: left; text-align: center;">
+							<img src="{% static 'user_lms/img/certificate.png' %}" alt="certificate image" class="img-responsive" />
+						</div>
+						<div class="col-sm-8 px-0" style="float: left;">
+							<div class="py-2">
+				    			<div>
+				    				<span style="font-size:11px;color:#666;">Complete your course to get your certificate
+				    				</span>
+				    			</div>
+				    			<div class="mt-2 row mx-0">
+				    				<div class="col-sm-1 px-0" style="font-size:11px;">
+				    					45%
+				    				</div>
+				    				<div class="col-sm-11 px-1">
+					    				<div class="progress brd-rds-5 mt-1" style="height: 10px;">
+										  <div class="progress-bar cta-color brd-green brd-rds-5" style="width: 45%; background: #28a745;" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>	
+										</div>
+									</div>
+				    			</div>
+				    		</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	
+
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+		<script type="text/javascript">
+			function tabCourseTabChange(t, id){
+				$(t).siblings('label').removeClass('brd-btm2');
+				$(t).addClass('brd-btm2');
+				$(""+id).siblings('div').css('display', 'none');
+				$(""+id).css('display', 'block');
+			}
+		</script>
+</section>
+
+
+<section class="courses-offered container">
+	<div class="pt-4 pb-3" >
+		<h4 style="text-align:center;font-family:sans-serif; font-weight: 800;">Recommended/Searched based</h4>
+		<br>
+	</div>
+	<div id="recommended_courses" class="carousel slide carousel-multi-item px-5 row mx-0" data-ride="carousel">
+	  
+		<div class="carousel-inner" role="listbox">
+
+		    <!--First slide-->
+		    <div class="carousel-item active">
+
+		      	<div class="col-md-3 pop-card" style="float:left">
+
+		        	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		      			<div class="card-inner">
+		      				<img src="{% static 'user_lms/img/f.png' %}" style="height:125px; width:175px;">
+
+		      				<div class="card-inner-content">
+		      				<div class="card-course-name">
+		      					<label class="cc-name">Retail Sales Associate</label>
+		      				</div>
+		      					<div class="card-course-price">
+		      						<span>
+		      							<strike class="card-course-price-strike">Rs. 200.0</strike>
+		      						</span> Free
+		      					</div>
+		      					<div class="fs-13 brd-btm brd-gry">
+		      						<label class="card-course-rating-star">
+		      							<!-- <i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_outline</i> -->
+		      							(New)
+		      						</label>
+		      						<span class="card-enroll-count fl-rt">
+		      							<i class="fa fa-users" aria-hidden="true"></i>
+		      							0
+		      						</span>
+		      					</div>
+		      					<div class="fs-13 py-2">
+		      						<div style="max-height: 120px; min-height: 120px; overflow: hidden;">
+		      							<b>Program Highlight</b><br> 
+		      							<div class="p-highlight">
+		      								<p style="margin-bottom: 0px;">Designed for Entry Level Job Force</p>
+											<p style="margin-bottom: 0px;">Self-Paced Learning for Career Enhancement and Growth</p>
+											<p style="margin-bottom: 0px;">Industry Relevant Curriculum with Latest Trends</p>
+											<p style="margin-bottom: 0px;">Job Placement Assistance</p>
+											<p style="margin-bottom: 0px;">Joint Certification with Retailers Association’s Skill Council of India</p>
+										</div>
+		      						</div>
+		      					</div>
+		      					<div>
+		      						<button class="cta-btn btn-wdth-120 fs-13" onclick="refToLink('https://learning.apprentissage.in/course/view.php?id=12')">Enroll Now</button>
+								
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+		      						</span>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		
+		      		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:20px;">
+		      			<a href="" class="a-norm">
+				      		<div class="fs-13 px-2 py-2 brd-rds-5" style="box-shadow: 10px 10px 15px #00000029;width:300px;background:#fff;">
+				      			<h6 class="fs-15">Retail Sales Associate</h6>
+				      			<!-- <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video minute 200</p> -->
+				      			<p class="brd-btm brd-gry py-1">What you will learn in this course</p>
+				      			<div class="check-list" style="max-height: 240px; min-height:240px; overflow: hidden;">
+					      			<ul class="c-overview p-2" style="list-style-type: none;">
+										<ul style="list-style-type: none;">
+											<li>Kickstart a career with fastest growing sector in India i.e. Retail Store Operations. Earn a certificate at the end of the program along with job placement assistance.</li>
+											<li>Learn about interaction with customers, by giving specialized services and product demonstration.</li>
+										</ul>
+									</ul>
+								</div>
+								<div class="card-course-price txt-center py-1">
+			  						<span>
+			  							<strike class="card-course-price-strike fw-800" style="color: #bbb;">Rs. 200.0</strike>
+			  						</span> Free
+			  					</div>
+			  					<div>
+
+				  					<button style="min-width:200px;" data-href="5" class="cta-btn fs-13">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+			  						<span class="fav-not fl-rt">
+			  							<i class="fa fa-heart" aria-hidden="true"></i>
+			  						</span>
+			  					</div>
+				      		</div>
+				      	</a>
+			      	</div>
+		      	</div>
+		      	<div class="col-md-3 pop-card" style="float:left">
+		        	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		      			<div class="card-inner">
+		      				<img src="{% static 'user_lms/img/f.png' %}" style="height:125px; width:175px;">
+		      				<div class="card-inner-content">
+		      					<div class="card-course-name"><label class="cc-name">Retail Sales Associate</label></div>
+		      					<div class="card-course-price">
+		      						<span>
+		      							<strike class="card-course-price-strike">Rs. 200.0</strike>
+		      						</span> Free
+		      					</div>
+		      					<div class="fs-13 brd-btm brd-gry">
+		      						<label class="card-course-rating-star">
+		      							<!-- <i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_outline</i> -->
+		      							(New)
+		      						</label>
+		      						<span class="card-enroll-count fl-rt">
+		      							<i class="fa fa-users" aria-hidden="true"></i>
+		      							0
+		      						</span>
+		      					</div>
+		      					<div class="fs-13 py-2">
+		      						<div style="max-height: 120px; min-height: 120px; overflow: hidden;">
+		      							<b>Program Highlight</b><br> 
+		      							<div class="p-highlight">
+		      								<p style="margin-bottom: 0px;">Designed for Entry Level Job Force</p>
+											<p style="margin-bottom: 0px;">Self-Paced Learning for Career Enhancement and Growth</p>
+											<p style="margin-bottom: 0px;">Industry Relevant Curriculum with Latest Trends</p>
+											<p style="margin-bottom: 0px;">Job Placement Assistance</p>
+											<p style="margin-bottom: 0px;">Joint Certification with Retailers Association’s Skill Council of India</p>
+										</div>
+		      						</div>
+		      					</div>
+		      					<div>
+		      						<button class="cta-btn btn-wdth-120 fs-13" onclick="refToLink('https://learning.apprentissage.in/course/view.php?id=12')">Enroll Now</button>
+								
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+		      						</span>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:20px;">
+		      			<a href="" class="a-norm">
+				      		<div class="fs-13 px-2 py-2 brd-rds-5" style="box-shadow: 10px 10px 15px #00000029;  width:300px;background:#fff;">
+				      			<h6 class="fs-15">Retail Sales Associate</h6>
+				      			<!-- <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video minute 200</p> -->
+				      			<p class="brd-btm brd-gry py-1">What you will learn in this course</p>
+				      			<div class="check-list" style="max-height: 240px; min-height:240px; overflow: hidden;">
+					      			<ul class="c-overview p-2" style="list-style-type: none;">
+										<ul style="list-style-type: none;">
+											<li>Kickstart a career with fastest growing sector in India i.e. Retail Store Operations. Earn a certificate at the end of the program along with job placement assistance.</li>
+											<li>Learn about interaction with customers, by giving specialized services and product demonstration.</li>
+										</ul>
+									</ul>
+								</div>
+								<div class="card-course-price txt-center py-1">
+			  						<span>
+			  							<strike class="card-course-price-strike fw-800" style="color: #bbb;">Rs. 200.0</strike>
+			  						</span> Free
+			  					</div>
+			  					<div>
+
+				  					<button style="min-width:200px;" data-href="5" class="cta-btn fs-13">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+			  						<span class="fav-not fl-rt">
+			  							<i class="fa fa-heart" aria-hidden="true"></i>
+			  						</span>
+			  					</div>
+				      		</div>
+				      	</a>
+			      	</div>
+		      	</div>
+		      	<div class="col-md-3 pop-card" style="float:left">
+		        	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		      			<div class="card-inner">
+		      				<img src="{% static 'user_lms/img/f.png' %}" style="height:125px; width:175px;">
+		      				<div class="card-inner-content">
+		      					<div class="card-course-name"><label class="cc-name">Retail Sales Associate</label></div>
+		      					<div class="card-course-price">
+		      						<span>
+		      							<strike class="card-course-price-strike">Rs. 200.0</strike>
+		      						</span> Free
+		      					</div>
+		      					<div class="fs-13 brd-btm brd-gry">
+		      						<label class="card-course-rating-star">
+		      							<!-- <i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_outline</i> -->
+		      							(New)
+		      						</label>
+		      						<span class="card-enroll-count fl-rt">
+		      							<i class="fa fa-users" aria-hidden="true"></i>
+		      							0
+		      						</span>
+		      					</div>
+		      					<div class="fs-13 py-2">
+		      						<div style="max-height: 120px; min-height: 120px; overflow: hidden;">
+		      							<b>Program Highlight</b><br> 
+		      							<div class="p-highlight">
+		      								<p style="margin-bottom: 0px;">Designed for Entry Level Job Force</p>
+											<p style="margin-bottom: 0px;">Self-Paced Learning for Career Enhancement and Growth</p>
+											<p style="margin-bottom: 0px;">Industry Relevant Curriculum with Latest Trends</p>
+											<p style="margin-bottom: 0px;">Job Placement Assistance</p>
+											<p style="margin-bottom: 0px;">Joint Certification with Retailers Association’s Skill Council of India</p>
+										</div>
+		      						</div>
+		      					</div>
+		      					<div>
+		      						<button class="cta-btn btn-wdth-120 fs-13" onclick="refToLink('https://learning.apprentissage.in/course/view.php?id=12')">Enroll Now</button>
+								
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+		      						</span>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:20px;">
+		      			<a href="" class="a-norm">
+				      		<div class="fs-13 px-2 py-2 brd-rds-5" style="box-shadow: 10px 10px 15px #00000029;  width:300px;background:#fff;">
+				      			<h6 class="fs-15">Retail Sales Associate</h6>
+				      			<!-- <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video minute 200</p> -->
+				      			<p class="brd-btm brd-gry py-1">What you will learn in this course</p>
+				      			<div class="check-list" style="max-height: 240px; min-height:240px; overflow: hidden;">
+					      			<ul class="c-overview p-2" style="list-style-type: none;">
+										<ul style="list-style-type: none;">
+											<li>Kickstart a career with fastest growing sector in India i.e. Retail Store Operations. Earn a certificate at the end of the program along with job placement assistance.</li>
+											<li>Learn about interaction with customers, by giving specialized services and product demonstration.</li>
+										</ul>
+									</ul>
+								</div>
+								<div class="card-course-price txt-center py-1">
+			  						<span>
+			  							<strike class="card-course-price-strike fw-800" style="color: #bbb;">Rs. 200.0</strike>
+			  						</span> Free
+			  					</div>
+			  					<div>
+
+				  					<button style="min-width:200px;" data-href="5" class="cta-btn fs-13">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+			  						<span class="fav-not fl-rt">
+			  							<i class="fa fa-heart" aria-hidden="true"></i>
+			  						</span>
+			  					</div>
+				      		</div>
+				      	</a>
+			      	</div>
+		      	</div>
+		      	<div class="col-md-3 pop-card" style="float:left">
+		        	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		      			<div class="card-inner">
+		      				<img src="{% static 'user_lms/img/f.png' %}" style="height:125px; width:175px;">
+		      				<div class="card-inner-content">
+		      					<div class="card-course-name"><label class="cc-name">Retail Sales Associate</label></div>
+		      					<div class="card-course-price">
+		      						<span>
+		      							<strike class="card-course-price-strike">Rs. 200.0</strike>
+		      						</span> Free
+		      					</div>
+		      					<div class="fs-13 brd-btm brd-gry">
+		      						<label class="card-course-rating-star">
+		      							<!-- <i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+		      							<i class="material-icons fs-15" aria-hidden="true">star_outline</i> -->
+		      							(New)
+		      						</label>
+		      						<span class="card-enroll-count fl-rt">
+		      							<i class="fa fa-users" aria-hidden="true"></i>
+		      							0
+		      						</span>
+		      					</div>
+		      					<div class="fs-13 py-2">
+		      						<div style="max-height: 120px; min-height: 120px; overflow: hidden;">
+		      							<b>Program Highlight</b><br> 
+		      							<div class="p-highlight">
+		      								<p style="margin-bottom: 0px;">Designed for Entry Level Job Force</p>
+											<p style="margin-bottom: 0px;">Self-Paced Learning for Career Enhancement and Growth</p>
+											<p style="margin-bottom: 0px;">Industry Relevant Curriculum with Latest Trends</p>
+											<p style="margin-bottom: 0px;">Job Placement Assistance</p>
+											<p style="margin-bottom: 0px;">Joint Certification with Retailers Association’s Skill Council of India</p>
+										</div>
+		      						</div>
+		      					</div>
+		      					<div>
+		      						<button class="cta-btn btn-wdth-120 fs-13" onclick="refToLink('https://learning.apprentissage.in/course/view.php?id=12')">Enroll Now</button>
+								
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+		      						</span>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:20px;">
+		      			<a href="" class="a-norm">
+				      		<div class="fs-13 px-2 py-2 brd-rds-5" style="box-shadow: 10px 10px 15px #00000029;  width:300px;background:#fff;">
+				      			<h6 class="fs-15">Retail Sales Associate</h6>
+				      			<!-- <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video minute 200</p> -->
+				      			<p class="brd-btm brd-gry py-1">What you will learn in this course</p>
+				      			<div class="check-list" style="max-height: 240px; min-height:240px; overflow: hidden;">
+					      			<ul class="c-overview p-2" style="list-style-type: none;">
+										<ul style="list-style-type: none;">
+											<li>Kickstart a career with fastest growing sector in India i.e. Retail Store Operations. Earn a certificate at the end of the program along with job placement assistance.</li>
+											<li>Learn about interaction with customers, by giving specialized services and product demonstration.</li>
+										</ul>
+									</ul>
+								</div>
+								<div class="card-course-price txt-center py-1">
+			  						<span>
+			  							<strike class="card-course-price-strike fw-800" style="color: #bbb;">Rs. 200.0</strike>
+			  						</span> Free
+			  					</div>
+			  					<div>
+
+				  					<button style="min-width:200px;" data-href="5" class="cta-btn fs-13">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+			  						<span class="fav-not fl-rt">
+			  							<i class="fa fa-heart" aria-hidden="true"></i>
+			  						</span>
+			  					</div>
+				      		</div>
+				      	</a>
+			      	</div>
+		      	</div>
+		      	
+		      	
+		    </div> 
+
+		    <div class="carousel-item">
+		    
+		      	
+		      
+		      	
+		      	
+		    </div>
+		      	
+
+		</div>
+		    
+		<a class="carousel-control-prev cta-color" style="opacity: 1 !important; width:40px;"  href="#recommended_courses" role="button" data-slide="prev">
+	      <span style="font-weight: 800;" class="fa fa-chevron-circle-left fs-24" aria-hidden="true"></span>
+	      <span class="sr-only">Previous</span>
+	    </a>
+	    <a class="carousel-control-next cta-color" style="opacity: 1 !important; width:40px;"  href="#recommended_courses" role="button" data-slide="next">
+	      <span style="font-weight: 800;" class="fa fa-chevron-circle-right fs-24" aria-hidden="true"></span>
+	      <span class="sr-only">Next</span>
+	    </a>
+	</div>
+	<div class="clearfix"></div>
+
+
+	
+</section>
+
+<style>
+
+.chat-list {
+    padding: 0;
+    font-size: .8rem;
+}
+
+.chat-list li {
+    margin-bottom: 10px;
+    overflow: auto;
+    color: #ffffff;
+}
+
+.chat-list .chat-img {
+    float: left;
+    width: 48px;
+}
+
+.chat-list .chat-img img {
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    width: 100%;
+}
+
+.chat-list .chat-message {
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    background: #5a99ee;
+    display: inline-block;
+    padding: 10px 20px;
+    position: relative;
+}
+
+.chat-list .chat-message:before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    width: 0;
+    height: 0;
+}
+
+.chat-list .chat-message h5 {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    line-height: 100%;
+    font-size: .9rem;
+}
+
+.chat-list .chat-message p {
+    line-height: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+.chat-list .chat-body {
+    margin-left: 20px;
+    float: left;
+    width: 70%;
+}
+
+.chat-list .in .chat-message:before {
+    left: -12px;
+    border-bottom: 20px solid transparent;
+    border-right: 20px solid #5a99ee;
+}
+
+.chat-list .out .chat-img {
+    float: right;
+}
+
+.chat-list .out .chat-body {
+    float: right;
+    margin-right: 20px;
+    text-align: right;
+}
+
+.chat-list .out .chat-message {
+    background: #fc6d4c;
+}
+
+.chat-list .out .chat-message:before {
+    right: -12px;
+    border-bottom: 20px solid transparent;
+    border-left: 20px solid #fc6d4c;
+}
+
+.card .card-header:first-child {
+    -webkit-border-radius: 0.3rem 0.3rem 0 0;
+    -moz-border-radius: 0.3rem 0.3rem 0 0;
+    border-radius: 0.3rem 0.3rem 0 0;
+}
+
+
+</style>
+<!-- aria-labelledby="exampleModalLabel" aria-hidden="true" -->
+<div class="modal fade" id="chatModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog modal-lg modal-dialog-centered">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="chatmodaltitle">Chat</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+             </div>
+           <div class="modal-body">
+            <div class="container content">
+    			<div class="row">
+       			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        			<p id="chatpmessage" class="chatpmessage" style="height:100%;width:100%;">
+        			</p>
+
+        			<!-- <ul class="chat-list" style="float:left;">
+        				<li class="in">
+        					<div class="chat-img">
+        					 <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar1.png" width="50" height="40" 
+        							>
+        					</div>
+        					<div class="chat-body" style="margin-left: 20px;float: left; width: 70%;">
+        						<div class="chat-message" >
+        							 <h5>Jimmy Willams</h5> 
+        							<p id="chatpmessage" class="chatpmessage">
+        							</p>
+        						</div>
+        					</div>
+        				</li>
+
+
+        			</ul>  -->
+        		</div>
+        	</div>
+        </div>
+        <div class="modal-footer">
+        <input type="text" class="form-control" name="chattext" id="chattext" />
+        <button id="chattextsubmit" class="btn btn-success">Send</button>
+      </div>
+           </div>
+         </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+{% block inpage_script %}
+	{% load static %}
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script>
+	// $('.chatmodalopen').click(function(){
+ //        alert();
+ //        $('#chatModal').modal('show');
+ //    });
+	</script>
+	<script>
+
+		var padding = {top:20, right:40, bottom:0, left:0},
+            w = 350 - padding.left - padding.right,
+            h = 350 - padding.top  - padding.bottom,
+            r = Math.min(w, h)/2,
+            rotation = 0,
+            oldrotation = 0,
+            picked = 100000,
+            oldpick = [],
+            color = d3.scale.category20();
+	        var data = [
+	                {"label":"Dell LAPTOP",  "value":1,  "question":["What CSS property is used for specifying the area between the content and its border?","ddddd","ddwdw"]}, 
+	                {"label":"DeTOP",  "value":1,  "question":["What CSS property is used for specifying the area between the content and its border?","ddd","sdjcbejb"]}, 
+	                
+	        ];
+        
+	    //var container ="";
+	    var svg=null;
+        var container = null;
+        var data=null;
+        var vis=null;
+        //var oldpick = null;
+        function spin(d)
+        {
+
+        	data = spin_data ;
+        	$("input[name='op']").prop('checked', false);
+	        	console.log("OldPick: " + oldpick.length, "Data length: " + data.length);
+		        if(oldpick.length == data.length)
+		        {
+		            //console.log("done");
+		        }
+		        var ps= 360/data.length
+		        pieslice = Math.round(1440/data.length)
+		        rng      = Math.floor((Math.random() * 1440) + 360);
+		        rotation = (Math.round(rng / ps) * ps); 
+		        picked = Math.round(data.length - (rotation % 360)/ps);
+		        picked = picked >= data.length ? (picked % data.length) : picked;
+		        console.log('picked is'+picked);
+		        console.log('oldpick is '+oldpick)
+		        if(oldpick.indexOf(picked) !== -1)
+		        {
+		            d3.select(this).call(spin);
+		            return;
+		        } 
+		        else 
+		        {
+		        }
+	            rotation += 90 - Math.round(ps/2);
+	            vis.transition().duration(3000).attrTween("transform", rotTween)
+	                .each("end", function(){
+	                    d3.select("#question h3").text('Question: '+data[picked].question[0].q);
+	                  	$("#questionheader").attr('data-qid',data[picked].question[0].qid);
+
+                    $('#op1').show();
+                    $('#op2').show();
+                    $('#op3').show();
+                    $('#op4').show();
+                    $('#saveanswer').show();
+                    $('#op1').val(data[picked].question[0].op1);
+                    $('#label_op1').text(data[picked].question[0].op1);
+
+                    $('#op2').val(data[picked].question[0].op2);
+                    $('#label_op2').text(data[picked].question[0].op2);
+
+                    $('#op3').val(data[picked].question[0].op3);
+                    $('#label_op3').text(data[picked].question[0].op3);
+
+                    $('#op4').val(data[picked].question[0].op4);
+                    $('#label_op4').text(data[picked].question[0].op4);
+
+                    data[picked].question.shift();
+                    console.log('que is'+data[picked].question);
+                    $('#spin_questions').show();
+                    if(data[picked].question.length < 1)
+                    {
+                      d3.select(".slice:nth-child(" + (picked + 1) + ") path")
+                       .attr("fill", "#111");
+                      console.log("done with "+picked);
+                      oldpick.push(picked);
+                    }
+                    oldrotation = rotation;
+                    
+                    //container.on("click", spin);
+                });
+
+        }
+
+ 	 	//     var dataStore = (function(url){
+  		//   			var spin_data;
+
+			    
+
+		// 	    return {getSpinData : function()
+		// 	    {
+		// 	        if (spin_data) return spin_data;
+		// 	        // else show some error that it isn't loaded yet;
+		// 	    }};
+		// });
+
+
+        //var data = $(dataStore.getSpinData());
+        function create_spin(data)
+        {
+        	//console.log("datA",data);
+	        svg = d3.select('#chart')
+	            .append("svg")
+	            .data([spin_data])
+	            .attr("width",  w + padding.left + padding.right)
+	            .attr("height", h + padding.top + padding.bottom);
+
+	        container = svg.append("g")
+	            .attr("class", "chartholder")
+	            .attr("transform", "translate(" + (w/2 + padding.left) + "," + (h/2 + padding.top) + ")");
+
+	        vis = container.append("g");
+	        var pie = d3.layout.pie().sort(null).value(function(d){return 1;});
+	        var arc = d3.svg.arc().outerRadius(r);
+	        var arcs = vis.selectAll("g.slice")
+	            .data(pie)
+	            .enter()
+	            .append("g")
+	            .attr("class", "slice");
+            
+	        arcs.append("path")
+	            .attr("fill", function(d, i){ return color(i); })
+	            .attr("d", function (d) { return arc(d); });
+        	// add the text
+        	arcs.append("text").attr("transform", function(d){
+                	d.innerRadius = 0;
+                	d.outerRadius = r;
+                	d.angle = (d.startAngle + d.endAngle)/2;
+                	return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")translate(" + (d.outerRadius -10) +")";
+            		})
+            		.attr("text-anchor", "end")
+		            .text( function(d, i) {
+		         		//return data.all_topics.label;
+		         		return d.label;
+		    });
+        	container.on("click",spin);
+        	var closed_flag =false;
+        	svg.append("g").attr("transform", "translate(" + (w + padding.left + padding.right) + "," + ((h/2)+padding.top) + ")")
+            .append("path")
+            .attr("d", "M-" + (r*.15) + ",0L0," + (r*.05) + "L0,-" + (r*.05) + "Z")
+            .style({"fill":"black"});
+
+			container.append("circle")
+	            .attr("cx", 0)
+	            .attr("cy", 0)
+	            .attr("r", 60)
+	            .style({"fill":"white","cursor":"pointer"});
+        	//spin text
+        	container.append("text")
+            .attr("x", 0)
+            .attr("y", 15)
+            .attr("text-anchor", "middle")
+            .text("spin")
+            .style({"font-weight":"bold", "font-size":"25px"});
+        }
+
+        
+        
+        
+        function rotTween(to) {
+          var i = d3.interpolate(oldrotation % 360, rotation);
+          return function(t) {
+            return "rotate(" + i(t) + ")";
+          };
+        }
+        
+        
+        function getRandomNumbers(){
+            var array = new Uint16Array(1000);
+            var scale = d3.scale.linear().range([360, 1440]).domain([0, 100000]);
+            if(window.hasOwnProperty("crypto") && typeof window.crypto.getRandomValues === "function"){
+                window.crypto.getRandomValues(array);
+                console.log("works");
+            } 
+            else {
+                //no support for crypto, get crappy random numbers
+                for(var i=0; i < 1000; i++){
+                    array[i] = Math.floor(Math.random() * 100000) + 1;
+                }
+            }
+            return array;
+        }
+
+        
+
+
+		function playerBtnSet(){
+			$('.vjs-big-play-button').each(function(i){
+				var height = $(this).siblings('video').outerHeight();
+				var width = $(this).siblings('video').outerWidth();
+				var top = Math.round(height/2 - 30);
+				var left = Math.round(width/2 - 30);
+
+				$(this).css({
+	    			'margin': '0',
+	    			'top': ''+top+'px',
+	    			'left': ''+left+'px',
+				});
+			});
+		}
+
+		
+
+		// $('#saveanswer').hide();
+  //       $('#op1').hide();
+  //       $('#op2').hide();
+  //       $('#op3').hide();
+  //       $('#op4').hide();
+
+  		function submit_assignment()
+  		{
+  			
+			var formData = new FormData();
+			//console.log($('#assignment_file')[0]);
+			var file=$('#assignment_file')[0].files[0];
+			//console.log(files);
+			formData.append('file', file);
+			formData.append('user',"{{ user.id }}");
+			var activity_id=$('#assignment_file').attr("data-attr");
+  			formData.append("activity_id",activity_id);
+			console.log(formData);
+			$.ajax({
+			     	url: '{% url "userlms:submit_assignment" %}',
+			     	data: formData,
+			     	contentType: false,
+			     	processData: false,
+			     	cache: false,
+			     	type: 'POST',
+			     	success: function(data) 
+			     	{
+			      		alert(data);
+			     	}
+			});
+  		}
+
+        $('.show_assignment_activity').click(function(){
+			//if($('#assignment_activity_area').is(":hidden"))
+			//{
+				var ac_id =$(this).attr('data-attr');
+				var url =$(this).attr('data-href');
+				$('#assignment_file').attr('data-attr',ac_id);
+				$('#activity_area').hide();
+				$('#assignment_activity_area').hide();
+				$('#spin_activity_area').hide();
+				$('#drag_activity_area').hide();
+
+				// document.getElementById('assignment_activity_area').innerHTML="";
+				function populatePre(url) {
+					$('#assignment_activity_area').show();
+					// document.getElementById('assignment_file_obj').setAttribute("data",window.location.host+url);
+					// document.getElementById('assignment_file').setAttribute("src",window.location.host+url);
+					document.getElementById('assignment_file_iframe').setAttribute("href", url);
+					// document.getElementById('assignment_file_iframe').setAttribute("src","http://www.africau.edu/images/default/sample.pdf");
+    				// var xhr = new XMLHttpRequest();
+    				// xhr.onload = function () {
+        // 				document.getElementById('assignment_content').textContent = this.responseText;
+    				// };
+    				// xhr.open('GET', url);
+    				// xhr.send();
+				}
+
+				$.ajax({
+					url:'{% url "userlms:get_activity" %}'+ac_id+"/",
+					method:'post',
+					success:function(data){
+						populatePre(data);
+					}
+				});
+			//}
+			//dataStore('{% url "userlms:show_spin_activity" %}'+"/"+ac_id+"/");
+		});
+
+		$('.show_drag_activity').click(function(){
+			var ac_id =$(this).attr('data-href');
+			$('#activity_area').hide();
+			$('#assignment_activity_area').hide();
+			$('#drag_activity_area').show();
+			$('#spin_activity_area').hide();
+
+			$.ajax({
+				url:'{% url "customadmin:add_drag_element" %}'+ac_id+"/",
+				type:'get',
+				success:function(data){
+					alert(data);
+				}
+			});
+
+
+
+		});
+
+		$('.show_spin_activity').click(function(){
+			//if($('#spin_activity_area').is(":hidden"))
+			//{
+				var ac_id =$(this).attr('data-attr');
+				var url =$(this).attr('data-href');
+				$('#activity_area').hide();
+				$('#assignment_activity_area').hide();
+				$('#drag_activity_area').hide();
+				$('#spin_activity_area').hide();
+				spinactivity_id = ac_id;
+				document.getElementById('spin_activity_area').innerHTML="";
+				spin_data = null;
+				document.getElementById('spin_activity_area').innerHTML='<div class="col-md-6"><div id="chart"></div></div><div class="col-md-6" style="display:none" id="spin_questions"><div id="question" style="margin-top:50px;"><h3 id="questionheader" style="font-size:17px;"data-qid=""></h3><div class="options" style="padding:10px;"><p style="list-style: none"><input type="radio" name="op" data-aid="" id="op1"><label id="label_op1" for="op1"></label> <br/><input type="radio" name="op"  data-aid="" id="op2"><label id="label_op2" for="op2"></label><br/><input type="radio" name="op"  data-aid="" id="op3"><label id="label_op3" for="op3"></label><br/><input type="radio" name="op" data-aid="" id="op4"><label id="label_op4" for="op4"></label><br/></p><button class="btn btn-success" id="saveanswer" data-sid="" value="saveanswer" onclick="saveanswer()">Save Answer</button></div></div></div>';
+
+				$.ajax({
+						url:"{% url 'userlms:show_spin_activity' %}/"+ac_id+"/",
+						type:'post',
+						success:function(data){
+						var dd=JSON.parse(data)
+						spin_data=dd.alltopics
+						//console.log(dd);
+						create_spin(dd.alltopics);
+
+						$('#spin_activity_area').show();
+						//$('#spin_activity_area').html(data);
+						//var data=[];
+	       				//set_spin_question(dd.alltopics)
+						}
+				});
+			//}
+			//dataStore('{% url "userlms:show_spin_activity" %}'+"/"+ac_id+"/");
+		});
+
+		function saveanswer()
+		{
+        	//alert();
+      // get selected radio button id or value
+		  var radioValue = $("input[name='op']:checked").val();
+          var attrid = $("input[name='op']:checked").attr('id')
+
+          if(attrid=='op1'){
+            var opt='a';
+          }
+          else if(attrid=='op2'){
+            var opt='b';
+          }
+          else if(attrid=='op3'){
+            var opt='c';
+          }
+          else{
+            var opt='d';
+          }
+
+          console.log(opt);
+          //console.log(spinactivity_id);
+          //console.log($('#questionheader').attr('data-qid'));
+      	   //var spinactivity_id=null;
+           $.post("{{ EXTRA_UTL }}/admin/store_ans_spin/",
+           {
+             'questionid':$('#questionheader').attr('data-qid'),
+             'answerid':opt,
+             'spinactivityid':spinactivity_id,
+            },
+            function(data, status){
+              alert("answer saved successfully");
+
+            });
+            //alert(data.length);
+            //alert(oldpick.length);
+            if(data.length==oldpick.length)
+            {     //alert("slice length");
+                   $.post("{% url 'userlms:activity_completed' %}",
+                    {
+                         'activityid':spinactivity_id,
+                         'userid':"{{user.id}}",
+                         'type':"spin_activity"
+                        },
+                        function(data, status){
+                          alert(data);
+                          window.location.href=window.location.href;
+                    });
+            }
+
+		}
+
+		// function set_spin_question(all_topics)
+		// {
+		// 	for (var i=0;i<all_topics.length;i++)
+  //       	{
+		//           topic=all_topics[i]
+		//           var temp={}
+		//           temp.label=topic.topic_name;
+		//           qlength=topic.questions.length;
+		//           questions=topic.questions
+		//           temp.value=qlength;
+		//           qarray=[];
+		//           for (var j=0;j<qlength;j++)
+		//           {
+		            
+		//             qarray.push({'qid':questions[j].qid,'q':questions[j].q,'op1':questions[j].op1,'op2':questions[j].op2,'op3':questions[j].op3,'op4':questions[j].op4});
+		//           }
+		//           temp.question=qarray
+		//           //data.push(temp)
+  //       	}
+		// }
+
+		$(document).ready(function(e){
+			var course_details = JSON.parse(document.getElementById('course_about').textContent);
+
+			//var course_highlights = JSON.parse(document.getElementById('course_highlights').textContent);
+			var course_overview = JSON.parse(document.getElementById('course_overview').textContent);
+			$('#course-abouts').html(course_details);
+			$('#contentForAbout').html(course_details);
+			//$('#contentForWatchingLive').html(course_overview);
+			$("ul").css('list-style-type', "none");
+
+			$('.vjs-big-play-button').addClass('player-ply-btn');
+			var video = document.getElementById('my-player_html5_api');
+
+			video.addEventListener("ended", function(){
+				//alert("video ended");
+				//get next_module and open it
+				var topicid=$(this).attr("topicid");
+				var videoid=$(this).attr("videoid");
+				$.ajax({
+					url:'{% url "userlms:open_next_topic" %}',
+					type:'post',
+					data:{'topic':topicid,'video':videoid},
+					success:function(data){
+						//alert(data);
+						window.location.href = window.location.href;
+					}
+				});
+
+
+			});
+
+
+			setTimeout(function(e){
+				playerBtnSet();
+
+				var video = document.getElementById('my-player_html5_api');
+				var supposedCurrentTime = 0;
+				video.addEventListener('timeupdate', function() {
+				  if (!video.seeking) {
+				        supposedCurrentTime = video.currentTime;
+				  }
+				});
+				// prevent user from seeking
+				video.addEventListener('seeking', function() {
+				  // guard agains infinite recursion:
+				  // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+				  var delta = video.currentTime - supposedCurrentTime;
+				  if (Math.abs(delta) > 0.01) {
+				    console.log("Seeking is disabled");
+				    video.currentTime = supposedCurrentTime;
+				  }
+				});
+				// delete the following event handler if rewind is not required
+				video.addEventListener('ended', function() {
+				  // reset state in order to allow for rewind
+				    supposedCurrentTime = 0;
+				});
+			},200);
+
+			$("#activity_screen_resize").click(function(e)
+			{
+				var scr_attr = $(this).attr('data-fullscreen');
+				if(scr_attr == "False"){
+					document.documentElement.requestFullscreen();
+					$("#activity_area").addClass('full-screen-div');
+					$("#activity_screen_resize").html('<span class="fa fa-compress"></span>');
+					$("#activity_screen_resize").siblings('div').css({
+						'width': '100%',
+						'height':'100%'
+					});
+					$(this).attr('data-fullscreen', "True");
+				}
+				else{
+					$("#activity_area").removeClass('full-screen-div');
+					$("#activity_screen_resize").html('<span class="fa fa-expand"></span>');
+					$("#activity_screen_resize").siblings('div').css({
+						'width': '100%',
+						'height':'400px'
+					});
+					$(this).attr('data-fullscreen', "False");
+					document.exitFullscreen();
+				}
+
+				playerBtnSet();
+			});
+
+			$("ul").css('list-style-type', "none");
+
+			$('.carousel-item').each(function(e){
+				$(this).children('.pop-card').each(function(i){
+					if(i >= 2){
+						$(this).children('.pop-card-hover').css('left', '-305px');
+					}
+				});
+			});
+			
+		});
+
+		$('.open_popup').click(function(){
+			var url =$(this).attr('data-href');
+			window.open(url,"activity",'toolbar=no,fullscreen=yes,titlebar=no,menubar=no');
+		});
+
+
+
+		
+
+		// var course_id = JSON.parse(document.getElementById('course_id').textContent);
+  		$('#qa-submit').click(function(){
+  			var discuss=$('#qa-discuss').val();
+  			var courseid="{{ object.id }}";
+  			var userid="{{ user.id }}";
+  			$.ajax({
+  				url:'{% url "userlms:add_discussion" %}',
+  				type:'post',
+  				data:{'discuss':discuss,'author':userid,'course':courseid },
+  				success:function(data){
+  					//alert(data);
+  					window.location.href = window.location.href;
+  				}
+  			});
+  		});
+
+        //var x=document.getElementById('person_list');
+        // const roomName = JSON.parse(document.getElementById('room-name').textContent);
+      
+        // var l_rcp=document.getElementById("recp_list");
+
+
+        
+                    
+
+  				
+	</script>
+	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    
+	<script>
+	$(document).ready(function(){
+
+
+
+		var roomName="{{ room.room_id }}";
+		var user ="{{ user.id }}";
+		var course ="{{ object.id }}";
+		
+		/*chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'+user+'/'
+        );
+        //console.log(chatSocket);
+
+        chatSocket.onopen = function open() {
+    		let now = new Date();
+    		console.log("connected socket")
+    		console.info(now.toLocaleString() + ':' + now.getMilliseconds() + ' – WebSocket connection created.');
+		};
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if(typeof(data.userlist)!='undefined')
+            {     
+               console.log((data.userlist));
+               var watchinglive = $('#contentForWatchingLive');
+				watchinglive.html('');
+               for(var i=0;i< data.userlist.length;i++)
+               {
+               		//data.userlist[i]
+               		if(data.userlist[i]!=user)
+               		{
+               			watchinglive.append('<p>'+	
+									'<div class="row">'+
+			                            	'<div class="col-md-2">'+
+			                                	'<img src="{% static 'user_lms/img/user.png' %}" class="img-circle img-responsive" style="border-radius: 50%;" height="50" width="50"  alt="" />'+
+			                            	'</div><div class="col-md-10"><div class="mic-info"><a href="#">'+data.userlist[i]+'</a> </div> <div class="comment-text" style="float: right;margin-right:70px;"><button type="button" class="btn btn-primary chatmodalopen" data-href="'+data.userlist[i]+'" onclick="openchatmodal(this)">Chat</button></div></div></div></p>');
+               	 	}
+               }
+
+               
+               //var options = document.querySelectorAll('#person_list option');
+               // options.forEach(o => o.remove());
+
+               //  for(var i=0;i< data.userlist.length;i++)
+               //  {
+               //      var option = document.createElement("option");
+               //      option.text = data.userlist[i];
+               //      option.value=data.userlist[i];
+               //      x.add(option, x[i]);
+               //  } 
+                
+            }
+            // else if(data.file){
+            //     var aTag = document.createElement('a');
+            //     aTag.setAttribute('href',"/chat/get_file/"+data.message);
+            //     aTag.innerText = data.message;
+            //     // html_response='<a href="/chat/get_file/">'+data.message+'</a>';
+            //    //document.querySelector('#chat-log').value += (aTag + '\n'); 
+            //    document.querySelector('#chat-log').appendChild(aTag);
+            //    document.querySelector('#chat-log').value += '\n';
+            // }
+            else
+            {
+               document.querySelector('.chatpmessage').innerText += (data.message + '\n');
+            }
+            
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+         //    chatSocket = new WebSocket(
+         //    'ws://'
+         //    + window.location.host
+         //    + '/ws/chat/'
+         //    + roomName
+         //    + '/'+user+'/'
+        	// );
+        };
+
+        chatSocket.onerror = function(error) {
+    		let now = new Date();
+    		let msg = now.toLocaleString() + ':' + now.getMilliseconds() + ' – WebSocket error: ' + error;
+    		console.error(msg);
+		}
+
+		window.addEventListener("unload", function () {
+    		if(chatSocket.readyState == WebSocket.OPEN)
+        		chatSocket.close();
+		});
+
+		// setInterval(function(){ 
+		// 	var courseid="{{ object.id }}"
+		// 	$.ajax({
+		// 		url:'{% url "userlms:get_online_user" %}',
+		// 		data:{'course':courseid},
+		// 		type:'post',
+		// 		success:function(data){
+		// 			//console.log(data);
+		// 			var all_user=JSON.parse(data);
+					
+		// 			var watchinglive = $('#contentForWatchingLive');
+		// 			watchinglive.html('');
+		// 			//console.log(all_user);
+		// 			//console.log(all_user.length);
+		// 			var i=0;
+		// 			for(i=0;i< all_user.users.length;i++)
+  //  					{
+  //  						//console.log(all_user);
+  //    //           		//data.userlist[i]
+  //    //           		console.log(all_user[i]);
+  //    				var o_user=all_user.users[i];
+
+  //              		watchinglive.append('<p><div class="row"><div class="col-md-2"><img src="{% static 'user_lms/img/user.png' %}" class="img-circle img-responsive" style="border-radius: 50%;" height="50" width="50"  alt="" /></div><div class="col-md-10"><div class="mic-info"><a href="#">'+
+		// 	                            	o_user+'</a> </div> <div class="comment-text" style="float: right;margin-right:70px;"><button type="button" class="btn btn-primary chatmodalopen" data-href="'+o_user+'" onclick="openchatmodal(this)">Chat</button></div></div></div></p>');
+  //              			//$('.chatModal').attr("data-href","");
+  //             			//$('.chatModal').attr("data-href",o_user);
+  //             		}
+		// 		}
+		// 	});
+		// }, 3000);
+
+        // document.querySelector('#chat-message-input').focus();
+        // document.querySelector('#chat-message-input').onkeyup = function(e) {
+        //     if (e.keyCode === 13) {  // enter, return
+        //         document.querySelector('#chat-message-submit').click();
+        //     }
+        // };
+
+        // $('#chatmodalopen').click(function(){
+        // 	alert();
+        // });
+        document.querySelector('#chattextsubmit').onclick = function(e) 
+        {
+        	//alert('f');
+            const messageInputDom = document.querySelector('#chattext');
+            const message = messageInputDom.value;
+            //var to_send=document.getElementById("person_list").value;
+            var to_send = $('#chatModal').attr("data-href");
+            //alert("sending to "+to_send);
+
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'to_send':to_send,
+                'from':"{{ user.id }}",
+                'course':"{{ object.id }}",
+                'type':'text',
+                
+            }));
+            messageInputDom.value = '';
+            document.querySelector('.chatpmessage').innerText += ('you: '+message + '\n');
+
+        };
+*/        
+	});
+
+	function openchatmodal(param)
+	{
+		var username=param.getAttribute("data-href");
+		//alert(username);
+		$('#chatModal').attr("data-href",username);
+
+		$('#chatModal').modal('show');
+	}
+	</script>
+
+
+	
+	<script>
+
+    var activityPlayerConf = 
+    {
+      title : "Test title",
+      width:"760",
+      height:"450",
+      background: {
+        image:false,
+        src:'https://kaveri.s3.ap-south-1.amazonaws.com/images/originals/161102115111385.png',
+        isColor:true,
+        color:'#f9f9f9',
+      },
+      elements:{
+        draggable:[
+          // {
+          //   type : "text",
+          //   label:"First label",
+          //   elid:"option1",
+          //   labelShow:true,
+          //   text:"First option Text",
+          //   color:"red",
+          //   border:true,
+          //   correct:true,
+          //   height:'50px',
+          //   width:'150px',
+          //   positionX:'100',
+          //   positionY:'50',
+          //   border:true,
+          //   borderColor:'#666',
+          // },
+          // {
+          //   type : "text",
+          //   labelShow:true,
+          //   elid:"option2",
+          //   label:"Second label",
+          //   text:"Second option Text",
+          //   color:"blue",
+          //   correct:true,
+          //   height:'50px',
+          //   width:'150px',
+          //   positionX:'400',
+          //   positionY:'50',
+          // },
+          {
+            type : "image",
+            label:"Third label",
+            elid:"option3",
+            labelShow:true,
+            src:"https://kaveri.s3.ap-south-1.amazonaws.com/images/originals/161102115111385.png",
+            correct:false,
+            height:'50px',
+            width:'150px',
+            positionX:'100',
+            positionY:'150',
+          },
+          {
+            type : "rect",
+            label:"forth label",
+            elid:"option4",
+            text:"Second option Text",
+            color:"white",
+            correct:true,
+            background:"blue",
+            rectProps: {
+              stroke: 'red', 
+              strokeWidth: 1,
+              fill: ''
+            },
+            height:'50px',
+            width:'150px',
+            positionX: '400',
+            positionY:'200',
+          }
+        ],
+        droppable:[
+          {
+            label:"First droppable",
+            text:"First droppable Text",
+            color:"red",
+            elid:"drop1",
+            backgroundImage:true,
+            backgroundColor:false,
+            backgroundSrc:'https://kaveri.s3.ap-south-1.amazonaws.com/images/originals/161102115111385.png',
+            correct:true,
+            border:true,
+            borderColor:'#666',
+            height:'150px',
+            width:'500px',
+            positionX:'200',
+            positionY:'280',
+          },
+        ],
+      }
+    };
+  
+  
+
+
+    $(document).ready(function(e){
+      var html = '';
+      var innerContent = '';
+
+      if(activityPlayerConf != undefined)
+      {
+        document.querySelector('#activity_title').textContent = activityPlayerConf.title;
+        var baseStyle = 'border:1px #000 solid; width:'+activityPlayerConf.width+'px; height:'+activityPlayerConf.height+'px;';
+        if(activityPlayerConf.background.image == true){
+          baseStyle += "background-image:url('"+activityPlayerConf.background.src+"'); background-size:contain; background-repeat:no-repeat; background-position:center;";
+        }
+        if(activityPlayerConf.background.isColor == true){
+          baseStyle += "background-color:"+activityPlayerConf.background.color+";";
+        }
+        html += '<div style="'+baseStyle+'" id="baseContainerElement">'+innerContent+'</div>';
+
+        document.querySelector('#activityPlayer').innerHTML = html;
+        var basePosition = $("#baseContainerElement").position();
+
+        var elementsDraggable = activityPlayerConf.elements.draggable;
+        var draggableHtml = '';
+        for(var i in elementsDraggable){
+           draggableHtml += createDraggableElement(elementsDraggable[i], basePosition);
+        }
+
+        var elementsDroppable = activityPlayerConf.elements.droppable;
+        var droppableHtml = '';
+        for(var i in elementsDroppable){
+           droppableHtml += createDroppableElement(elementsDroppable[i], basePosition);
+        }
+
+document.querySelector("#baseContainerElement").innerHTML = draggableHtml + droppableHtml;
+
+        bindDraggable();
+        bindDroppable();
+
+      }
+
+    });
+
+    function createDraggableElement(elementConf, basePosition){
+      let item = '';
+      var hw = 'width:'+elementConf.width+';height:'+elementConf.height+';';
+          var draggableStyle = 'position:absolute; top:'+(basePosition.top+parseInt(elementConf.positionY))+'px; left:'+(basePosition.top+parseInt(elementConf.positionX))+'px; color:'+elementConf.color+';'+hw;
+          if(elementConf.border != undefined && elementConf.border == true){
+            draggableStyle += 'border:1px '+elementConf.borderColor+' solid;';
+          }
+
+          item += '<div style="'+draggableStyle+'" class="makeDraggable" data-draggable="'+elementConf.elid+'">';
+
+          if(elementConf.labelShow == true){
+            item += '<label>'+elementConf.label+'</label>';
+          }
+
+          if(elementConf.type == "text"){
+            item += '<div stye="'+hw+'">'+elementConf.text+'</div>';
+          }
+
+          if(elementConf.type == "image"){
+            item += '<img stye="'+hw+'" src="'+elementConf.src+'"/>';
+          }
+
+          if(elementConf.type == "rect"){
+            item += '<div style="background-color:'+elementConf.background+'; color:'+elementConf.color+'; '+hw+'" ><p>'+elementConf.text+'</p></div>';
+          }
+
+          item += '</div>';
+
+          return item;
+    }
+
+
+    function createDroppableElement(elementConf, basePosition){
+      let item = '';
+      var hw = 'width:'+elementConf.width+';height:'+elementConf.height+';';
+          var draggableStyle = 'position:absolute; top:'+(basePosition.top+parseInt(elementConf.positionY))+'px; left:'+(basePosition.top+parseInt(elementConf.positionX))+'px; color:'+elementConf.color+';'+hw;
+          if(elementConf.border != undefined && elementConf.border == true){
+            draggableStyle += 'border:1px '+elementConf.borderColor+' solid;';
+          }
+
+          if(elementConf.backgroundImage == true){
+            draggableStyle += "background-image:url('"+elementConf.backgroundSrc+"'); background-size:contain; background-position:center; background-repeat:no-repeat;";
+          }
+
+          item += '<div style="'+draggableStyle+'" class="makeDroppable" data-droppable="'+elementConf.elid+'">';
+
+          if(elementConf.labelShow == true){
+            item += '<label>'+elementConf.label+'</label>';
+          }
+
+          if(elementConf.text == true){
+            item += '<p>'+elementConf.text+'</p>';
+          }
+
+          item += '</div>';
+
+          return item;
+    }
+
+
+    function bindDraggable(){
+      $(".makeDraggable").draggable({ revert: 'invalid' });
+    }
+
+    function bindDroppable(){
+      var dropablesData = [];
+      $(".makeDroppable").droppable({
+        drop: function(event, ui) {
+          var opid = $(ui.draggable).attr('data-draggable');
+          var dropid = $(this).attr('data-droppable');
+          if(dropablesData[dropid] != undefined){
+            if(Array.isArray(dropablesData[dropid])){
+              dropablesData[dropid].push(opid);
+            }else{
+              dropablesData[dropid] = new Array();
+              dropablesData[dropid].push(opid);
+            }
+          }else{
+            dropablesData[dropid] = new Array();
+            dropablesData[dropid].push(opid);
+          }
+          console.log(dropablesData);
+          //return $(ui.draggable).addClass('drag-revert');
+          
+          alert('You just droped an element inside this droppable zone');
+        }
+      });
+    }
+
+	</script>
+	
+{% endblock %}

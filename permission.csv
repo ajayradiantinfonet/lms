@@ -1,0 +1,3 @@
+permission_codename,permission_name,permission_type,permission_description
+'can_create_custom_permission','','generic','for createting generic permission'
+

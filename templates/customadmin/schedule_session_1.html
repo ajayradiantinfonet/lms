@@ -1,0 +1,245 @@
+{% extends 'head2.html'%}
+
+{% block inner_content %}
+{% load static %}
+
+{% load mytag %}
+
+{% load crispy_forms_tags %}
+
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'components/datetimepicker/css/bootstrap-datetimepicker.css' %}" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'components/datetimepicker/css/pmd-datetimepicker.css' %}" />
+
+
+
+<div class="right_col" role="main">
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-dismissible alert-{{ message.tags }}">
+                  <button type="button" class="close" data-dismiss="alert">
+                      <i class="fa fa-close"></i>
+                  </button>
+                  <strong>{{ message }}</strong>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+
+
+          <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+              <div class="dashboard_graph border_radius">
+                              <div class="col-md-6 col-sm-6 border_radius1">
+                                <h2>Add Class Room Session</h2>
+                              </div>
+                            <div class="col-md-6 col-sm-6 left-courses border_radius1">
+                            <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                            <p>Calendar<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                            <p>Add Session<i></i></p>
+                            </div>     
+                     <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <br>
+
+
+
+         
+
+             {{ form.name.errors }}
+
+
+
+             <form method="post" action="{% url 'customadmin:schedule_session' %}" >
+              <div class="row">
+                <div class="col-md-12 col-sm-12 ">
+                  <div class="x_panel company_height">
+                   <!-- <h2 class="head-tag1">Company Information</h2> -->
+                    <div class="tab-content" id="myTabContent">
+                      
+                      {% if form %}
+
+                      <div class="row">
+                        <div class="col-md-8">
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Topic:* </h2>
+                              {{ form.topic }} 
+                          </div>
+
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Description:* </h2>
+                              {{ form.description }} 
+                          </div>
+
+                          <div class="col-md-8">
+                            <h2 class="head-tag">Start Time: </h2>
+                             {{ form.start_date }} 
+                          </div>
+
+                       
+
+                        
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Duration(In Minutes): </h2>
+                             {{ form.duration }} 
+                          </div>
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Select Organization: </h2>
+                             {{ form.organization }} 
+                          </div>
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Select Course: </h2>
+                             {{ form.course }} 
+                          </div>
+
+                          <div class="col-md-12">
+                            <h2 class="head-tag">Select Teacher: </h2>
+                             {{ form.teacher }} 
+                          </div>
+
+
+                        </div>
+                      </div>
+
+                     
+                      <div class="row">
+                        <hr color="black" size="3px" />
+
+                          <div class="col-md-6">
+
+                            <div class="col-md-12">
+                              <h2 class="head-tag">Auto Attendance: </h2>
+                               {{ form.auto_attendence }} 
+                            </div>
+
+                            <div class="col-md-12">
+                              <h2 class="head-tag">Photo Attendance: </h2>
+                               {{ form.photo_attendence }}
+                            </div>
+
+                            <div class="col-md-12">
+                              <h2 class="head-tag">Capture Photo After every (In Minutes):</h2>
+                              {{ form.capture_photo_after_every }}
+                            </div>
+
+                            <div class="col-md-12">
+                                <h2 class="head-tag">Record Session:</h2>
+                                {{ form.record_session }}
+                            </div>
+
+                          </div>
+
+                            <div class="col-md-6">
+
+                              <div class="col-md-12">
+                                <h2 class="head-tag">Enable Private Chat:</h2>
+                                {{ form.enable_private_chat }}
+                              </div>
+
+                              <div class="col-md-12">
+                                <h2 class="head-tag">Raise Query:</h2>
+                                {{ form.raise_query }}
+                              </div>
+
+                              <div class="col-md-12">
+                                <h2 class="head-tag">Download Record Session Video:</h2>
+                                 {{ form.download_record_session_video}}
+                              </div>
+
+                              <div class="col-md-12">
+                                <h2 class="head-tag">Download session Resources:</h2>
+                                 {{ form.download_session_resource}}
+                              </div>
+
+                            </div>
+                      </div>
+
+
+                    {% endif %}
+
+                    {% csrf_token %}
+
+                    <br/><br/><br/>
+
+                    <div class="col-md-12">
+                      <input type="submit" class="form-control btn btn-submit btn-primary btn-active"
+                       value="submit" />
+                    </div>
+
+                  </form>
+
+
+                </div>
+              </div>       
+              
+ </div>
+
+  {% endblock %}
+
+
+{% block inpage_script %}
+
+<script type="text/javascript" language="javascript" src="{% static 'components/datetimepicker/js/moment-with-locales.js' %}"></script>
+
+<script type="text/javascript" language="javascript" src="{% static 'components/datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+
+<script>
+
+  $('#datepicker-default').datetimepicker();
+
+ 
+  $('#id_organization').change(function(){
+        var organization_id = $(this).val();
+
+        $.ajax({
+          type:'post',
+          url:'{% url "customadmin:g_a_co_o_org" %}',
+          data:{'organization_id':organization_id},
+          success:function(data)
+          {
+            var d=JSON.parse(data);
+            if(d.message)
+            {
+              $('#id_course').find('option').remove();
+              $('#id_teacher').find('option').remove();
+              var res=d.courses;
+              $('#id_course').append('<option value="">Select Course</option>');
+              $('#id_teacher').append('<option value="">Select Teacher</option>');
+
+              for(var i=0;i<res.length;i++){
+                $('#id_course').append(`<option value="${res[i].id}">`
+                  +res[i].name+`</option>`);
+              }
+
+              var teachers = d.teachers;
+
+              for(var i=0;i<teachers.length;i++)
+              {
+                $('#id_teacher').append(`<option value="${teachers[i].id}">`
+                  +teachers[i].name+`</option>`);
+              }
+
+            }
+          }
+
+        });
+  });
+
+  </script>
+
+
+  {% endblock %}

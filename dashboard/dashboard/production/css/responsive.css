@@ -1,0 +1,32 @@
+@media only screen and (min-device-width:320px) and (max-device-width:480px) {
+.btn_dashgraph{
+	display: flex;
+}
+.btn_upload {
+    width: 109px;
+    height: 32px;}
+.btn_add{
+    width: 109px;
+    height: 32px;}
+.btn_upload span {
+    font-size: 12px;
+    }
+
+.btn_add span {
+    font-size: 12px;
+}
+.btn{
+	padding: 0px;
+}
+
+
+
+
+
+
+
+
+}
+
+	@media only screen and (min-width:1030px) and (max-width:1366px) {
+}

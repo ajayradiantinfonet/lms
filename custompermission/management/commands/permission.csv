@@ -1,0 +1,34 @@
+codename,name,type,description
+can_create_custompermission,,generic,for createting generic permission
+can_see_all_custompermission,,generic,permission to user if he/she can view all available custom permission (for superadmin)
+can_assign_custompermission,,generic,permission for assigning custom permission to user (company admin perm)
+can_create_group,,generic,Custom permission for creating group
+can_create_organization,,generic,Custom permission for creating organization (superadmin level access)
+can_add_user_of_organization,,generic,custom permission for adding user of organization 
+can_see_all_courses,,generic,custom permission for seeing all available courses (for superadmin )
+can_create_courses_for_organization,,generic,custom permission for creating courses of organization
+can_create_topic_for_organization,,generic,custom permission for creating topics inside courses  inside organization
+can_create_activity_for_topic,,generic,custom permission for adding activity inside courses or outside courses
+can_see_upcoming_session,,generic,custom permission for checking if any upcoming class room session is available
+can_schedulde_session,,generic,custom permission for scheduling virtual class room session (for com. Admin )
+can_see_completed_session,,generic,custom permission for seeing completed session ( for teacher) (for com. Admin)
+can_enroll_into_courses,,generic,custom permission for enrolling into courses (according to user org and course)(end user)
+can_see_own_permission,,generic,custom permission for viewing own permission (for org user only )
+can_see_organization_courses,,generic,custom permission for viewing only organization courses (apply only when user is reg. With org)
+can_assign_user_to_org,,generic,custom permission for assigning  user to organization (user which is reg by same org first)
+can_view_all_organization,,generic,custom permission for viewing all organization (superadmin level permission )
+can_enroll_into_any_course,,generic,custom permission to enroll in any course (superadmin level access)
+can_see_all_published_courses,,generic,custom permission to view all courses which are published (for end user ) (for company admin)
+can_see_published_courses_activity,,generic,custom permission for viewing all activity of published courses (for end user ) (for company admin)
+can_assign_user_to_course,,generic,revser way to enroll user into course by company (company admin perm)
+can_assign_activity_to_course,,generic,assign activity to course of org by org admin or course creator (company admin perm )
+can_assign_topic_to_course,,generic,assign topic to course of org by org admin or course creator 
+can_see_all_org_courses,,generic,for viewing all  courses of courses
+can_view_own_organization,,generic,for seeing organization (org user perm)
+can_view_course_category,,generic,for viewing category (org user perm )
+can_edit_organization,,generic,for editing organization
+can_delete_organization,,generic,for deleting organization
+can_create_category,,generic,can create category
+can_update_category,,generic,can update category
+can_delete_category,,generic,can delete category
+can_view_category,,generic,can view categiory

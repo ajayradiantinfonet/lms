@@ -1,0 +1,462 @@
+{% extends 'user_lms/header_1.html' %}
+
+
+
+
+{% block user_banner %}
+{% load static %}
+
+<section id="pageBanner">
+	<div class="bd-example">
+	  <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+	    <ol class="carousel-indicators">
+	      <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+	      <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+	    </ol>
+	    <div class="carousel-inner">
+	      <div class="carousel-item active">
+	        <img src="{% static 'user_lms/img/slider/banner1.png' %}" class="d-block w-100" alt="...">
+	        
+	      </div>
+	      <div class="carousel-item">
+	        <img src="{% static 'user_lms/img/slider/banner2.png' %}" class="d-block w-100" alt="...">
+	      
+	      </div>
+	     
+	      
+	    </div>
+	    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+	      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	      <span class="sr-only">Previous</span>
+	    </a>
+	    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+	      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	      <span class="sr-only">Next</span>
+	    </a>
+	  </div>
+	</div>
+	
+</section>
+
+
+{% endblock %}
+
+
+
+
+
+{% block user_card-slider %}
+
+{% load static %}
+
+{% load mytag %}
+
+<section class='card-slider-template container'>
+
+	<div class="pt-4 pb-3" >
+		<h4 style="text-align:center;font-family: sans-serif; font-weight: 800;">Popular Courses</h4>
+	</div>
+
+	
+	<div id="multi-item-example" class="carousel slide carousel-multi-item px-5" data-ride="carousel">
+	  
+		<div class="carousel-inner" role="listbox">
+
+		    <!--First slide-->
+		    <div class="carousel-item active">
+
+		      	{% for obj in object_list %}
+		      	<div class="col-md-3 pop-card" style="float:left">
+		        	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		      			<div class="card-inner">
+		      				<img src="{{ obj.thumbnail.url }}" style="height:125px; width:175px;" />
+		      				<div class="card-inner-content">
+		      					<div class="card-course-name"><label>{{ obj.name }}</label></div>
+		      					<div class="card-course-price">
+		      						<span>
+		      							<strike class="card-course-price-strike">Rs. {{ obj.price }}</strike>
+		      						</span> Free
+		      					</div>
+		      					<div class="fs-13 brd-btm brd-gry">
+		      						<label class="card-course-rating-star">
+	          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+	          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+	          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+	          							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+	          							<i class="material-icons fs-15" aria-hidden="true">star_outline</i>
+	          						</label>
+		      						<span class="card-enroll-count fl-rt">
+		      							<i class="fa fa-users" aria-hidden="true"></i>
+		      							{{ obj.total_view }}
+		      						</span>
+		      					</div>
+		      					<div class="fs-13 py-2 txt-justify">
+		      						<p>
+		      							<b>Program Highlight</b><br> {{ obj.highlight }}
+		      						</p>
+		      					</div>
+		      					<div>
+		      						<!-- <button    class="cta-btn btn-wdth-120 fs-13" 
+	  						onclick="refToLink('{{obj.link}}')" >
+	  					Enroll Now</button> -->
+
+	  								<a    class="cta-btn btn-wdth-120 fs-13" 
+	  						href="{% url 'userlms:my' obj.id %}">
+	  							{% if user|user_enrolled:obj.id  %}
+	  								Go To Course
+	  							{% else %}
+	  								Enroll Now
+	  							{% endif %}
+	  							</a> 
+	  						
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+		      						</span>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:15px;" >
+		      			<a href="{% url 'userlms:course_details' %}{{obj.id}}/details/" class="a-norm">
+				      		<div class="fs-13 px-2 py-2 brd-rds-5 brd-green" style="border:1px solid; width:300px;background:#fff;">
+				      		<h6 class="fs-15">{{ obj.name }}</h6>
+				      		<p class="brd-btm brd-gry" style="font-size: 11px;"> Total Video minute </p>
+				      			<p  class="brd-btm brd-gry py-1">What you will learn in this course</p>
+				      			<ul class="check-list p-2">
+									
+									{{ obj.overview }}
+								</ul>
+								<div class="card-course-price txt-center py-1">
+			  						<span>
+			  							<strike class="card-course-price-strike fw-800" style="color: #bbb;" >Rs. {{ obj.price }}</strike>
+			  						</span> Free
+			  					</div>
+			  					<div>
+			  						
+
+				  					<button style="min-width:200px;" data-href="{{ obj.id }}" class="cta-btn fs-13" 
+	  						id="enroll">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+			  						<span class="fav-not fl-rt">
+			  							<i class="fa fa-heart" aria-hidden="true"></i>
+			  						</span>
+			  					</div>
+				      		</div>
+				      	</a>
+			      	</div>
+		      	</div>
+
+		      	{% endfor %}
+
+		      	
+		      	</div> 
+
+		      	
+
+		    </div>
+		    
+
+	   
+
+		</div>
+		<a class="carousel-control-prev cta-color" style="opacity: 1 !important; width:40px;"  href="#carouselExampleCaptions" role="button" data-slide="prev">
+	      <span style="font-weight: 800;" class="fa fa-chevron-circle-left fs-24" aria-hidden="true"></span>
+	      <span class="sr-only">Previous</span>
+	    </a>
+	    <a class="carousel-control-next cta-color" style="opacity: 1 !important; width:40px;"  href="#carouselExampleCaptions" role="button" data-slide="next">
+	      <span style="font-weight: 800;" class="fa fa-chevron-circle-right fs-24" aria-hidden="true"></span>
+	      <span class="sr-only">Next</span>
+	    </a>
+	</div>
+	<div class="clearfix"></div>
+
+
+	<script>
+		
+	</script>
+</section>
+ 
+
+{% endblock %} 
+
+
+
+{% block user_course-offered %}
+
+{% load static %}
+
+
+<section class="courses-offered container">
+	<div class="pt-4 pb-3" >
+		<h4 style="text-align:center;font-family:sans-serif; font-weight: 800;">Courses Offered</h4>
+	</div>
+	<div class="py-2 txt-center" >
+
+		{% for obj in categories %}
+			<a style="text-decoration:none" href="{% url 'userlms:home' %}?category={{obj.name}}" class="category-btn-pills px-3 mx-2 fs-15 fw-800">{{ obj.name }}</a>
+		
+
+		{% endfor %}
+	</div>
+
+	<div class="col-md-12">
+
+		{% for obj in object_list %}
+		<div class="col-md-3 pop-card" style="float:left">
+	   		<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+	  			<div class="card-inner">
+	  				<img src="{{ obj.thumbnail.url }}" style="height:125px; width:175px;" />
+	  				<div class="card-inner-content">
+	  					<div class="card-course-name"><label>{{ obj.name }}</label></div>
+	  					<div class="card-course-price" style="display: block;">
+	  						<span>
+	  							<strike class="card-course-price-strike">{{ obj.price }}</strike>
+	  						</span> Free
+	  					</div>
+	  					<div class="fs-13">
+	  						<label class="card-course-rating-star">
+	  							<!-- {{ obj.star|floatformat:"0" }} -->
+
+	  							<i class="fa fa-star" aria-hidden="true"></i>
+	  							<i class="fa fa-star" aria-hidden="true"></i>
+	  							<i class="fa fa-star" aria-hidden="true"></i>
+	  							<i class="fa fa-star-half-o" aria-hidden="true"></i>
+	  							<i class="fa fa-star-o" aria-hidden="true"></i>
+
+	  						</label>
+	  						<span class="card-enroll-count fl-rt">
+	  							<i class="fa fa-users" aria-hidden="true"></i>
+	  							{{ obj.total_view }}
+	  						</span>
+	  					</div>
+	  					<div>
+
+	  						<a    class="cta-btn btn-wdth-120 fs-13" 
+	  						href="{% url 'userlms:my' obj.id %}">
+	  							{% if user|user_enrolled:obj.id  %}
+	  								Go To Course
+	  							{% else %}
+	  								Enroll Now
+	  							{% endif %}
+	  							</a> 
+	  				<!-- <button   class="cta-btn btn-wdth-120 fs-13" 
+	  						 onclick="refToLink('{{obj.link}}')">Enroll Now</button> -->
+	  						<span class="fav-not fl-rt">
+	  							<i class="fa fa-heart" aria-hidden="true"></i>
+	  						</span>
+	  					</div>
+	  				</div>
+	  			</div>
+	  		</div>
+
+	  		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:15px;" >
+      			<a href="{% url 'userlms:course_details' %}{{obj.id}}/details/" class="a-norm">
+		      		<div class="fs-13 px-2 py-2 brd-rds-5 brd-green" style="border:1px solid; width:300px;background:#fff;">
+		      			<h6 class="fs-15">{{ obj.name }}</h6>
+		      			<p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video hrs {{ obj.duration }} </p>
+		      			<p  class="brd-btm brd-gry py-1">What you will learn in this course</p>
+
+		      			{{ obj.overview }}
+
+<!-- 		      			<ul class="check-list p-2">
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur
+							</li>
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+							</li>
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+							</li>
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+							</li>
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur
+							</li>
+							<li class="check-list-item">
+								Lorem ipsum dolor sit amet, consectetur
+							</li>
+						</ul> -->
+
+
+						<div class="card-course-price txt-center py-1">
+	  						<span>
+	  							<strike class="card-course-price-strike fw-800" style="color: #bbb;display: block;" >Rs. {{ obj.price}}</strike>
+	  						</span> 
+	  					</div>
+	  					<div>
+	  						<button style="min-width:200px;" data-href="{{ obj.id }}" class="cta-btn fs-13" 
+	  						id="enroll">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+	  						<span class="fav-not fl-rt">
+	  							<i class="fa fa-heart" aria-hidden="true"></i>
+	  						</span>
+	  					</div>
+		      		</div>
+		      	</a>
+	      	</div>
+	  	</div>
+
+	  	{% endfor %}
+	    
+	  				
+	</div>
+
+	<div class="clearfix">
+	</div>
+	
+</section>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block user_why %}
+
+	{% load static %}
+<section class="why-apprentissage bg-img-cover mt-4">
+	<div style="height: 350px;">
+		<div class="col-sm-2 mbl-hide" style="float: left;height: 350px;">
+			<img style="position: absolute;bottom: 0; right: 20px;height:120px;" src="{% static 'user_lms/img/Group50.png' %}" alt='...'>
+		</div>
+		<div class="col-sm-8" style="float: left;">
+			<div class="pt-4 pb-3" >
+				<h4 style="text-align:center;font-family: sans-serif; font-weight: 800;">Why Apprentissage?</h4>
+			</div>
+			<div class="col-sm-12">
+				<div class="col-sm-3" style="float: left;text-align: center;">
+					<div>
+						<img style="height:150px;" src="{% static 'user_lms/img/Students.png' %}">
+					</div>
+					<div style='position:relative;top:-40px; padding: 5px;'>
+						<b style="font-size: 24px;">
+						{{ all_students }} +</b><br>
+						<span style="font-size: 14px;">Students</span>
+					</div>
+				</div>
+				<div class="col-sm-3" style="float: left;text-align: center;">
+					<div>
+						<img style="height:150px;" src="{% static 'user_lms/img/Courses.png' %}">
+					</div>
+					<div style='position:relative;top:-40px; padding: 5px;'>
+						<b style="font-size: 24px;">{{ all_course }} +</b><br />
+						<span style="font-size: 14px;">Courses Free & paid</span>
+					</div>
+				</div>
+				<div class="col-sm-3" style="float: left;text-align: center;">
+					<div>
+						<img style="height:150px;" src="{% static 'user_lms/img/Instructor.png' %}">
+					</div>
+					<div style='position:relative;top:-40px; padding: 5px;'>
+						<b style="font-size: 24px;">{{ all_instructor }} +</b><br />
+						<span style="font-size: 14px;">Expert Instructor</span>
+					</div>
+				</div>
+				<div class="col-sm-3" style="float: left;text-align: center;">
+					<div>
+						<img style="height:150px;" src="{% static 'user_lms/img/Acces.png' %}">
+					</div>
+					<div style='position:relative;top:-40px; padding: 5px;'>
+						<b style="font-size: 24px;">Access</b><br />
+						<span style="font-size: 14px;">Anytime anywhere</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2 mbl-hide" style="float: left;">
+			<img style="position: absolute;top: 0; left: 20px;height: 120px;" src="{% static 'user_lms/img/Group50.png' %}" alt='...'>
+		</div>
+	</div>
+</section>
+
+{% endblock %}
+
+
+
+
+{% block footer %}
+
+
+{% load static %}
+
+
+	<section class="page-footer py-5 mt-4" style="min-height:400px; color:#fff">
+			<div class="container">
+				<div class="col-sm-4" style="float: left;">
+					<div class="col-sm-10" style="float: left;">
+						<h2 class="fw-800">Apprentissage</h2>
+						<p class="fs-13">
+							Apprentissage is a learning platform providing many facilities for learning and contents for courses in multiple domains.
+						</p>
+
+						<br>
+						<br>
+
+						<p class="fs-15">
+							Subscribe to our news letter
+						</p>
+						<div class="input-group mb-3">
+						  <div class="input-group-prepend">
+						    <span class="input-group-text" id="basic-addon1">Email</span>
+						  </div>
+						  <input type="text" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-8" style="float: left;">
+					<div class="col-sm-4" style="float: left;">
+						<h4 class="fw-800" >Who we are</h4>
+						<div class="my-2">About Us</div>
+						<div class="my-2">Vision & Mission</div>
+						<div class="my-2">Our Team</div>
+						<div class="my-2">Contact Us</div>
+						<div class="my-2">Apprentissage for business</div>
+					</div>
+					<div class="col-sm-4" style="float: left;">
+						<h4 class="fw-800">Services</h4>
+						<div class="my-2">Tourism</div>
+						<div class="my-2">Banking & finance</div>
+						<div class="my-2">Health care</div>
+						<div class="my-2">General</div>
+					</div>
+					<div class="col-sm-4" style="float: left;">
+						<h4 class="fw-800">Resources</h4>
+						<div class="my-2">News</div>
+						<div class="my-2">Blog</div>
+						<div class="my-2">Videos</div>
+						<div class="my-2">FAQs</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<footer>
+
+			<script type="text/javascript"src="{% static 'user_lms/js/jquery-3.5.1.min.js' %}"></script>
+			<script type="text/javascript"src="{% static 'user_lms/bootstrap-4/js/bootstrap.min.js' %}"></script>
+		</footer>
+
+
+		<script>
+	$('#course_link').click(function(){
+			var id=$(this).attr('data-href');
+			window.location.href="{% url 'userlms:course_details' %}"+id+"/details/";
+
+	});
+
+	
+</script>
+	</body>
+</html>
+
+
+{% endblock %}
+
+    
+
+
+

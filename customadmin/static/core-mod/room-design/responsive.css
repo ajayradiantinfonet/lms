@@ -1,0 +1,77 @@
+@media screen and (max-width: 768px) {
+
+
+.right_bar h5 {
+    position: relative;
+    top: 29px;
+    font-size: 12px;
+    text-align: center;}
+
+    .right_icon {
+    height: 18px;
+    position: relative;
+    top: 39px;
+    left: 14px;
+}
+.mute {
+    margin-left: 0px;
+    margin-top: 38px;}
+    .mute h6 {
+    font-size: 7px;
+}
+.multipleSelection1 {
+    width: 84px;
+    margin-left: 0;
+    margin-top: -19px;
+}
+.selectBox select {
+    width: 100%;
+    /* font-weight: bold; */
+    font-size: 9px;
+}
+#checkBoxes label {
+    display: inline-block;
+    font-size: 9px;
+}
+.multipleSelection2 {
+    width: 84px;
+    margin-left: 0;
+    margin-top: 0;
+    position: relative;
+}
+#check {
+    display: none;
+    border: 1px #000 solid;
+    /* text-align: initial; */
+    margin-top: 19px;
+    font-size: 8px;}
+    .chat_area {
+    margin-top: 21px;
+    position: relative;
+}
+
+.icon_right img {
+    height: auto;
+    max-width: 33%;
+    margin-top: 7px;
+    margin-left: 0;
+}
+.icon_right img {
+    height: auto;
+    max-width: 33%;
+    margin-top: 7px;
+    margin-left: 8px}
+
+.right_content {
+    font-size: 6px;
+    text-align: center;
+}
+.student_icon {
+    position: relative;
+    top: 27px;
+}
+.student_icon .candidate-Num {
+    font-size: 9px;}
+    
+
+}

@@ -1,0 +1,272 @@
+
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+
+{% block content %}
+{% load static %}
+
+
+<div id="content" class="pmd-content inner-page" style="">
+
+<div class="container-fluid full-width-container " style="">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+
+    <!-- end component header -->
+  
+    
+    
+    <!-- Default tab -->
+    <section class="row component-section" style="height:auto;">
+      
+      <!-- Default tab title and description -->
+      <!-- <div class="col-md-3">
+        <div id="propeller-basic-tab">
+          <h2>Propeller Basic Tabs</h2>
+        </div>
+        <p>Propeller Tabs consist of Bootstrap HTML structure with Propeller customized classes and jQuery based on material design standards. Add <code>.pmd-tabs</code> to nav tag for applying Propeller Theme to the tabs. <code>.pmd-tabs-bg</code> is used to add a background to the tabs.</p>
+      </div> --> <!-- Default tab title and description end -->
+      
+      <!-- Default tab example and code -->
+      <div class="col-md-9 col-sm-12" style=""> 
+        <div class="component-box" style="">
+          <!--Default tab example -->
+          <div class="pmd-card pmd-z-depth" style="height: 800px;"> 
+            <!-- <div class="pmd-tabs pmd-tabs-bg">
+              <div class="pmd-tab-active-bar" style="width: 233px; left: 190.133px;"></div>
+              <ul class="nav nav-tabs nav-justified" role="tablist" style="width: 523.017px;">
+                <li role="presentation"  class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">Schedule sessions</a></li>
+                 <li role="presentation"  class=""><a href="#about" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Upcoming Session</a></li>
+                <li role="presentation"   class=""><a href="#work" aria-controls="work" role="tab" data-toggle="tab" aria-expanded="false">Completed Session</a></li> 
+              </ul>
+            </div> -->
+            <div class="pmd-card-body">
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+
+
+
+                <div class="pmd-card-body"> 
+
+                  {{ msg }}
+
+                  {{ form.name.errors }}
+                  <form method="post" action="{% url 'customadmin:schedule_session' %}" >
+
+                      <!-- <div class="form-group">
+                        <label class="control-label">Text Area</label>
+                        <textarea required="" class="form-control"></textarea>
+                      </div> -->
+                    {% if form %}
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        <label>Topic: &nbsp;&nbsp;&nbsp;</label> 
+                      </div>
+                          {{ form.topic }} 
+                      </div> 
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        
+                        <label>Description: </label> 
+                      </div>
+                          {{ form.description }} 
+                      </div> 
+
+                      <div class="form-group">
+                      <div class="col-sm-3"> 
+                        <label>Start Time: </label> 
+                      </div>
+                          {{ form.start_date }} 
+                      </div>
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        <label>Duration : </label> 
+                      </div>
+                          {{ form.duration }} 
+                      </div>
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        <label>Select Teacher : </label> 
+                      </div>
+                          {{ form.teacher }} 
+                      </div>
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        <label>Course : </label> 
+                      </div>
+                          {{ form.course }} 
+                      </div>
+
+                      <div class="form-group"> 
+                        <div class="col-sm-3">
+                        <label> </label> 
+                      </div>
+                          {{ form.organization }} 
+                      </div>
+
+                      <hr color="black" size="3px" />
+
+                      <div style="margin-top:20px">
+
+                      <div class="form-group"> 
+                        <div class="col-sm-4">
+                        <label>Attendence Settings </label> 
+                      </div>
+                        <div class="col-sm-4">
+                          {{ form.auto_attendence }} 
+                      <!-- <label>{{ form.auto_attendence.id_for_label }} </label> -->
+                          <label>Auto Attendence</label>
+                            <br/>
+                            {{ form.photo_attendence }}
+                           <label>Photo Attendence</label>
+                          </div>
+                          <div class="col-sm-4">
+
+                           <label>Capture Photo After every</label>
+                           {{ form.capture_photo_after_every }}
+                         </div>
+                          
+                      </div>
+                    </div>
+
+                      <div class="clearfix">
+                      </div>
+
+                      <div style="margin-top:20px">
+
+                      <div class="form-group"> 
+                          <div class="col-sm-4">
+                          <label>Session Settings </label> 
+                        </div>
+                        <div class="col-sm-8">
+                          {{ form.record_session }}
+                           <label>Record Session</label>
+                          <br/>
+
+                           {{ form.enable_private_chat }}
+                           <label>Enable Private Chat</label>
+                            <br/>
+                           {{ form.raise_query }}
+                           <label>Raise Query</label>
+                            <br/>
+                           {{ form.download_record_session_video}}
+                           <label>Download Record Session Video</label>
+                           <br/>
+                           {{ form.download_session_resource}}
+                           <label>Download session Resources</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {% endif %}
+
+                    {% csrf_token %}
+
+                    <br/><br/><br/>
+
+                    
+
+                    <div class="form-group">
+                      <div class=" col-sm-12">
+                        <button type="submit" class="form-control btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
+                      </div>
+                    </div>
+
+
+                  </form>
+                 
+
+                  
+                  
+                </div>
+
+
+              <!--   </div> -->
+               <!--  <div role="tabpanel" class="tab-pane" id="about"></div>
+                  {% if upcoming_session %}
+                     {% for session in upcoming_session %}
+
+                      
+                        <p>{{ session.topic }}</p>
+                        <p>{{ session.description }} </p>
+                        <p> {{ session.author }} </p>
+
+                    {% endfor %}
+                  {% endif %}
+                 <div role="tabpanel" class="tab-pane" id="work"></div> 
+              </div> -->
+            </div>
+          </div> <!--Default tab example end-->
+          
+        </div>
+      </div> <!-- end Default example and code -->
+      
+    </section><!-- end default tab --> 
+    
+        <!-- Fixed tab -->
+    
+         
+    
+    
+  </div>
+
+
+
+
+
+
+ 
+            
+  
+
+ <script>
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+
+  //$('#datetimepicker-default').datetimepicker();
+
+$('#datepicker-default').datetimepicker();
+  $(document).ready(function() {
+    var sPath=window.location.pathname;
+    var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+    $(".pmd-sidebar-nav").each(function(){
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+      $(this).find("a[href='"+sPage+"']").addClass("active");
+    });
+    $(".auto-update-year").html(new Date().getFullYear());
+  });
+
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

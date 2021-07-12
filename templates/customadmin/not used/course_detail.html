@@ -1,0 +1,520 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+{% load mytag %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'customadmin:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+
+
+    <div class="page-content profile-edit section-custom">
+      <div class="pmd-card pmd-z-depth">
+        <div class="pmd-card-body">
+          <div class="row">
+
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+             <div class="menu pmd-floating-action" role="navigation"> 
+                    <a href="javascript:void(0);" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" data-title="New Course"> 
+                      <span class="pmd-floating-hidden">New Course</span>
+                      <i class="material-icons fa fa-certificate"></i> 
+                    </a> 
+                    <a href="javascript:void(0);" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" data-title="New Category"> 
+                      <span class="pmd-floating-hidden">New Category</span> 
+                      <i class="material-icons fa fa-file"></i> 
+                    </a> 
+                   <!--  <a href="javascript:void(0);" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" data-title="Headset"> 
+                      <span class="pmd-floating-hidden">Headset</span> 
+                      <i class="material-icons">headset</i> 
+                    </a>  -->
+                   <!--  <a href="javascript:void(0);" class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" data-title="Dialpad"> 
+                      <span class="pmd-floating-hidden">Dialpad</span> 
+                      <i class="material-icons">dialpad</i> 
+                    </a> --> 
+                    <a href="javascript:void(0);" class="pmd-floating-action-btn btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary" data-title="Add"> 
+                      <span class="pmd-floating-hidden">Primary</span>
+                      <i class="material-icons pmd-sm">add</i> 
+                    </a> 
+                  
+              </div>
+            </div>
+          
+
+            <div class="col-lg-9 col-sm-9">
+
+
+            </div>
+
+            <div data-provides="fileinput" class="fileinput fileinput-new col-lg-3">
+              <div data-trigger="fileinput" class="fileinput-preview thumbnail img-circle img-responsive">
+                {% if object.thumbnail %}
+                  <img src="{{ object.thumbnail.url }}" alt="">
+                {% else %}
+                <img src="" alt="no image">
+                {% endif %}
+                
+              </div>
+              <div class="action-button"> 
+                <span class="btn btn-default btn-raised btn-file ripple-effect">
+                  <span class="fileinput-new"><i class="material-icons md-light pmd-xs">add</i></span>
+                  <span class="fileinput-exists"><i class="material-icons md-light pmd-xs">mode_edit</i></span>
+                  <input type="file" name="...">
+                </span> 
+                <a data-dismiss="fileinput" class="btn btn-default btn-raised btn-file ripple-effect fileinput-exists" href="javascript:void(0);"><i class="material-icons md-light pmd-xs">close</i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-9 col-sm-9 custom-col-12">
+              <!-- <h3 class="heading">Course Info</h3> -->
+              <div class="row">
+
+                <form class="form-horizontal">
+                  <fieldset>
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3"> Course Name</label>
+                      <div class="col-sm-9">
+                      <p class="form-control-static"><strong>{{ object.name }}</strong></p>
+                      </div>
+                    </div>
+                    <!-- <div class="form-group pmd-textfield">
+                      <label class="col-sm-3 control-label" for="u_fname">Course Description</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control empty" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                      </div>
+                    </div>
+                    <div class="form-group pmd-textfield">
+                      <label class="col-sm-3 control-label" for="u_fname">Last Name</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control empty" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                      </div>
+                    </div> -->
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                      <label class="col-sm-3 control-label" for="u_fname"> </label>
+                      <div class="col-sm-9">
+                      {% if not user.is_anonymous %}
+                         <p class="form-control-static"><strong> {{ object.about }}</strong></p><span class="pmd-textfield-focused"></span>
+                      {% else %}
+
+                      <p class="form-control-static"><strong>{{ object.name }}</strong></p>
+                      
+                       {% endif %}  
+
+
+                      </div>
+                    </div>
+
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                        <label class="col-sm-3 control-label" for="u_fname">Intructor </label>
+                        <div class="col-sm-9">
+                           <span> {{ object.teacher }}</span>
+
+                        </div>
+
+                      </div>
+
+                    <!-- <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                        <label class="col-sm-3 control-label" for="u_fname">Assign Instructor</label>
+                        <div class="col-sm-9">
+                         
+                        <select class="form-control empty">
+                        {% for teacher in all_teacher %}
+                          
+                          <option value="{{ teacher.id}}">{{ teacher.username }} </option>
+                         
+                        {% endfor %}
+                        </select >
+
+
+                        </div>
+
+                      </div> -->
+
+
+                      
+
+
+                    <!-- <div class="form-group btns margin-bot-30">
+                      <div class="col-sm-9 col-sm-offset-3">
+                      <button type="submit" class="btn btn-primary pmd-ripple-effect">Update</button>
+                      <button class="btn btn-default btn-link pmd-ripple-effect">Cancel</button>
+                      </div>
+                    </div> -->
+
+
+                  </fieldset>
+                </form>
+              </div>
+
+
+
+
+
+
+              
+              <h3> Virtual Class Rooms </h3>
+              {% for classroom in classroomlist %}
+
+
+                <div class="col-md-12 pmd-card">
+                  <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+
+
+                  <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3"><i class="fa fa-bell"></i></label>
+                      <div class="col-sm-9">
+                      <p class="form-control-static">
+
+                       
+<a href="{% url 'customadmin:start_classroom' classroom.room_id %}">{{ classroom.topic }}</a></p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                  
+
+              {% endfor %}
+
+
+                
+                
+               
+               {% for activity in activity_list %}
+
+                 
+<!--                   <div class="col-md-12 pmd-card">
+                  <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                  
+
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3"> Topic</label>
+                      <div class="col-sm-9">
+                      <p class="form-control-static"><strong>{{ activity.topic_name }}</strong></p>
+                      
+                      </div>
+                    </div>
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3">Topic About </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_about }}</strong></p>
+                      
+                      </div>
+                    </div>
+                     <div class="form-group prousername pmd-textfield">
+                     <label class="control-label col-sm-3">Topic Author </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_author }}</strong></p>
+                      
+                      </div>
+                      <div class="form-group prousername pmd-textfield">
+                     <label class="control-label col-sm-3">Duration </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_duration }}</strong></p>
+                      
+                      </div>
+                      <div style="margin-left:5%;">
+                        
+                        <div class="form-group prousername pmd-textfield">
+                           
+                        
+
+                          {% for a in activity.activity %}
+                          <h3> >> Activity Details << </h3>
+
+                              
+                          <label class="control-label col-sm-3">Activity Name </label> 
+                            <p class="form-control-static">
+                              <strong>{{ a.activity_name }}</strong></p>
+                              <label class="control-label col-sm-3">Activity Type </label>
+                            <p class="form-control-static">
+                              <strong>{{ a.activity_type }}
+
+                                &nbsp;&nbsp;&nbsp;
+                                  <a
+                                  href="{% url 'customadmin:course_enroll' object.id %}" type="button">Enroll</a>
+                              
+                              </strong>
+
+                              
+                            </p>
+
+
+                                
+                          {% endfor %}
+                        
+                      </div>
+                    </div>
+                    </div>
+ -->
+
+                    
+                      
+                    <!-- <div class="col-sm-9">
+                      <input type="text" class="form-control empty" id="inputEmail" value="password"><span class="pmd-textfield-focused"></span>
+                    </div> -->
+                  
+                  
+                {% endfor %}
+
+
+
+
+
+
+                </div>
+
+                    
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        {% if not user.is_anonymous %}
+          {% if user|check_permission:'generic.can_create_topic_for_organization' %}
+            <div class="col-md-2 col-lg-2" style="margin-left: 69%;margin-top:5px;">
+                <button class="btn btn-primary addtopic">Add Topic</button>
+            </div>
+
+            
+          {% endif %}
+        {% endif %}
+
+        <div class="col-md-12" style="margin-top:20px;">
+
+          <div class="component-box">
+          
+            <!-- hoverable rows table example -->
+            <div class="pmd-card pmd-z-depth pmd-card-custom-view">
+
+              
+              <div class="table-responsive">
+
+            
+                <table class="table pmd-table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Topic</th>
+                      <th>About</th>
+                      <th>Author</th>
+                      <th>Duration</th>
+                      <th>Activity</th>
+                      <th></th>
+                      
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  {% for activity in activity_list %}
+                    <tr>
+                      <td data-title=""><input type="checkbox"/></td>
+                      <td data-title="Topic">{{ activity.topic_name }}</td>
+                      <td data-title="About">{{ activity.topic_about }}</td>
+                      <td data-title="Author">{{ activity.topic_author }}</td>
+                      <td data-title="Duration">{{ activity.topic_duration }}</td>
+                      <td data-title="Activity">
+
+                      {% if user.is_authenticated %}
+                      {% if user|check_permission:'generic.can_create_content_for_course' %}
+                      <button class="btn btn-primary addvideo" data-href="{{ activity.topic_id }}">Add Content</button> 
+                      <button class="btn btn-primary addsubtopic" data-href="{{ activity.topic_id }}">Add SubTopic</button> 
+
+                      <button class="btn btn-primary addsubtopic" data-href="{{ activity.topic_id }}">Add Assesment</button> 
+                      </td>
+
+                      {% endif %}
+                      {% endif %}
+                      <td data-title=""><a href="javascript:void(0);">
+                        <i class="material-icons md-dark pmd-sm"></i></a></td>
+
+                        {% for video in activity.video %}
+                          <tr>
+                      <td data-title=""><input type="checkbox"/></td><td><i class="fa fa-video-camera"></i></td><td><a href="{{ video.video_file.url }}">Video</a></td><td>{{ video.video_description }}</td>
+                          </tr>
+                    {% endfor %}
+
+                    {% for subtopic in activity.subtopic %}
+                        <tr>
+                      <td data-title=""><input type="checkbox"/></td><td></td><td>{{ subtopic.name }}</td><td>{{ subtopic.about }}</td><td>{{ subtopic.duration }}</td>
+                          </tr>
+                    {% endfor %}
+                    </tr>
+
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- <button class="form-control btn"> Enroll </button>
+ -->
+              <button type="submit" class="enroll form-control btn btn-primary pmd-checkbox-ripple-effect">Enroll</button>
+
+               <!-- <a class="" style="width:50%;" href="{% url 'customadmin:course_enroll' object.id %}"> Enroll
+                    </a> -->
+            </div> <!-- hoverable rows table example end -->
+          
+          </div>
+        </div>     
+      </div>      
+      </div>
+    </div>
+    
+</div>
+
+<script >
+
+  $(function() {
+    $("td[colspan=3]").find("p").hide();
+    $("table").click(function(event) {
+        event.stopPropagation();
+        var $target = $(event.target);
+        if ( $target.closest("td").attr("colspan") > 1 ) {
+            $target.slideUp();
+        } else {
+            $target.closest("tr").next().find("p").slideToggle();
+        }                    
+    });
+});
+
+  $('.enroll').click(function(){
+      window.location.href='{% url "customadmin:course_enroll" object.id %}'
+  });
+
+  $('.addtopic').click(function(){
+      window.location.href='{% url "customadmin:add_topic_c" object.id %}'
+  });
+  $('.addsubtopic').click(function(){
+      var topic_id=$(this).attr('data-href');
+      window.location.href='{% url "customadmin:add_subtopic" %}'+topic_id+'/';
+  });
+  $('.addvideo').click(function(){
+      var topicid=$(this).attr('data-href');
+      window.location.href='{% url "customadmin:add_video_s" %}'+topicid+'/';
+      
+
+  });
+</script>
+                    <!-- {% for obj in object_list %}
+                      window.location.href='{% url "customadmin:add_video" %}'+topicid+'/';
+                  <div style="background:#D3D3D3">
+                    <img src="/{{ obj.thumbnail }}" alt="thumbnail" /> <br/>
+                    Course Name : {{ obj.name }} <br/>
+                    Course Desc : {{ obj.about }} <br/>
+                    Course Start Date : {{ obj.start_date }} <br/>
+                    Course EndDate : {{ obj.end_date }} <br/>
+                    Course Organization  :{{ organization_name }} <br/>
+                    Want to Enroll <a href="#"> Click Here </a>
+                  </div>
+
+                  {% endfor %} -->
+
+<!--                  <form method="post" enctype="multipart/form-data">-->
+
+
+<!--                    {{ form.as_p }}-->
+
+<!--                    {% csrf_token %}-->
+
+<!--                    <br/>-->
+
+<!--                    <div class="form-group">-->
+<!--                      <input type="submit" class="btn btn-primary btn-user btn-block" id="exampleInputPassword"  value="submit" name="submit" placeholder="Permission Description"/>-->
+<!--                    </div>-->
+
+
+<!--                  </form>-->
+                  <!--<form class="user">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Permission Name">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputPassword" placeholder="Permission Description">
+                    </div>
+
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    </form>-->
+                    <!--<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    <hr>
+                    <a href="index.html" class="btn btn-google btn-user btn-block">
+                      <i class="fab fa-google fa-fw"></i> Login with Google
+                    </a>
+                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a>-->
+
+                
+                  <!--<div class="text-center">
+                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="register.html">Create an Account!</a>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  // $(function() {
+  //   $(".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

@@ -1,0 +1,179 @@
+{% extends "assesment_header.html" %}
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+{% block content %} {% load static %}
+
+<div id="content" class="pmd-content inner-page">
+
+    <div class="container-fluid full-width-container data-tables">
+
+        <h1 class="section-title" id="services">
+            <span>{{desc}}</span>
+        </h1>
+
+        <!-- End Title -->
+
+        <!--breadcrum start-->
+        <ol class="breadcrumb text-left">
+            <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+            <li class="active">{{ desc }}</li>
+        </ol>
+        <!--breadcrum end-->
+
+        <!-- table card -->
+        <section class="row component-section">
+
+
+            {% ifequal object_list|length 0 %}
+            <p>&nbsp;&nbsp;There is no course available</p>
+            {% endifequal %}
+
+
+            <div class="" style="float:right">
+                <a style="background: #05ed3f;color:black;
+            text-decoration:none; padding:10px; 
+            margin:8px;" href="{% url 'assesment:add_quiz' %}"> ADD Quiz </a>
+            </div><br/><br/>
+
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Topic</th>
+                        <th scope="col">Description</th>
+
+
+
+                        <th scope="col">Question Paper</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obj in quiz_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ obj.course }}</td>
+                        <td>{{ obj.topic }}</td>
+                        <td>{{ obj.description }}</td>
+
+                        <td><a href="{% url 'assesment:designquestionpaper' obj.id %}">Add/Show</a></td>
+                        <td>
+
+                            <a class="edit" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+
+                            <a class="delete" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+            {% for obj in quiz_list %}
+            <!--  <a href="{% url 'customadmin:course_detail' obj.id  %}">
+          <div class="col-md-4 col-sm-6 masonry-brick" style=" ">
+        
+        <div class="pmd-card pmd-card-default pmd-z-depth">
+          <div class="pmd-card-media">
+            {% if obj.thumbnail %}
+            <img src="{{ obj.thumbnail.url }}" class="img-responsive" width="1084" height="600">
+            {% else %}
+            <img src="" class="img-responsive" width="1084" height="600">
+            {% endif %}
+            
+          </div>
+          <div class="pmd-card-title">
+            <h2 class="pmd-card-title-text">{{ obj.name }}</h2>
+            <span class="pmd-card-subtitle-text">{{ obj.about }}</span>  
+          </div>  
+          <div class="pmd-card-actions">
+          
+            <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_detail' obj.id  %}" type="button">View Details</a>
+
+            {% if obj.organization is None %}
+                   <a class="btn pmd-btn-flat pmd-ripple-effect btn-default" href="{% url 'customadmin:course_allot' obj.id  %}" type="button">Allot Course</a>
+            {% endif %}
+          </div>
+        </div>
+      </div></a> -->
+            {% endfor %}
+
+
+
+        </section>
+
+    </div>
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<script>
+    $('.edit').click(function() {
+
+        var objid = $(this).attr('data-href');
+        //window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/edit/";
+
+    });
+
+    $('.sort').click(function() {
+
+        var objid = $(this).attr('data-href');
+        //window.location.href="{% url 'customadmin:all_topic' %}"+'?courseid='+objid;
+
+    });
+
+
+    $('.delete').click(function() {
+
+        var objid = $(this).attr('data-href');
+        if (confirm('Are you sure you want to delete this course ?')) {
+
+            //window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/delete/";
+
+        } else {
+
+            console.log('course is not deleted');
+        }
+
+    });
+
+
+
+
+
+    // $(function() {
+    //   $( ".datepicker" ).datepicker({
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: "2020:2080",
+    //     // You can put more options here.
+
+    //   });
+    // });
+</script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

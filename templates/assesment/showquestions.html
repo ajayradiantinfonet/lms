@@ -1,0 +1,282 @@
+{% extends "assesment_header.html" %}
+{% load static %}
+
+{% block content %} 
+
+
+<script type="text/javascript" src="{% static 'assesment/js/show_question.js' %}"></script>
+<script type="text/javascript" src="{% static 'assesment/js/jquery.tablesorter.min.js' %}"></script>
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+
+      <section class="row component-section">
+        <div class="col-md-12 col-sm-12"> 
+                <div class="component-box">
+                    <!--Default tab example -->
+                    <div class="pmd-card pmd-z-depth"> 
+                        <div class="pmd-tabs pmd-tabs-bg">
+
+                            <div class="pmd-tab-active-bar">
+                            </div>
+
+                            <ul class="nav nav-tabs" role="tablist" style="width: 323.017px;">
+                                  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">All Question</a>
+                                  </li>
+
+                                  <!-- <li role="presentation" class=""><a href="#about" aria-controls="about" role="tab" data-toggle="tab" aria-expanded="false">Upload Question</a>
+                                  </li> -->
+
+                                
+                            </ul>
+                        </div>
+
+                  <div class="pmd-card">
+                      <div class="pmd-card-body">
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="home">
+                          
+
+
+                     
+        
+      
+
+      
+              {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dismissible alert-info">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="fa fa-close"></i>
+                    </button>
+                    <strong>{{ message }}</strong>
+                </div>
+                {% endfor %}
+              {% endif %}
+        
+            <!-- Filter Questions -->
+            <!-- <h4>Filters Questions: </h4>
+            <form method="GET" action="">
+
+              <div class="row">
+                  <div class="col-md-4">{{ form.question_type }}</div>
+                  <div class="col-md-4">{{ form.language }}</div>
+                  <div class="col-md-4">{{ form.marks }}</div>
+                  <br><br>
+                  <div class="col">
+                    <button class="btn btn-outline-success">
+                      <i class="fa fa-filter"></i>&nbsp;Filter
+                    </button>
+                  </div>
+              </div>
+            </form>
+           
+            <hr> -->
+            
+       
+        <!-- End card filters and search -->
+        <form name=frm action="" method="post">
+          {% csrf_token %}
+          <div id="filtered-questions">
+            <br>
+            <a class="btn btn-lg btn-success" href="{% url 'assesment:add_question' %}">
+              <i class="fa fa-plus-circle"></i>&nbsp;Add Question</a>
+            {% if objects %}
+              <div>
+                <br>
+                
+                <br>
+                <h5><input id="checkall" type="checkbox"> Select All </h5>
+                 <div class="table-wrapper-2">
+                    <table id="questions-table" class="tablesorter table  table-striped table-responsive-sm">
+                      <thead>
+                        <tr>
+                          <th> Select </th>
+                          <th> Sr No. </th>
+                          <th> Question&nbsp;<i class="fa fa-sort"></i> </th>
+                          <th> Description&nbsp;<i class="fa fa-sort"></i> </th>
+                          <th> Language&nbsp;<i class="fa fa-sort"></i> </th>
+                          <th> Type&nbsp;<i class="fa fa-sort"></i> </th>
+                          <th> Marks&nbsp;<i class="fa fa-sort"></i> </th>
+                         <!--  <th>Test</th> -->
+                          <!-- <th>Download</th> -->
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for question in objects %}
+                        <tr>
+                          <td>
+                           <input type="checkbox" name="question" value="{{ question.id }}">
+                          </td>
+                          <td>{{forloop.counter}}</td>
+                      <td><a href="">{{question.question_name|capfirst}}</a></td>
+                          <td>
+                          <a href="">{{question.description|capfirst}}</a></td>
+                          <td>{{question.language|capfirst}}</td>
+                          <td>{{question.type|capfirst}}</td>
+                          <td>{{question.points}}</td>
+                          <!-- <td>
+                            <a href="{% url 'assesment:test_question' question.id %}" class="btn btn-info">
+                              Test
+                            </a>
+                          </td> -->
+                          <!-- <td><a href="" class="btn btn-primary">
+                            <i class="fa fa-download"></i>&nbsp;Download</a></td> -->
+                          <td><a href="" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{question.summary|capfirst}}?')">
+                          <i class="fa fa-trash"></i>&nbsp;Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            {% include "./paginator.html" %}
+            {% else %}
+              <br><br>
+              <div class="alert alert-info">
+                <center><h3>No Questions found</h3></center>
+              </div>
+            {% endif %}
+          </div>
+          <br>
+          <center>
+            {% if objects %}
+              <!-- <button class="btn btn-lg btn-primary" type="submit" name='download' value='download'><i class="fa fa-download"></i>&nbsp;Download Selected</button>
+              <button class="btn btn-lg btn-primary" type="submit" name="test" value="test">Test Selected</button>
+ -->              
+
+ <button class="btn btn-lg btn-danger" type="submit" onClick="return confirm_delete(frm);" name='delete' value='delete'>
+              <i class="fa fa-trash"></i>&nbsp;Delete Selected</button>
+            {% endif %}
+          </center>
+        </form>
+
+
+                      </div>
+                   
+                 
+
+
+
+        <div role="tabpanel" class="tab-pane second-tab" id="about">
+
+
+               <!-- <form action="" method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+              <div class="form-group col-md-6">
+                  <a class="btn btn-info" href="">
+                    <i class="fa fa-download"></i>&nbsp;Download Template</a>
+                  <br><br>
+                  <h4> Or </h4>
+                  <br>
+                  <div class="input-group mb-3">
+                      <div class="custom-file">
+                          {{ upload_form }}
+                          <label class="custom-file-label" for="id_file">
+                              Choose file
+                          </label>
+                      </div>
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit" name="upload" value="upload"><i class="fa fa-upload"></i>&nbsp;Upload File</button>
+                      </div>
+                  </div>
+              </div>
+              <script>
+                  $('#id_file').on('change',function(){
+                      //get the file name
+                      var fileName = $(this).val();
+                      //replace the "Choose a file" label
+                      $(this).next('.custom-file-label').html(fileName);
+                  })
+              </script>
+          </form>
+                           
+                              <p>You can upload question files the following ways -
+                                <li><b><u>Yaml File</u></b>
+                                  <p>One can upload Yaml file with extensions .yaml or .yml. Please note
+                                    that you cannot upload files associated to a question. Yaml file can
+                                    have any name.
+                                  </p>
+                                </li>
+                                <li><b><u>Zip File</u></b>
+                                 <p> One can also upload zip with the following zip structure - </p>
+                                  <pre>
+                                    .zip
+                                    |-- .yaml or .yml
+                                    |-- .yaml or .yml
+                                    |-- folder1
+                                    |   |-- Files required by questions
+                                    |-- folder2
+                                    |   |-- Files required by questions
+                                  </pre>
+                                </li>
+                              </p>
+                      
+
+                    </div> -->
+                  </div>
+
+                </div>
+              
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      
+      var sPath=window.location.pathname;
+         var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+         $(".pmd-sidebar-nav").each(function(){
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+            $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+              $(this).find("a[href='"+sPage+"']").addClass("active");
+       });  
+    </script>
+
+                       
+
+
+
+
+
+
+ <!--  <div class="container-fluid">
+    <div class="nav nav-pills" role="tablist" aria-orientation="vertical">
+      <a href="#show" id="showbar" class="nav-link active"  data-toggle="pill" role="tab" aria-controls="show" aria-selected="true">
+       All Questions
+     </a>
+      <a href="#updown" id="updownbar" class="nav-link" data-toggle="pill" role="tab" aria-controls="updown" aria-selected="false" > 
+      Upload Questions
+    </a>
+    </div>
+    <br>
+    <div class="tab-content">
+      
+      
+        </div>
+        <div class="card-body">
+          
+      </div>
+    </div>
+  </div> -->
+{% endblock %}
+

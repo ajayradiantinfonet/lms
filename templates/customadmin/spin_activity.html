@@ -1,0 +1,692 @@
+{% extends 'assesment_header.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+
+{{ allq|json_script:"allquestions" }}
+{{ alltopics|json_script:"alltopics" }}
+
+{{ spinactivity_id|json_script:"spinactivity_id"}}
+
+{{ showspin|json_script:"showspin" }}
+
+
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+ -->
+
+
+
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">Configure Spin Activity</li>
+    </ol>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+{% endif %}
+  
+
+    
+    <div class="page-content profile-edit section-custom">
+      <div class="pmd-card pmd-z-depth">
+        <div class="pmd-card-body">
+          <div class="row">
+            
+            <div class="col-lg-12 col-sm-12 custom-col-12">
+              <!-- <h3 class="heading">Course Info</h3> -->
+
+
+              <div class="row">
+
+
+    {% if show_spin is True %}
+
+    <div class="col-md-6">
+      <div id="chart"></div>
+    </div>
+
+    <div class="col-md-6">
+    <div id="question">
+      <h1 id="questionheader" data-qid=""></h1>
+
+      <div class="options">
+        <ul style="list-style: none">
+          <li><input type="radio" name="op" data-aid="" id="op1">
+            <label id="label_op1" for="op1"></label></li>
+          <li><input type="radio" name="op"  data-aid="" id="op2">
+            <label id="label_op2" for="op2"></label></li>
+          <li><input type="radio" name="op"  data-aid="" id="op3">
+          <label id="label_op3" for="op3"></label></li>
+          <li><input type="radio" name="op" data-aid="" id="op4">
+            <label id="label_op4" for="op4"></label></li>
+
+          <li><button id="saveanswer" data-sid="" value="saveanswer">Save Answer</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+    
+
+  {% endif %}
+    
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+   
+    <script type="text/javascript" charset="utf-8">
+
+        $('#saveanswer').hide();
+        $('#op1').hide();
+        $('#op2').hide();
+        $('#op3').hide();
+        $('#op4').hide();
+
+        var alltopics=document.getElementById('alltopics').text;
+        var showspin=document.getElementById('showspin').text;
+        var spinactivity_id=document.getElementById('spinactivity_id').text;
+
+        var all_topics=JSON.parse(alltopics);
+        console.log(alltopics);
+        //alert(all_topics);
+
+        var data=[];
+        for (var i=0;i<all_topics.length;i++)
+        {
+          topic=all_topics[i]
+          var temp={}
+          temp.label=topic.topic_name;
+          qlength=topic.questions.length;
+          questions=topic.questions
+          temp.value=qlength;
+          qarray=[];
+          //qidarray=[];
+          for (var j=0;j<qlength;j++)
+          {
+            
+            qarray.push({'qid':questions[j].qid,'q':questions[j].q,'op1':questions[j].op1,'op2':questions[j].op2,'op3':questions[j].op3,'op4':questions[j].op4});
+          }
+          temp.question=qarray
+          data.push(temp)
+        }
+        //console.log(data);
+
+        var padding = {top:20, right:40, bottom:0, left:0},
+            w = 350 - padding.left - padding.right,
+            h = 350 - padding.top  - padding.bottom,
+            r = Math.min(w, h)/2,
+            rotation = 0,
+            oldrotation = 0,
+            picked = 100000,
+            oldpick = [],
+            color = d3.scale.category20();
+
+            //category20c()
+           
+
+        var datas = [
+                {"label":"Dell LAPTOP",  "value":1,  "question":["What CSS property is used for specifying the area between the content and its border?","ddddd","ddwdw"]}, 
+                {"label":"DeTOP",  "value":1,  "question":["What CSS property is used for specifying the area between the content and its border?","ddd","sdjcbejb"]}, 
+                
+        ];
+        //console.log(datas);
+
+        
+        var svg = d3.select('#chart')
+            .append("svg")
+            .data([data])
+            .attr("width",  w + padding.left + padding.right)
+            .attr("height", h + padding.top + padding.bottom);
+
+
+
+        var container = svg.append("g")
+            .attr("class", "chartholder")
+            .attr("transform", "translate(" + (w/2 + padding.left) + "," + (h/2 + padding.top) + ")");
+
+
+        var vis = container.append("g");
+            
+        var pie = d3.layout.pie().sort(null).value(function(d){return 1;});
+        // declare an arc generator function
+        var arc = d3.svg.arc().outerRadius(r);
+        // select paths, use arc generator to draw
+        var arcs = vis.selectAll("g.slice")
+            .data(pie)
+            .enter()
+            .append("g")
+            .attr("class", "slice");
+            
+        arcs.append("path")
+            .attr("fill", function(d, i){ return color(i); })
+            .attr("d", function (d) { return arc(d); });
+        // add the text
+        arcs.append("text").attr("transform", function(d){
+                d.innerRadius = 0;
+                d.outerRadius = r;
+                d.angle = (d.startAngle + d.endAngle)/2;
+                return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")translate(" + (d.outerRadius -10) +")";
+            })
+            .attr("text-anchor", "end")
+            .text( function(d, i) {
+                return data[i].label;
+            });
+        
+        container.on("click", spin);
+        var closed_flag =false;
+        function spin(d)
+        {
+            
+          container.on("click", null);
+          $("input[name='op']").prop('checked', false);
+        console.log("OldPick: " + oldpick.length, "Data length: " + data.length);
+        if(oldpick.length == data.length)
+        {
+                //console.log("done");
+               
+                //alert("go for check result here /admin/spinactivityresult/")
+                //container.on("click", null);
+                //return;
+        }
+        var ps= 360/data.length
+        //console.log('ps is'+ps);
+         pieslice = Math.round(1440/data.length)
+         //console.log('pieslice is'+pieslice);
+
+         rng      = Math.floor((Math.random() * 1440) + 360);
+         //console.log('rng is'+rng);
+
+        rotation = (Math.round(rng / ps) * ps);
+        //console.log('rotation is'+rotation);
+            
+        picked = Math.round(data.length - (rotation % 360)/ps);
+        
+        picked = picked >= data.length ? (picked % data.length) : picked;
+        console.log('picked is'+picked);
+        console.log('oldpick is '+oldpick)
+        if(oldpick.indexOf(picked) !== -1){
+            d3.select(this).call(spin);
+            return;
+        } 
+        else {
+          // if(closed_flag)
+          // {
+          //   oldpick.push(picked);
+          //   closed_flag=false;
+          // }
+        }
+            rotation += 90 - Math.round(ps/2);
+            vis.transition()
+                .duration(3000)
+                .attrTween("transform", rotTween)
+                .each("end", function(){
+                    //mark question as seen
+                    //d3.select(".slice:nth-child(" + (picked + 1) + ") path")
+                       // .attr("fill", "#111");
+                    //populate question
+
+                    d3.select("#question h1").text('Question: '+data[picked].question[0].q);
+
+                    //alert(data[picked].question[0].qid);
+                  $("#questionheader").attr('data-qid',data[picked].question[0].qid);
+
+                    $('#op1').show();
+                    $('#op2').show();
+                    $('#op3').show();
+                    $('#op4').show();
+                    $('#saveanswer').show();
+                    $('#op1').val(data[picked].question[0].op1);
+                    $('#label_op1').text(data[picked].question[0].op1);
+
+                    $('#op2').val(data[picked].question[0].op2);
+                    $('#label_op2').text(data[picked].question[0].op2);
+
+                    $('#op3').val(data[picked].question[0].op3);
+                    $('#label_op3').text(data[picked].question[0].op3);
+
+                    $('#op4').val(data[picked].question[0].op4);
+                    $('#label_op4').text(data[picked].question[0].op4);
+
+                    // d3.select("#op1").text(data[picked].question[0].op1);
+                    // d3.select("#op2").text(data[picked].question[0].op2);
+                    // d3.select("#op3").text(data[picked].question[0].op3);
+                    // d3.select("#op4").text(data[picked].question[0].op4);
+                    data[picked].question.shift();
+                    console.log('que is'+data[picked].question);
+                    if(data[picked].question.length < 1){
+                      d3.select(".slice:nth-child(" + (picked + 1) + ") path")
+                       .attr("fill", "#111");
+                      console.log("done with "+picked);
+                      oldpick.push(picked);
+
+                      
+                       //closed_flag=true;
+                    }
+                    oldrotation = rotation;
+                    
+                    container.on("click", spin);
+                });
+
+               
+        }
+        svg.append("g")
+            .attr("transform", "translate(" + (w + padding.left + padding.right) + "," + ((h/2)+padding.top) + ")")
+            .append("path")
+            .attr("d", "M-" + (r*.15) + ",0L0," + (r*.05) + "L0,-" + (r*.05) + "Z")
+            .style({"fill":"black"});
+
+
+
+        container.append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 60)
+            .style({"fill":"white","cursor":"pointer"});
+        //spin text
+        container.append("text")
+            .attr("x", 0)
+            .attr("y", 15)
+            .attr("text-anchor", "middle")
+            .text("spin")
+            .style({"font-weight":"bold", "font-size":"25px"});
+        
+        
+        function rotTween(to) {
+          var i = d3.interpolate(oldrotation % 360, rotation);
+          return function(t) {
+            return "rotate(" + i(t) + ")";
+          };
+        }
+        
+        
+        function getRandomNumbers(){
+            var array = new Uint16Array(1000);
+            var scale = d3.scale.linear().range([360, 1440]).domain([0, 100000]);
+            if(window.hasOwnProperty("crypto") && typeof window.crypto.getRandomValues === "function"){
+                window.crypto.getRandomValues(array);
+                console.log("works");
+            } 
+            else {
+                //no support for crypto, get crappy random numbers
+                for(var i=0; i < 1000; i++){
+                    array[i] = Math.floor(Math.random() * 100000) + 1;
+                }
+            }
+            return array;
+        }
+
+      
+
+      </script>
+            {% if not spinactivityid is None %}
+                      <p> Activity is generated </p>
+                      <a href="{% url 'customadmin:spin_activity' spinactivityid %}"> Go Here </a>
+                  {% endif %}
+            {% if show_spin is False and spinactivityid is None %}
+
+            <div style="float:right">
+              
+              <button data-target="#form-dialog" data-toggle="modal" class="btn pmd-ripple-effect btn-primary pmd-z-depth" type="button">Add Question</button>
+
+              <div tabindex="-1" class="modal fade" id="form-dialog" style="display: none;" aria-hidden="true">
+
+              <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header bordered">
+                              <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                              <h2 class="pmd-card-title-text">Create Question</h2>
+                            </div>
+                            <div class="modal-body">
+                             <!--  <form class="form-horizontal"  
+                              action=""> -->
+                                {{question_form|crispy }}
+                                <!-- <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                  <label for="first-name">Name</label>
+                                  <input type="text" class="mat-input form-control" id="question_name" value=""><span class="pmd-textfield-focused"></span>
+                                  <span class="help-text">Input is required!</span> </div>
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                  <label for="first-name">Email Address</label>
+                                  <input type="text" class="mat-input form-control" id="email" value=""><span class="pmd-textfield-focused"></span>
+                                </div> data-dismiss="modal"-->
+                               
+                              
+                            </div>
+                            <div class="pmd-modal-action">
+                              <button  
+                              class="btn pmd-ripple-effect btn-primary" onclick="add_que()">Submit</button>
+                                
+                            </div>
+                            <!-- </form> -->
+                </div>
+              </div>
+            </div>
+
+
+            </div>
+
+
+              
+            <form name="" style="margin:10px;"  id="form_spin" method="post">
+
+            {% csrf_token  %}
+
+            <div class="form-group">
+                    <label for="name" class="control-label">
+                    Spin Activity Name *</label>
+                    <input type="text" name="name" id="spin_name" class="form-control">
+            </div>
+
+             <div class="form-group">
+                    <label for="no_of_topic" class="control-label">
+                    No of Topic(s) *</label>
+                    <input type="number"  id="id_no_of_topic" name="no_of_topic" class="form-control">
+            </div>
+
+            <div class="form-group">
+                    <input type="checkbox" name="block_slice_after_open" />
+                    <label for="block_slice_after_open" class="control-label">
+                    Disable Topic After Spin </label>
+                    
+            </div>
+
+            <!-- <div class="form-group">
+                    <input type="checkbox" name="question_in_seq" />
+                    <label for="question_in_seq" class="control-label">
+                    Question In Sequence </label>
+                    
+            </div> -->
+
+            <!-- Name: <input type="text" name="name" /><br/><br/> -->
+
+                 <!--   No Of Topic: <input type="number" id="id_no_of_topic" name="no_of_topic" /><br/><br/> -->
+
+                 <!--  Block Slice After Open: <input type="checkbox" name="block_slice_after_open" /><br/> -->
+                    <!-- <div class="fieldWrapper">
+                       {{ form.name.label_tag }}
+                      {{ form.name }}
+                    </div><br/>
+
+
+                     <div class="fieldWrapper">
+                      {{ form.no_of_topic.label_tag }}
+                    {{ form.no_of_topic }}
+                  </div><br/>
+
+                    <div class="fieldWrapper">
+
+                    
+                      {{ form.question_per_slices.label_tag }}
+                      {{ form.question_per_slices }}
+                    </div>
+                    <br/>
+
+                  <div class="fieldWrapper">
+                    {{ form.block_slice_after_open.label_tag }}
+                    {{ form.block_slice_after_open }}
+
+                  </div> -->
+
+
+
+                    
+                 
+        <button id="show" value="Show More Fields" >Show More Fields</button>
+                  
+        </form>
+
+        {% endif %}
+
+        </div>
+              
+                    
+                </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+      
+
+        
+               
+            </div> 
+          
+          </div>
+        </div>     
+      </div>      
+      </div>
+    </div>
+    
+</div>
+
+ 
+
+<script>
+        //$('.add_que').click(function(){
+              function add_que(){ 
+
+                  var question_name=$('#id_question_name').val();
+                  
+                  var option_a=$('#id_option_a').val();
+                  var option_b=$('#id_option_b').val();
+                  var option_c=$('#id_option_c').val();
+                  var option_d=$('#id_option_d').val();
+                  var answer_option=$('#id_answer_option').val();
+                  var start_date=$('#id_start_date').val();
+                  var author=$('#id_author').val();
+                  var ql=$('#id_question_language').val();
+                  //alert(1);
+                  $.post('{% url "customadmin:all_questions" %}',
+                  {
+                    'question_name':question_name,'option_a':option_a,
+                     'option_b':option_b,'option_c':option_c,
+                     'option_d':option_d,'answer_option':answer_option,'start_date':start_date,'author':author,'question_language':ql },
+                    function(data,status){
+                      alert("question has been added");
+                      window.location.reload();
+                    }
+                  );
+
+                 
+              }
+          
+
+  $(document).ready(function(){
+     
+  });
+
+  var allqs=document.getElementById('allquestions').text;
+  //console.log(allqs);
+  var all_question=JSON.parse(allqs);
+  
+  var option=''
+  for(var i=0;i<all_question.length;i++)
+  {
+    option=option+'<option value="'+all_question[i].id+'">'+all_question[i].name+'</option>';
+  }
+
+  $('#submit').hide();
+
+  
+
+  function isNormalInteger(str) {
+    var n = Math.floor(Number(str));
+    return n !== Infinity && String(n) === str && n >= 0;
+    }
+	$('#show').click(function()
+	{
+      //event.preventDefault();
+		var no_of_topics=$('#id_no_of_topic').val();
+    var name=$('#spin_name').val();
+    if(name==''){
+      alert('Please enter spin activity name ');
+      return false;
+    }
+    if (no_of_topics==''){
+      alert('Please enter numerical value ');
+        return false;
+    }
+    if( no_of_topics < 2){
+        alert('Please enter value greater than or equal to two');
+        return false;
+
+    }
+
+    
+    if (!isNormalInteger(no_of_topics)){
+      alert("no of topic should be integer value");
+      return false;
+    }
+
+    
+
+    var question_per_slices=$('#id_question_per_slices').val();
+    console.log(question_per_slices);
+
+    // var selectinput='<select name="" multiple="multiple" class="multiple-checkboxes"><option>Select Question</option></select>';
+    	for(var i=1;i<=no_of_topics;i++)
+      {
+    	    //var top='<ul>';
+          var top='<br/>';
+           var top=top+'* Topic'+i+' :<input type="text" id="topics'+i+'" name="topics'+i+'" class="form-control" /><br/>';
+            var subque='Select Questions *: <select class="multiple-checkboxes"  name="topics'+i+'questions" id="topics'+i+'questions" multiple="multiple">'+option+'</select>';
+
+              //top=top+subque+'</ul>';
+            top=top+subque+'<br/><br/>';
+            $('#form_spin').append(top);
+            //get_questions
+            //$('#form_spin').append(questionvar);
+      }
+		  $(this).hide();
+      $('#form_spin').append('<input type="submit" value="submit" name="submit" />');
+
+      $(".multiple-checkboxes").multiselect({includeSelectAllOption: true, });
+      //alert();
+		return false;
+	});
+
+
+$(document).ready(function(){
+  $(".multiple-checkboxes").multiselect({includeSelectAllOption: true, });
+});
+
+   
+
+
+  $('#saveanswer').click(function()
+  {
+        var radioValue = $("input[name='op']:checked").val();
+        var attrid = $("input[name='op']:checked").attr('id')
+
+          if(attrid=='op1'){
+            var opt='a';
+          }
+          else if(attrid=='op2'){
+            var opt='b';
+          }
+          else if(attrid=='op3'){
+            var opt='c';
+          }
+          else{
+            var opt='d';
+          }
+
+          console.log(opt);
+          console.log(spinactivity_id);
+          console.log($('#questionheader').attr('data-qid'));
+
+
+            $.post("/admin/store_ans_spin/",
+            {
+             'questionid':$('#questionheader').attr('data-qid'),
+             'answerid':opt,
+             'spinactivityid':spinactivity_id,
+            },
+            function(data, status){
+              //alert("answer saved successfully");
+
+            });
+
+             if(data.length==oldpick.length)
+             {
+                   $.post("{% url 'userlms:activity_completed' %}",
+                        {
+                         'activityid':spinactivity_id,
+                         'userid':"{{user.id}}",
+                         'type':"spin_activity"
+                        },
+                        function(data, status){
+                          alert(data);
+                  });
+            }
+
+});
+
+
+
+
+
+
+
+
+  
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+
+<script>
+
+    
+
+</script>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

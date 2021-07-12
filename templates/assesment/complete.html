@@ -1,0 +1,59 @@
+{% extends "assesment_header.html" %}
+{% load custom_filters %}
+
+
+{% block content %}
+{% load static %}
+
+<br>
+{% if module_id and not paper.course.is_trial %}
+<center>
+    <div class="alert alert-info col-md-8">
+        Note:- Please Click on the Next button to submit the quiz. Please do not close the browser without clicking Next.
+    </div>
+</center>
+{% endif %}
+{% csrf_token %}
+    {% if paper.questions_answered.all or paper.questions_unanswered.all %}
+        <center>
+        <div class="col-md-8">
+            <h3>Submission Status</h3>
+            <table class="table table-bordered table-responsive-sm" >
+                <thead>
+                    <tr class="text-center">
+                        <th> Question</th>
+                        <th> Status </th>
+                    </tr>
+                </thead>
+
+                {% for question in paper.questions.all %}
+                    <tbody>
+                        {% if question in paper.questions_answered.all %}
+                            <tr class="table-success">
+                            <td> {{ question.summary }} </td>
+                            <td> Attempted </td>
+                        {% else %}
+                            <tr class="table-warning">
+                            <td> {{ question }} </td>
+                            <td> Not completed </td>
+                        {% endif %}
+                        </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+
+            <!-- <h3><a href="{% url 'assesment:view_answerpaper' paper.question_paper.id 0 %}">Check Result </a></h3> -->
+        </div>
+        </center>
+    {% endif %}
+    <br><br>
+	<center class="container">
+        <h5>
+            <span class="alert alert-success">{{message}}</span> 
+        </h5>
+    </center>
+    <center>
+    <br>
+   
+    </center>
+{% endblock content %}

@@ -1,0 +1,22 @@
+codename,name,type,description
+can_create_custompermission,,generic,for createting generic permission
+can_see_all_custompermission,,generic,permission to user if he/she can view all available custom permission (for superadmin)
+can_assign_custompermission,,generic,permission for assigning custom permission to user
+can_create_group,,generic,Custom permission for creating group
+can_create_organization,,generic,Custom permission for creating organization
+can_add_user_of_organization,,generic,custom permission for adding user of organization 
+can_see_all_courses,,generic,custom permission for seeing all available courses (for superadmin )
+can_create_courses_for_organization,,generic,custom permission for creating courses of organization
+can_create_topic_for_organization,,generic,custom permission for creating topics inside courses  inside organization
+can_create_activity_for_topic,,generic,custom permission for adding activity inside courses or outside courses
+can_see_upcoming_session,,generic,custom permission for checking if any upcoming class room session is available
+can_schedulde_session,,generic,custom permission for scheduling virtual class room session
+can_see_completed_session,,generic,custom permission for seeing completed session ( for teacher)
+can_enroll_into_courses,,generic,custom permission for enrolling into courses (according to user org and course)
+can_see_own_permission,,generic,custom permission for viewing own permission
+can_see_organization_courses,,generic,custom permission for viewing only organization courses (apply only when user is reg. With org)
+can_assign_user_to_org,,generic,custom permission for assigning  user to organization (user which is reg by same org first)
+can_view_all_organization,,generic,custom permission for viewing all organization (superadmin level permission )
+can_view_topic_of_organization,,model,custom permission for view_topic_of_perticuler_organization (user should be registered with same org)
+can_view_topic_of_course,,model,custom permission for adding activity inside courses or outside courses
+can_enroll_into_any_course,,generic,custom permission to enroll in any course (superadmin level access)

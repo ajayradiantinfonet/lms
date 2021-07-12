@@ -1,0 +1,398 @@
+{% extends 'head1.html'%}
+        
+{% block content %}
+{% load static %}
+
+{% load mytag %}
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+  
+
+
+
+<h1 class="section-title" id="services">
+    <span>{{desc}}</span>
+</h1>
+
+    
+<ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+</ol><!--breadcrum end-->
+  
+    <!-- table card -->
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+{% endif %}
+
+  
+<section class="row component-section">
+        <div class="row component-section">
+          {% if not user.is_anonymous %}
+      {% if user|check_permission:'generic.can_create_organization' %}
+          <div style="float:right; padding-right:20px;">
+            <button type="button" id="add_org" class="btn pmd-btn-outline pmd-ripple-effect btn-primary">Add Organisation</button>
+          </div>
+          {% endif %}
+        {% endif %}
+
+
+        </div>
+
+        {% ifequal object_list|length 0 %}
+              <p>&nbsp;&nbsp;There is no organization  available</p>
+        {% endifequal %}
+        
+        
+
+
+          <table class="table table-striped">
+            <thead>
+
+              <tr>
+                <th scope="col">S.N.</th>
+                <th scope="col">Organization Name</th>
+                <th scope="col">Certificate</th>
+                <th scope="col">Download Certificate</th>
+                <th scope="col">Active</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {% for obj in object_list %}
+              <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ obj.organization_name }}</td>
+                
+
+                
+                <td>
+
+                  <a class="certificate_A" data-target="#cer-dialog{{obj.id}}" data-toggle="modal" style="background:white;" data-id="{{obj.id}}" data-href='{{ obj.certificate | safe }}'>Show Certificate 
+                  </a>
+
+
+                  <div tabindex="-1" class="modal fade" id="cer-dialog{{obj.id}}" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header bordered">
+                                      <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                      <h2 class="pmd-card-title-text"> Organization Certificate</h2>
+                                    </div>
+                                    <div class="modal-body">
+
+                                      <div class="certificate_u"  
+                                        style="background:white;margin-left:35px;display: none;height:auto;width:auto;" id="certificate_u{{obj.id}}" 
+                                        >
+                     
+                                       </div>
+
+                                    </div>
+        </div>
+      </div>
+    </div>
+                  
+
+
+                  <!-- <div class="certificate_u"  
+                    style="background:white;padding:7px;display: none;height:auto;width:auto;" id="certificate_u{{obj.id}}" 
+                    >
+                     
+                  </div> -->
+                  
+                  
+
+                </td>
+                <td>
+                  <a class="download_cer" data-href="{{ obj.id }}">Download</a>
+                </td>
+
+                <td>
+                  {{ obj.is_active }}
+                </td>
+                
+                
+                <td>
+
+            {% if not user.is_anonymous %}
+      {% if user|check_permission:'generic.can_edit_organization' %}
+             <a class="edit_org" title="Edit" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE254;</i>
+            </a>
+
+
+          {% endif %}
+          {% if user|check_permission:'generic.can_edit_organization' %}
+        
+             <a class="delete_org" title="Delete" data-href="{{obj.id}}" data-toggle="tooltip"><i class="material-icons">&#xE872;</i>
+            </a>
+
+          {% endif %}
+        {% endif %}
+           
+
+            
+
+                </td>
+              </tr>
+
+               
+               {% endfor %}
+            
+
+            </tbody>
+        
+         
+         
+
+
+  
+          </table>
+
+          <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+            
+            {% if page_obj.has_previous %}
+                <a class="page-link" href="?page=1">&laquo; first</a>
+                <a class="page-link" href="?page={{page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+                <!-- <a href="?page={{ page_obj.previous_page_number }}">previous</a> -->
+            {% endif %}
+            </li>
+
+            <li class="page-item">
+                <!-- {{ page_obj.paginator.num_pages }} -->
+                  <a class="page-link" href="?page={{page_obj.number}}">{{ page_obj.number }}</a>
+              
+            </li>
+
+            <li class="page-item">
+
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">{{page_obj.next_page_number}}</a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+              
+            </li>
+            
+          </ul>
+        </nav>
+
+
+
+      </section>
+    </div>
+           
+</div>
+
+
+
+
+              
+
+ 
+
+
+
+ <script>
+
+      //$('.certificate').
+        $('.certificate_A').click(function(){
+
+              var datahref=$(this).attr("data-href");
+              //console.log(datahref);
+              var id = $(this).attr("data-id");
+              var d=document.getElementById("certificate_u"+id);
+              vd=d.innerHTML;
+              
+              //if($(d).css('display') == 'none'){
+
+              
+
+              //alert(datahref);
+                var parser = new DOMParser();
+
+            //var doc = parser.parseFromString(datahref, "image/svg+xml");
+              //document.write(doc);
+              //var d = decodeURIComponent(escape(datahref));
+              //const parser = new DOMParser();
+//const convertedValue = (parser.parseFromString("&#039 &amp &#039 &lt &gt", "application/xml").body.innerText;
+
+              //var dd=d.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+             // $(".certificate_u").html(datahref);
+                 htmlDecode(datahref);
+                  function htmlDecode(input){
+                  //var e = document.createElement('textarea');
+                  //e.style.display="none";
+                  //e.innerHTML = input;
+                  //console.log(input);
+                 // var d=document.createElement(e.innerHTML);
+              document.getElementById("certificate_u"+id).innerHTML=input;
+              document.getElementById("certificate_u"+id).style.display="block";
+              //$('.certificate_A').text('Hide Certificate');
+            }
+          //}
+            //else{
+              // document.getElementById("certificate_u"+id).style.display="none";
+              //$('.certificate_A').text('Show Certificate');
+              //$("certificate_u").html(e.innerHTML);
+           // }
+          // handle case of empty input
+              return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+            });
+              // html2canvas(datahref).then( 
+              //  function (canvas) { 
+              // //   //document.getElementById('certificate').appendChild(canvas); 
+              //      $('.certificate_u').appendChild(canvas);
+              // //   $('.certificate').show();
+              // //   //var imgData = canvas.toDataURL('image/png');
+
+              // //   //var doc = new jsPDF('p','mm','a4');
+              // //   //doc.addImage(imgData, 'PNG', 0, 0);
+              // //   //doc.save('certificate.pdf');
+              //  });
+
+        //});
+
+        $('.download_cer').click(function(){
+          var id=$(this).attr("data-href");
+            var gi=document.getElementById("certificate_u"+id);
+            console.log(gi);
+           // domtoimage.toPng(gi)
+           //  .then(function (dataUrl) {
+           //      var img = new Image();
+           //      img.src = dataUrl;
+           //      document.body.appendChild(img);
+           //  })
+           //  .catch(function (error) {
+           //      console.error('oops, something went wrong!', error);
+           //  });
+
+    domtoimage.toPng(gi, { quality: 0.95 })
+    .then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'my-image-name.jpeg';
+        link.href = dataUrl;
+        link.click();
+    });
+
+    //     function filter (node) {
+    //   return (node.tagName !== 'i');
+    //   }
+
+    // domtoimage.toSvg(gi)
+    // .then(function (dataUrl) {
+    //      var link = document.createElement('a');
+    //     link.download = 'my-image-name.jpeg';
+    //     link.href = dataUrl;
+    //     link.click();
+    // });
+
+              
+              
+            //   var div=document.createElement('div')
+
+            //   div.style.display="none";
+            //   document.body.appendChild(div);
+            //     html2canvas(gi).then( 
+            //     function (canvas) { 
+            //       //document.getElementById('output').appendChild(canvas); 
+            //         div.appendChild(canvas);
+            //         var imgData = canvas.toDataURL('image/png');
+            //         var doc = new jsPDF('p','mm','a4');
+            //         doc.addImage(imgData, 'PNG', 0, 0);
+            //         doc.save('certificate.pdf');
+            // });
+        });
+               
+                //var html_cert=$("{{obj.certificate}}");
+                //$("#certificate").html(html_cert);
+</script>
+
+ <script>
+
+
+  $('#adduser').bind('click',function(){
+         //window.location.href="http://sjsjsjsj.com";
+        //window.location.href="{% url 'customadmin:create_organization_user' %}";
+  });
+
+  $('.edit_org').on('click',function(){
+    var id=$(this).attr('data-href');
+    window.location.href="{% url 'customadmin:edit_organization' %}"+id+"/";
+  });
+
+  $('.delete_org').on('click',function(){
+      var id=$(this).attr('data-href');
+      {% if not user.is_anonymous %}
+      {% if user|check_permission:'generic.can_delete_organization' %}
+        //if (confirm("this will only inactive organization")){
+          window.location.href="{% url 'customadmin:delete_organization' %}"+id+"/";
+        //}
+        {% else %}
+        alert("you don't have permission");
+        {% endif %}
+      {% endif %}
+      
+  });
+
+  $('#add_org').on('click',function(){
+    
+    {% if not user.is_anonymous %}
+      {% if user|check_permission:'generic.can_create_organization' %}
+        window.location.href="{% url 'customadmin:create_organization' %}";
+        {% else %}
+        alert("you don't have permission");
+      {% endif %}
+      {% endif %}
+  });
+
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+
+  // $(document).ready(function() {
+  //   $('.pmd-dropdown-hover').dropdownHover().dropdown();
+  // });
+  </script>
+
+
+<!-- <script>
+  $(document).ready(function() {
+
+    var sPath=window.location.pathname;
+    var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+    $(".pmd-sidebar-nav").each(function(){
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+      $(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+      $(this).find("a[href='"+sPage+"']").addClass("active");
+    });
+    $(".auto-update-year").html(new Date().getFullYear());
+  });
+  // very simple to use!
+  
+</script> -->
+
+
+</body>
+
+</html>
+{% endblock %}

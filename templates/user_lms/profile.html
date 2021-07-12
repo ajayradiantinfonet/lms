@@ -1,0 +1,1222 @@
+{% extends 'user_lms/header_1.html' %}
+
+{% block course_details %}
+
+{% load static %}
+<!-- {% get_media_prefix %} 
+ -->
+{% load mytag %}
+{% load userlmstag %}
+
+{% load crispy_forms_tags %}
+
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'boheader/css/responsive.css' %}"> -->
+
+
+<style>
+  .profile-header-img > img.img-circle {
+  width: 120px;
+  height: 120px;
+  }
+
+  .label.label-default.rank-label {
+  position: absolute;
+  left: 53%;
+  font-size: 23px;
+  top: 83%;
+  color: #4CA64A;
+}
+
+.profile-header-container {
+  text-align: center;
+}
+
+*, ::before, ::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+  .img-circle .img1-circle {
+  border-radius: 50%;
+
+}
+
+
+
+  body{
+    color: #73879C;
+    font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.471;
+  }
+.head-tag {
+  font-size: 15px;
+  font-weight: 600;
+}
+.user-image img {
+  width: 25px;
+}
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+</style>
+
+  
+
+<br/>
+
+
+
+
+{% if user.is_superuser and not user.has_organization %}
+
+<div class="container">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Profile</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Create Organization</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="certificate-tab" data-toggle="tab" href="#certificatetab" role="tab" aria-controls="certificatetab" aria-selected="false">Organization Certificate</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        
+  <div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-3">
+    <div style="border: 1px solid #80808026;padding: 6px 0px;">
+      <div class="col-md-6 image_w">
+        {% if user.image %}
+          <img class="img-circle1 img1" src="{{ user.image.url }}" />
+        {% else %}
+          <img class="img-circle1 img1" src="{% static 'user_lms/img/account-circle.svg' %}" />
+        {% endif %}
+      </div>
+        <div class="col-md-6" style="padding: 6px 6px;"><p>Hello</p><h2 style="font-size: 12px;
+      font-weight: 700;">{{ user.get_full_name }}</h2></div>
+    </div>
+    <div style="border-radius: 4px;border: 1px solid #80808026; margin: 17px 0px;height: 62vh;padding: 6px 0px;">
+              <h2 style="font-size: 13px;text-align: center;padding: 6px 0px;">Profile Information</h2>
+    </div>
+
+  </div> <!--col-3-->
+
+
+
+  <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-9 col-sm-9">
+                <!-- <div class="x_panel company_height"> -->
+                  <center><h5 class="head-text">Your Profile</h5>
+
+                  <form action="{%  url 'userlms:profile_submit' user.id  %}" method="post">
+
+
+                  <input type="hidden" name="next" value="{{ next }}"  />
+                  <div class="profile-header-container">   
+                    <div class="profile-header-img">
+                       {% if user.image %}
+                            <img class="img-circle imgp" src="{{ user.image.url }}" />
+                        {% else %}
+                          <img class="img-circle imgp" src="{% static 'user_lms/img/account-circle.svg' %}" />
+                      {% endif %}
+                      <div class="rank-label-container">
+                          <input type="file" name="image" id="imgupload" style="display:none"/> 
+                          <span class="label label-default rank-label openfile" ><i class="fa fa-camera" aria-hidden="true"></i></span>
+                      </div>
+                    </div>
+                  </div> </center>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="head-tag">Personal Information Edit</h2> 
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-4">
+                <input type="text" id="first_name" class="form-control" 
+                value="{{user.first_name}}" name="first_name"/>
+              </div>
+              <div class="col-md-4">
+                <input type="text" id="last_name" class="form-control" 
+                value="{{user.last_name}}" name="last_name" />
+              </div>
+
+              <div class="col-md-4">
+                      
+              </div>
+            </div>
+            <br/>
+
+            <div class="row">
+              <div class="col-md-6">
+                <h2 class="head-tag">Gender</h2>
+                  <div class="row">
+                    <input type="radio" id="gender1" name="gender" style="display: none;" value="male" />
+                    <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/male-b.svg' %}" id="mgender" alt="">
+                     <span>Male</span>
+                    </div>
+                    <input type="radio" id="gender2" name="gender" value="female" style="display: none;" />
+                    <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/female-b.svg' %}" id="fgender" alt="">
+                      <span>Female</span>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-4">
+                    <h2 class="head-tag">E-Mail ID Edit</h2>
+                    <input type="text" id="email" value="{{user.email}}" class="form-control" name="email" />
+              </div>
+              <div class="col-md-4">
+                
+              </div>
+              <div class="col-md-4">
+                
+              </div>
+            </div>
+            
+            <br/>
+            <div class="row">
+                  
+              <div class="col-md-4">
+                    <h2 class="head-tag">Mobile Number Edit</h2>
+                    <input type="number" id="phone" value="{{ user.phone }}" 
+                    class="form-control" name="phone" />
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4"></div>
+            </div>
+              <!-- <div class="col-md-6"></div> -->
+              <br/>
+              <div class="row">
+                  <div class="col-md-12">
+                    <h2 class="head-tag">Address Edit</h2>
+                  </div>
+              </div>
+              <div class="row">
+                    <div class="col-md-4">
+                    <input type="text" id="address" class="form-control"  value="{% if user.address %} {{user.address}} {% endif %}" name="address"></div>
+                    <div class="col-md-4">
+                    <input type="text" id="address1" class="form-control" value="{% if user.address %} {{user.address1}} {% endif %}" name="address1"></div>
+                    <div class="col-md-4">
+                    <input type="text" id="pincode" class="form-control" value="{% if user.address %} {{user.pincode}} {% endif %}" name="pincode"></div>
+                  
+                
+              </div>
+
+              <br/>
+                
+              <div class="row">
+                       <div class="col-md-9 offset-md-4">
+                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">Save</button>
+                          <button type="submit" class="btn btn-danger save-delete5">Delete</button>
+                        </div>
+              </div>
+            </form>
+
+             </div> <!-- /tab content-->
+                  
+      </div>
+
+
+
+  
+
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+
+         <form method="post" action="{% url 'customadmin:create_organization' %}" id="form_org" enctype="multipart/form-data">
+                      
+                      {{ form.organization_name|as_crispy_field }}<br/>
+                      {{ form.unique_code|as_crispy_field }}<br/>
+                      <input type="hidden" name="contact_person_name" value="{{user.first_name}}" />
+                     
+                       <input type="hidden" name="contact_person_email" value="{{user.email}}" />
+
+                       <input type="hidden" name="contact_person_phone" value="{{user.phone}}" />
+
+                       <input type="hidden" name="ajax_request" value="true" />
+                       <input type="hidden" name="profile_update" value="true" />
+
+                       <!-- <input type="hidden" name="password" value="{{user.password}}" />
+
+                        <input type="hidden" name="password_again" value="{{user.password}}" /> -->
+
+                        {{ form.password | as_crispy_field }}<br/>
+                        {{ form.password_again | as_crispy_field }}<br/>
+                       <input type="hidden" name="end_date" value=""/>
+
+                      {{ form.address|as_crispy_field }}<br/>
+
+                      {{ form.website|as_crispy_field }}<br/>
+
+                      
+
+                       <input type="hidden" name="no_of_candidates" value="" />
+                      {{ form.logo|as_crispy_field }} <br/>
+
+                      Another Logo :{{ form.logo1 }}<br/><br/>
+
+                      Show Partner Logo :{{ form.show_second_logo }}<br/><br/>
+
+                      Sector Type :{{ form.sector_type }}<br/>
+
+                      {{ form.pin|as_crispy_field }} <br/>
+
+                      State :{{ form.state }}<br/>
+
+                      City :{{ form.city }}<br/>
+
+                      {{ form.certificate }}
+
+                      {% csrf_token %} 
+
+          </form>       
+        
+    </div> 
+
+    <div class="tab-pane" id="certificatetab" role="tabpanel" aria-labelledby="certificate-tab">
+
+      <div class="certificate_upper" id="certificate_upper"style="width:800px;height: 600px;padding:10px;">
+
+                          
+                        <div class="certificate" data-href='{{ obj.certificate | safe }}' id="certificate" style="height: 580px;width:780px;">
+
+                               
+
+
+                            
+                        </div>
+
+                      </div>
+
+                     
+
+                        
+                          
+                          Logo :<input name="logo" id="logo" type="file" /> <br/>
+
+                          Background Image : <input type="file"  name="bi" id="bi"  /><br/>
+
+
+                         Text:<input type="text" class="form-control" name="text"  id="text"  /> <br/>
+
+
+                         Font Family :<select id="fonttype" class="form-control">
+        
+                          <option>Sans-serif</option>
+                          <option>Sancreek</option>
+
+                        </select>
+
+
+                          <br/>
+
+                           Font Weight: <select  id="fontstyle" class="form-control">
+                                <option value="400">Normal</option>
+                                <option value="700">Bold</option>
+                                <option value="1300">Bolder</option>
+
+                            </select><br/>
+
+                           Font Size: <select  id="fontsize" class="form-control">
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                                <option>13</option>
+                                <option>14</option>
+                                <option>15</option>
+                                <option>16</option>
+                                <option>18</option>
+                                <option>19</option>
+                                <option>20</option>
+                                <option>21</option>
+                                <option>22</option>
+                                <option>23</option>
+                                <option>24</option>
+                                <option>25</option>
+                                <option>26</option>
+                                <option>27</option>
+                                <option>28</option>
+
+                                <option></option>
+                                </select>
+                            <br/>
+
+
+                          Select Color: <input type="color" class="form-control" id="favcolor" name="favcolor" value="#ff0000"/> <br/>
+
+                          Border Color:<input type="color" class="form-control" id="bordercolor" name="bordercolor" value="#ff0000"/> <br/>
+
+                          Candidate Name : <input type="text" class="form-control"
+                         id="canname" placeholder="please write a sample name or  anything"/> <br/>
+
+
+
+     
+                      Signature :<input type="file"  name="sig" id="sig"   />
+                       <br/>
+
+                      <input type="button" id="submit_ajax" class="btn-green" value="Submit" />
+
+                    
+
+            </div>
+    </div> 
+  </div>
+</div>
+
+
+{% else %}
+
+   <div class="row container">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-3">
+    <div style="border: 1px solid #80808026;padding: 6px 0px;">
+      <div class="col-md-6 image_w">
+        {% if user.image %}
+          <img class="img-circle1 img1" src="{{ user.image.url }}"  style="border-radius:50%;width:100px;height:100px;"/>
+        {% else %}
+          <img class="img-circle1 img1" src="{% static 'user_lms/img/account-circle.svg' %}" style="border-radius:50%;width:100px;height:100px;" />
+        {% endif %}
+      </div>
+        <div class="col-md-6" style="padding: 6px 6px;"><p>Hello</p><h2 style="font-size: 12px;
+      font-weight: 700;">{{ user.get_full_name }}</h2></div>
+    </div>
+    <div style="border-radius: 4px;border: 1px solid #80808026; margin: 17px 0px;height: 62vh;padding: 6px 0px;">
+              <h2 style="font-size: 13px;text-align: center;padding: 6px 0px;">Profile Information</h2>
+    </div>
+
+  </div> <!--col-3-->
+
+
+
+  <div class="col-md-8">
+
+
+            {% if messages %}
+        <ul class="messages">
+                    {% for message in messages %}
+                   <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+
+                        {{ message }}
+                    </li>
+                    {% endfor %}
+        </ul>
+    {% endif %}
+            <div class="row">
+              <div class="col-md-9 col-sm-9">
+                <!-- <div class="x_panel company_height"> -->
+                  <center><h5 class="head-text">Your Profile</h5>
+
+                  <form action="{%  url 'userlms:profile_submit' user.id  %}" method="post" enctype="multipart/form-data">
+
+
+                  <input type="hidden" name="next" value="{{ next }}"  />
+                  <div class="profile-header-container">   
+                    <div class="profile-header-img">
+                       {% if user.image %}
+                            <img class="img-circle imgp" style="border-radius:50%;" src="{{ user.image.url }}" />
+                        {% else %}
+                          <img class="img-circle imgp" style="border-radius:50%;"  src="{% static 'user_lms/img/account-circle.svg' %}" />
+                      {% endif %}
+                      <div class="rank-label-container">
+                          <input type="file" name="image" id="imgupload" style="opacity:0;margin-top:-20px;" /> 
+
+                          <span class="label label-default rank-label openfile" ><i class="fa fa-camera" aria-hidden="true"></i></span>
+                      </div>
+                    </div>
+                  </div> </center>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="head-tag">Personal Information Edit</h2> 
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-4">
+                <input type="text" id="first_name" class="form-control" 
+                value="{{user.first_name}}" name="first_name"/>
+              </div>
+              <div class="col-md-4">
+                <input type="text" id="last_name" class="form-control" 
+                value="{{user.last_name}}" name="last_name" />
+              </div>
+
+              <div class="col-md-4">
+                      
+              </div>
+            </div>
+            <br/>
+
+            <div class="row">
+              <div class="col-md-6">
+                <h2 class="head-tag">Gender</h2>
+                  <div class="row">
+                    <input type="radio" id="gender1" name="gender" style="display: none;" value="male" />
+                    {% if user.gender == "male" %}
+                      <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/male-b.svg' %}" id="mgender" alt="">
+                       <span>Male</span>
+                      </div>
+
+                      <div class="col-md-6 user-image">
+                        <img class="gender" src="{% static 'user_lms/img/female-b.svg' %}" id="fgender" alt="">
+                      
+                         <span>Female</span>
+                        </div>
+                      {% else %}
+
+                        <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/male-g.svg' %}" id="mgender" alt="">
+                       <span>Male</span>
+                      </div>
+
+                       <div class="col-md-6 user-image">
+                        <img class="gender" src="{% static 'user_lms/img/femail-g.svg' %}" id="fgender" alt="">
+                      
+                         <span>Female</span>
+                        </div>
+                    {% endif %}
+                    <input type="radio" id="gender2" name="gender" value="female" style="display: none;" />
+                   
+                  </div>
+              </div>
+              <div class="col-md-6">
+                
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-4">
+                    <h2 class="head-tag">E-Mail ID Edit</h2>
+                    <input type="text" id="email" value="{{user.email}}" class="form-control" name="email" />
+              </div>
+              <div class="col-md-4">
+                
+              </div>
+              <div class="col-md-4">
+                
+              </div>
+            </div>
+            
+            <br/>
+            <div class="row">
+                  
+              <div class="col-md-4">
+                    <h2 class="head-tag">Mobile Number Edit</h2>
+                    <input type="number" id="phone" value="{{ user.phone }}" 
+                    class="form-control" name="phone" />
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4"></div>
+            </div>
+              <!-- <div class="col-md-6"></div> -->
+              <br/>
+              <div class="row">
+                  <div class="col-md-12">
+                    <h2 class="head-tag">Address Edit</h2>
+                  </div>
+              </div>
+              <div class="row">
+                    <div class="col-md-4">
+                    <input type="text" id="address" class="form-control"  value="{% if user.address %} {{user.address}} {% endif %}" name="address"></div>
+                    <div class="col-md-4">
+                    <input type="text" id="address1" class="form-control" value="{% if user.address1 %} {{user.address1}} {% endif %}" name="address1"></div>
+                    <div class="col-md-4">
+                    <input type="text" id="pincode" class="form-control" value="{% if user.pincode %} {{user.pincode}} {% endif %}" name="pincode"></div>
+                  
+                
+              </div>
+
+              <br/>
+                
+              <div class="row">
+                       <div class="col-md-9 offset-md-4">
+                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">Save</button>
+                          <button type="submit" class="btn btn-danger save-delete5">Delete</button>
+                        </div>
+              </div>
+            </form>
+
+             </div> <!-- /tab content-->
+                  
+      </div>
+
+{% endif %}
+
+
+</body>
+</html>
+{% endblock %}
+
+
+{% block inpage_script %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+
+// $('#myTab a').on('click', function (event) {
+//   event.preventDefault()
+//   $(this).tab('show')
+// });
+
+
+  $('.openfile').click(function(){ 
+    $('#imgupload').trigger('click'); 
+  });
+
+  $('#mgender').click(function(){
+      
+      $(this).attr('src',"{% static 'user_lms/img/male-b.svg' %}");
+      $('#gender1').click();
+       $("#fgender").attr('src',"{% static 'user_lms/img/female-b.svg' %}");
+  });
+
+  $('#fgender').click(function(){
+      
+      $(this).attr('src',"{% static 'user_lms/img/femail-g.svg' %}");
+      $('#gender2').click();
+      $("#mgender").attr('src',"{% static 'user_lms/img/male-g.svg' %}");
+  });
+  
+  $('#imgupload').on('change',function(){
+      if(this.files && this.files[0]) 
+      {
+          var img = document.querySelector('img');
+          //console.log(img[0]);
+          // var img = $('.img-circle');
+          
+          console.log( URL.createObjectURL(this.files[0]));
+          $('.imgp').on('load',function(){
+              console.log("herer");
+              //URL.revokeObjectURL($('.imgp').attr('src')); 
+              //$('.imgp').attr('src','#');
+          });
+
+          $('.imgp').attr('src',URL.createObjectURL(this.files[0])); 
+          //$('.img1').attr('src',URL.createObjectURL(this.files[0]));
+          // img.onload = () => {
+          //     URL.revokeObjectURL(img.src);  
+          // }
+
+      }
+  });
+
+  const form = document.querySelector('form');
+  
+  
+  // form.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+  //     var gender = $("input[name='gender']:checked").val();
+  //     form.submit();
+  // });
+
+  // $('#submit').click(function(){
+
+  // });
+
+  // $('#mgender').click(function(){
+  //     $('#gender1').click();
+  // });
+
+  // $('#fgender').click(function(){
+  //     $('#gender2').click();
+  // });
+
+
+
+
+
+  
+</script>
+
+
+<script>
+      $('#datepicker-default').datepicker({
+         "dateFormat":"mm/dd/yy",
+         'minDate' :'+0d',
+          'changeYear':'true',
+      });
+
+     
+
+      //document.getElementById("certificate").innerHTML = document.getElementById("certificate").getAttribute("data-attr");
+
+      var logourl = '';
+      var bgurl='';
+      var sigurl ='';
+
+      function readURL(input,is_background) 
+      {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+    
+          reader.onload = function(e) {
+            doctorUrl1 = e.target.result;
+            if(is_background==false)
+            {
+              //alert("logo");
+              appendDraggableImage(doctorUrl1,[50,50],false);
+            }
+            else if(is_background==true){
+              //alert(reader.result);
+              // $('.certificate').css('background-image',"url(" + reader.result + ")");   
+                appendDraggableImage(doctorUrl1,[0,0],true);
+            }
+            else if(is_background=='sig'){
+                appendDraggableImage(doctorUrl1,[500,500],false);
+            } 
+            else{
+            }
+            //$('#blah').attr('src', e.target.result);
+          }
+          reader.readAsDataURL(input.files[0]); // convert to base64 string
+      }
+    }
+
+    $("#logo").change(function() {
+        readURL(this,false);
+    });
+
+    $('#bi').change(function(){
+        readURL(this,true);
+    });
+
+    $('#sig').change(function(){
+        readURL(this,true);
+    });
+
+    var theInput = document.getElementById("favcolor");
+    var bordercolor = document.getElementById("bordercolor");
+    var theColor = theInput.value;
+    var bordercolorvalue = bordercolor.value;
+
+    //alert(bordercolorvalue);
+
+    bordercolor.addEventListener("change", function() {
+        bordercolorvalue = bordercolor.value;
+        //alert(bordercolorvalue);
+        $('.certificate').css('borderColor',bordercolorvalue);
+        //alert(theColor);
+    },false);
+
+    theInput.addEventListener("change", function() {
+        theColor = theInput.value;
+        //alert(theColor);
+    },false);
+    
+
+    $('#text').on('keyup',function(e){
+        //e.preventDefault();
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          //e.preventDefault();
+          var fonttype = $('#fonttype').find(":selected").text();
+          var fontsize = $('#fontsize').find(":selected").text();
+          //var c='';
+      
+          if(fonttype==undefined && fontsize==undefined){
+            alert("please select font type and size");
+            return;
+          }
+          if(fonttype==""&& fontsize==""){
+            alert("please select font type and size");
+            return;
+          }
+          var textv=$(this).val();
+         // alert(textv);
+          appendDraggableImage(textv,[100,100],'text',fonttype,fontsize);
+          $(this).val('');
+
+        }
+    });
+    $('#canname').on('keyup',function(e){
+        //e.preventDefault();
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          //e.preventDefault();
+          var fonttype = $('#fonttype').find(":selected").text();
+          var fontsize = $('#fontsize').find(":selected").text();
+          //var c='';
+      
+          if(fonttype==undefined && fontsize==undefined){
+            alert("please select font type and size");
+            return;
+          }
+          if(fonttype==""&& fontsize==""){
+            alert("please select font type and size");
+            return;
+          }
+          var textv=$(this).val();
+         // alert(textv);
+          appendDraggableImage(textv,[100,100],'canname',fonttype,fontsize);
+        }
+    });
+
+
+  </script>
+
+
+  <script>
+
+    var id = "{{ obj.id }}";
+    console.log(id);
+    //var height = $('.certificate').attr("height");
+    //var width = $('.certificate').attr("width");
+    var zoom = d3.zoom();
+
+    var svg = d3.select("div.certificate").append("svg")
+    .attr("width", "780px")
+    .attr("height", "580px")
+    
+      var image = {
+        size: 150
+      }
+    
+      var defs = svg.append("defs");
+
+
+    // if(id)
+    // {
+        
+    //     var svg=d3.select("svg");
+    //     //console.log(svg);
+    // }
+    // else
+    // {
+    //   var svg = d3.select("div.certificate").append("svg")
+    //   .attr("width", "780px")
+    //   .attr("height", "580px")
+    
+    //   var image = {
+    //     size: 150
+    //   }
+    
+    //   var defs = svg.append("defs");
+    // }
+    
+    // var clipPath = defs.append("clipPath")
+    //   .attr("id", "clip")
+    //   .append("circle")
+    //   .attr("cx", image.size / 2)
+    //   .attr("cy", image.size / 2)
+    //   .attr("r", image.size / 2);
+    
+    // var glow = defs.append("filter")
+    //   .attr("id", "glow");
+
+
+    // glow.append("feGaussianBlur")
+    //   .attr("class", "blur")
+    //   .attr("stdDeviation", 3.5)
+    //   .attr("result","coloredBlur");
+    
+    // var feMergeGlow = glow.append("feMerge");
+    // feMergeGlow.append("feMergeNode")
+    //   .attr("in","coloredBlur");
+    // feMergeGlow.append("feMergeNode")
+    //   .attr("in","SourceGraphic");
+    
+  function appendDraggableImage(url, position,is_background,fonttype,fontsize)
+    {
+      var imageGroup = svg.append("g")
+        .datum({position: position})
+        .attr("transform", d => "translate(" + d.position + ")");
+
+        if(is_background=="text")
+        {
+         //alert(position);
+        }
+       //alert("fjfjff");
+         clsbtn1 = new d3CloseButton();
+         var size=100;
+         //clsbtn1.size(30).isCircle(true).borderStrokeWidth(3).crossStrokeWidth(5);
+
+     
+
+      //alert(is_background);
+      if(is_background==false)
+      {
+        //var imageELEM = imageGroup.append("div").css({position:position});
+        var imageElem = imageGroup.append("image")
+        .attr("xlink:href", url)
+        .attr("height", image.size)
+        .attr("width", image.size);
+        //imageELEM.append("div").attr("class","resizer top-left");
+       // imageELEM.append("div").attr("class","resizer top-right");
+       // imageELEM.append("div").attr("class","resizer bottom-left");
+       // imageELEM.append("div").attr("class","resizer bottom-right");
+        //.attr("class","top-left top-right bottom-left bottom-right")
+        //.attr("clip-path", "url(#clip)");
+      }
+      else if(is_background == true){
+        //alert("going to here")
+        var imageElem = imageGroup.append("image")
+        .attr("xlink:href", url)
+        .attr("height","570")
+        .attr("width", "770")
+        .attr("background",true)
+        //.attr("clip-path", "url(#clip)");
+      }
+      else if(is_background =='text')
+      {
+          fontsize = fontsize+"px";
+          var theInput = document.getElementById("favcolor");
+          var color = theInput.value;
+          //alert(color);
+          //alert(typeof(color));
+          var fontstyle = $('#fontstyle').find(":selected").val();   
+        
+        imageGroup.append("text").style("font-size",fontsize).style('fill',color).style("font-weight",fontstyle).style('font-family',fonttype).text(url).attr("text-anchor","start").style('alignment-baseline', 'hanging');
+          function type(d) {
+            return d;
+          }
+
+      }
+      else if(is_background =='canname')
+      {
+          fontsize = fontsize+"px";
+          var theInput = document.getElementById("favcolor");
+          var color = theInput.value;
+          var fontstyle = $('#fontstyle').find(":selected").val();
+          imageGroup.append("text").style("font-size",fontsize).
+          style('fill',color).style("font-weight",fontstyle).
+          style('font-family','Times New Roman').text(url).attr("id","candidatename").
+          attr("text-anchor","start").style('alignment-baseline', 'hanging');
+          // function type(d) {
+          //   return d;
+          // }
+
+      }
+        imageGroup.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+      
+      //selection.call(d3.zoom().on("zoom", zoomed));
+
+      var zoom = d3.zoom().scaleExtent([0.5, 8]).on("zoom", zoomed);
+      
+      // imageGroup.call(d3.zoom().on('zoom',e=>{ 
+      //       console.log("djfndefnjden");
+      // }));
+
+      imageGroup.call(zoom);
+
+
+
+      imageGroup.each(function (d,i) {
+          var g = d3.select(this);
+          //console.log(d.position[0]);
+          //g.attr("d",{})
+          clsbtn1.x(d.position[0]/12).y(3).isCircle(true).clickEvent(function(){ g.remove(); });
+          g.call(clsbtn1);
+      });
+
+
+      
+    }
+    
+    function dragstarted(d) 
+    {
+//       d3.select(this).raise();    
+//       d3.select(this).select(".circle-outline")
+//        .transition()
+//        .attr("r", 1 + image.size / 3);
+//       d3.select(this).select(".circle-fill")
+//        .transition()
+//        .attr("r", 1 + image.size / 3);
+//       d3.select(this).select("image")
+//        .attr("x", image.size / 6)
+//        .attr("y", image.size / 6)
+//        .attr("height", image.size * 2 / 3)
+//         .attr("width", image.size * 2 / 3)
+//       clipPath.attr("r", image.size / 3)
+    }
+    function zoomed(){
+      //console.log("succc");
+      // parent.select("svg").attr("transform", d3.event.transform);
+      //console.log(d.transform);
+    }
+    
+    function dragged(d) 
+    {
+      var newX = d3.event.x - image.size / 2,
+          newY = d3.event.y - image.size / 2; 
+      
+      d3.select(this)
+        .attr("transform", "translate(" + (d.position = [newX, newY]) + ")");
+    }
+    
+    function dragended(d) {
+      d3.select(this).lower();
+      
+    }
+
+
+
+    $('#submit_ajax').click(function(event){
+           event.preventDefault();
+           var noc=$('#id_no_of_candidates').val();
+            if(noc!==''){
+              if(noc <= 1){
+                alert("no of candidate either will be blank or greater than 1");
+                return;
+              }
+            }
+
+            var pass= $('#id_password').val();
+            var pass_again = $('#id_password_again').val();
+            if(pass==''){
+              alert("Password can not be blank");
+              return;
+            } 
+            if(pass!=pass_again){
+              alert("Password and password again field value should match");
+              return;
+
+            }
+           //d3.selectAll("#crossline").remove();
+           //d3.selectAll("#crossbutton").remove();
+
+          var gi=document.getElementById("certificate_upper");
+          var div=document.createElement('div')
+          div.style.display="none";
+          document.body.appendChild(div);
+        //alert(gi);
+        //alert(gi.getRootNode());
+          html2canvas(gi).then( 
+                function (canvas) { 
+                  //document.getElementById('output').appendChild(canvas); 
+                    alert("checking ...");
+                    div.appendChild(canvas);
+                    var imgData = canvas.toDataURL('image/png');
+                    //  $.ajax({
+                    //     url :'{% url "customadmin:save_org_cer_img" %}',
+                    //     type:'post',
+                    //     data:{'image':imgData},
+                    //     success:function(data){
+                    //       alert(data);
+                    //     }
+                    // });
+                    var doc = new jsPDF('p','mm','a4');
+                    doc.addImage(imgData, 'PNG', 0, 0);
+                    doc.save('certificate.pdf');
+        });
+          //var certificate = document.getElementById("id_certificate");
+          $('#id_certificate').val($("#certificate_upper").clone().html());
+          // var organization_name=$('#id_organization_navame').val();
+          // var person_name = $('#person_name').val();
+          // var person_email = $('#person_email').val();
+          // var person_phone = $('#id_password').val();
+
+          $('#form_org').submit();
+
+          // $.ajax({
+          //   type:'post',
+          //   url:"{% url 'customadmin:create_organization' %}",
+          //   data:{""},
+          //   success:function(msg){
+
+          //   }
+          // })
+
+    });
+
+    
+
+
+
+  function d3CloseButton () {
+
+    var size = 20,
+        x = 0,
+        y = 0,
+        rx = 0,
+        ry = 0,
+        isCircle = false,
+        isBorderShown = true,
+        borderStrokeWidth = 1.5,
+        crossStrokeWidth = 1.5,
+        g,
+        event;
+
+    function button (selection) {
+
+        //Styling for the border of the button
+        var buttonStyle = {
+                "fill-opacity": 0,
+                "stroke-width": borderStrokeWidth,
+                "stroke": (isBorderShown)? "none" : "black" },
+        //for the cross
+            crossStyle = {
+                "stroke-width": crossStrokeWidth,
+                "stroke": "black"
+            },
+            r = size / 2,
+            ofs = size / 6,
+            cross;
+
+        g = selection.append("g").on("click", event);
+        cross = g.append("g");
+
+        if (isCircle) 
+        {
+            g.append("circle")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", r).attr("id","crossbutton")
+                .style("fill-opacity",0).
+                style("stroke-width",1.5).style("stroke","none");
+
+            cross.append("line")
+                .attr("x1", x - r + ofs)
+                .attr("y1", y)
+                .attr("x2", x + r - ofs)
+                .attr("y2", y).attr("id","crossline");
+
+            cross.append("line")
+                .attr("x1", x)
+                .attr("y1", y - r + ofs)
+                .attr("x2", x)
+                .attr("y2", y + r - ofs).attr("id","crossline");
+
+            // // Make '+' to 'x'
+            cross.attr("transform", "rotate (45," + x + "," + y + ")");
+            console.log(cross);
+
+        } 
+        else 
+        {
+            g.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("rx", rx)
+                .attr("ry", ry)
+                .attr("width", size)
+                .attr("height", size)
+                .style(buttonStyle);
+
+            cross.append("line")
+                .attr("x1", x + ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", (x + size) - ofs)
+                .attr("y2", (y + size) - ofs);
+
+            cross.append("line")
+                .attr("x1", (x + size) - ofs)
+                .attr("y1", y + ofs)
+                .attr("x2", x + ofs)
+                .attr("y2", (y + size) - ofs);
+        }
+
+        cross.style("stroke-width",1.5).style("stroke","black");
+
+    }
+
+    button.x = function (val) {
+        x = val;
+        return button;
+    }
+
+    button.y = function (val) {
+        y = val;
+        return button;
+    }
+
+    button.size = function (val) {
+        size = val;
+        return button;
+    }
+
+    button.rx = function (val) {
+        rx = val;
+        return button;
+    }
+
+    button.ry = function (val) {
+        ry = val;
+        return button;
+    }
+
+    button.borderStrokeWidth = function (val) {
+        borderStrokeWidth = val;
+        return button;
+    }
+
+    button.crossStrokeWidth = function (val) {
+        crossStrokeWidth = val;
+        return button;
+    }
+
+    //If true, the border of the button becomes a circle instead of a rectangle
+    button.isCircle = function (val) {
+        isCircle = val;
+        return button;
+    }
+
+    button.isBorderShown = function (val) {
+        isBorderShown = val;
+        return button;
+    }
+
+    button.clickEvent = function (val) {
+        event = val;
+        return button;
+    }
+
+    //Remove the whole button if one already exists
+    button.remove = function () 
+    {
+        if (g) 
+        {
+            g.remove();
+            g = undefined;
+        }
+        return button;
+    }
+
+    return button;
+  }
+    
+</script>
+
+
+  
+  <!-- <script src='dist/jspdf.min.js' type='text/javascript'></script> -->
+
+    <script src= 
+"https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"> 
+    </script> 
+
+{% endblock %}

@@ -1,0 +1,325 @@
+{% extends 'head1.html' %}
+{% block content %}
+{% load static %}
+{% load mytag %}
+{% load crispy_forms_tags %}
+
+<div id="content" class="pmd-content">
+
+<div class="container-fluid full-width-container">
+
+<link href="{% static 'main.css' %}" rel='stylesheet' />
+<script src="{% static 'main.js' %}"></script>
+
+
+<script>
+
+
+  function goto(url){
+    window.location.href=url;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    /* initialize the external events
+    -----------------------------------------------------------------*/
+
+    // var containerEl = document.getElementById('external-events-list');
+    // new FullCalendar.Draggable(containerEl, {
+    //   itemSelector: '.fc-event',
+    //   eventData: function(eventEl) {
+    //     return {
+    //       title: eventEl.innerText.trim()
+    //     }
+    //   }
+    // });
+
+    //// the individual way to do it
+    // var containerEl = document.getElementById('external-events-list');
+    // var eventEls = Array.prototype.slice.call(
+    //   containerEl.querySelectorAll('.fc-event')
+    // );
+    // eventEls.forEach(function(eventEl) {
+    //   new FullCalendar.Draggable(eventEl, {
+    //     eventData: {
+    //       title: eventEl.innerText.trim(),
+    //     }
+    //   });
+    // });
+
+    /* initialize the calendar
+    -----------------------------------------------------------------*/
+
+    var calendarEl = document.getElementById('calendar');
+    var calendar_events=[]
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      timezone:'local',
+      headerToolbar: {
+        //center: 'prev,next,title',
+        center: 'title',
+        //right: 'title',
+        //right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        left: 'dayGridMonth,timeGridWeek,listWeek'
+      },
+      events: {
+          url: '{% url "customadmin:schedule_session" %}?upcoming_session=true',
+          method: 'GET',
+          // extraParams: {
+          //   custom_param1: 'something',
+          //   custom_param2: 'somethingelse'
+          // },
+          failure: function() {
+            alert('there was an error while fetching events!');
+          },
+          color: 'yellow',   // a non-ajax option
+          textColor: 'black' // a non-ajax option
+      },
+      // events: [
+      //   {
+      //     "title": 'Event1',
+      //     "start": '2021-01-20'
+      //   }
+      // ],
+      //events:calendar_events,
+      eventColor: '#378006',
+      eventBackgroundColor :'#f00',
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar
+      drop: function(arg) {
+        // is the "remove after drop" checkbox checked?
+        if (document.getElementById('drop-remove').checked) {
+          // if so, remove the element from the "Draggable Events" list
+          arg.draggedEl.parentNode.removeChild(arg.draggedEl);
+        }
+      }
+    });
+    calendar.render();
+
+  });
+
+</script>
+<style>
+
+  body {
+    margin-top: 40px;
+    font-size: 14px;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  }
+
+  #external-events {
+    position: fixed;
+    /*left: 20px;*/
+    /*top: 80px;*/
+    width: 160px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    background: #eee;
+    text-align: left;
+  }
+
+  #external-events h4 {
+    font-size: 16px;
+    margin-top: 0;
+    padding-top: 1em;
+  }
+
+  /*#external-events .fc-event {
+    margin: 3px 0;
+    cursor: move;
+  }
+
+  #external-events p {
+    margin: 1.5em 0;
+    font-size: 11px;
+    color: #666;
+  }
+
+  #external-events p input {
+    margin: 0;
+    vertical-align: middle;
+  }*/
+
+  /*#calendar-wrap {
+    margin-left: 200px;
+  }*/
+
+  #calendar {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+</style>
+
+  <div class="row">
+
+    <!-- <div class="col-md-1">
+  <div id='wrap'> -->
+
+    <!-- <div id='external-events'>
+      <h4>Draggable Events</h4>
+
+      <div id='external-events-list'>
+        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+          <div class='fc-event-main'>My Event 1</div>
+        </div>
+        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+          <div class='fc-event-main'>My Event 2</div>
+        </div>
+        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+          <div class='fc-event-main'>My Event 3</div>
+        </div>
+        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+          <div class='fc-event-main'>My Event 4</div>
+        </div>
+        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+          <div class='fc-event-main'>My Event 5</div>
+        </div>
+      </div>
+
+      <p>
+        <input type='checkbox' id='drop-remove' />
+        <label for='drop-remove'>remove after drop</label>
+      </p>
+    </div> -->
+
+
+  <!-- </div>
+</div -->
+
+
+  <div class="col-md-10">
+
+    
+
+
+    <div id='calendar-wrap'>
+      <div id='calendar'></div>
+    </div>
+  </div>
+  <button class="btn btn-success create_event" onclick="goto('{% url "customadmin:schedule_session" %}')">Create Event</button>
+  <div class="col-md-2">
+
+      <a href="whatsapp://send?text=<URL>" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp"></a>
+
+        
+      <h4 style="background-color:#4DA0FF;padding:4px; ">Upcoming Session</h4>
+      <div id="upcoming" style="background-color:#E8F0FD;height: 150px;
+      border-radius:3px;margin:0;">
+
+      </div>  
+      <script>
+        $(document).ready(function(){
+          $.ajax({
+            url:'{% url "customadmin:schedule_session" %}?upcoming_session=true',
+            type:'get',
+            success:function(data){
+              console.log(data);
+              //calendar_events=data;
+              //alert(calendar_events);
+              //alert(calendar);
+              var sd=JSON.parse(data);
+              //console.log(sd[0].title);
+              var str='<ul>';
+              var i=0;
+              for (i=0;i<sd.length;i++){
+                 str+='<li>'+sd[i].title+'<br/>'+sd[i].start+'</li>';
+              }
+              str+='</ul>';
+              //alert(str);
+              //alert(str);
+              document.getElementById('upcoming').innerHTML=str;
+              
+             // var d=[{'title':'ddd','start':'20-01-2021'}]
+              //calendar.events=d;
+              //console.log(d);
+              //var calendarEl = document.getElementById('calendar');
+              
+              //calendar.render();
+            }
+          });
+        });
+        
+      </script>
+  </div>
+
+ 
+</div>
+
+</div>
+</div>
+
+
+</body>
+</html>
+
+
+
+{% endblock %}
+
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>Python Graph Tutorial</title>
+
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous">
+    <link rel="stylesheet"
+      href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"
+    />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tutorial/app.css' %}">
+  </head>
+
+  <body>
+    
+    <main role="main" class="container">
+      {% if errors %}
+        {% for error in errors %}
+          <div class="alert alert-danger" role="alert">
+            <p class="mb-3">{{ error.message }}</p>
+            {% if error.debug %}
+              <pre class="alert-pre border bg-light p-2"><code>{{ error.debug }}</code></pre>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+      <h1>Calendar</h1>
+<a href="/calendar/new" class="btn btn-light btn-sm mb-3">New event</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Organizer</th>
+      <th scope="col">Subject</th>
+      <th scope="col">Start</th>
+      <th scope="col">End</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if events %}
+      {% for event in events %}
+        <tr>
+          <td>{{ event.organizer.emailAddress.name }}</td>
+          <td>{{ event.subject }}</td>
+          <td>{{ event.start.dateTime|date:'n/d/Y g:i A' }}</td>
+          <td>{{ event.end.dateTime|date:'n/d/Y g:i A' }}</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
+ -->
+

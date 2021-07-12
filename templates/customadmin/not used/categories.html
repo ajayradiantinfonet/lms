@@ -1,0 +1,159 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+{% load mytag %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'customadmin:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol>
+  
+   
+
+
+    <div class="page-content profile-edit section-custom">
+      <div class="pmd-card pmd-z-depth">
+        <div class="pmd-card-body">
+          <div class="row">
+            All Category
+            <div class="col-lg-9 col-sm-9 custom-col-12">
+              <!-- <h3 class="heading">Course Info</h3> -->
+
+
+              <div class="row">
+                
+                  {% for item in all_category.items %}
+                    {% if item.1|length > 0 %}
+                   <a href="">
+                    <div class="col-md-4 col-sm-6 masonry-brick" style=" ">
+                  
+                  <div class="pmd-card pmd-card-default pmd-z-depth">
+                    <div class="pmd-card-media">
+                      <img src="{{ obj.thumbnail.url }}" class="img-responsive" width="1084" height="600">
+                    </div>
+                    <div class="pmd-card-title">
+                      <h2 class="pmd-card-title-text">{{ item.0.name }}</h2>
+
+                      <ul>
+                        {% for subc in item.1 %}
+                          <li>{{ subc.name }}</li>
+                        {% endfor %}
+                      </ul>
+                      
+                    </div>  
+                    <div class="pmd-card-actions">
+                      
+                      
+                    </div>
+                  </div>
+                </div>
+                   </a>
+
+                {% endif %}
+
+
+
+                  {% endfor %}
+              
+                  <form name="" method="post">
+
+                    {{ form.errors }}
+
+                  {{ form.as_p }}
+                  {% csrf_token  %}
+                  <input type="submit" value="submit" />
+                </form>
+
+              </div>
+              
+                    
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+      
+
+        
+               
+            </div> <!-- hoverable rows table example end -->
+          
+          </div>
+        </div>     
+      </div>      
+      </div>
+    </div>
+    
+</div>
+
+<script >
+
+  $(function() {
+    $("td[colspan=3]").find("p").hide();
+    $("table").click(function(event) {
+        event.stopPropagation();
+        var $target = $(event.target);
+        if ( $target.closest("td").attr("colspan") > 1 ) {
+            $target.slideUp();
+        } else {
+            $target.closest("tr").next().find("p").slideToggle();
+        }                    
+    });
+});
+
+  
+</script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

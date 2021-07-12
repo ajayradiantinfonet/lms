@@ -1,0 +1,1945 @@
+{% load static %}
+
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Talento Virtual Classroom Dashboard</title>
+  <!-- Dashboard + Video Conferencing + Chat + File Sharing | RTCMultiConnection -->
+  <meta name="description" content="Virtual Classroom Dashboard by Talento">
+
+  <link rel="shortcut icon" href="{% static '/core-mod/images/fav.ico' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'core-mod/css/emojionearea.min.css' %}">
+
+  <script src="{% static '/core-mod/js/jquery.min.js' %}"></script>
+  <link href="{% static '/core-mod/css/bootstrap.min.css' %}" rel="stylesheet">
+  <script src="{% static '/core-mod/modules/webrtc-adapter/out/adapter.js' %}"></script>
+  <script src="{% static '/core-mod/dist/RTCMultiConnection.min.js' %}"></script>
+  <script src="{% static '/core-mod/js/socket.io.js' %}"></script>
+  <script src="{% static '/core-mod/modules/fbr/FileBufferReader.js' %}"></script>
+
+  <script src="{% static '/core-mod/modules/canvas-designer/dev/webrtc-handler.js' %}"></script>
+  <script src="{% static '/core-mod/modules/canvas-designer/canvas-designer-widget.js' %}"></script>
+  <script src="{% static '/core-mod/js/emojionearea.min.js' %}"></script>
+  <!-- <script src="core-mod/modules/multistreamsmixer/MultiStreamsMixer.js"></script> -->
+
+<style type="text/css">
+    html, body, section, ul, li, nav, a, h1, h2 {
+        padding: 0;
+        margin: 0;
+        outline: none;
+        text-shadow: none;
+        box-shadow: none;
+        border-radius: 0;
+        text-decoration: none;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 17px;
+        line-height: 1.5em;
+    }
+
+    input[disabled], button[disabled] {
+      background: transparent!important;
+      color: #dcd7d7!important;
+      border: 1px solid #dcd7d7!important;
+      cursor: not-allowed!important;
+      text-shadow: none!important;
+      box-shadow: none!important;
+      text-decoration: none!important;
+      outline: none!important;
+    }
+    html, body{
+        position:fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+</head>
+<body>
+<style>
+    .extra-controls {
+        position: absolute;
+        right: 21%;
+    }
+
+    #btn-comments {
+      color: red;
+      margin-top: 5px;
+      font-size: 24px;
+      text-shadow: 1px 1px white;
+    }
+
+    #other-videos {
+        margin-top: 5px;
+    }
+
+    #other-videos video {
+        width: 45%;
+        margin: 5px;
+        border: 1px solid black;
+        padding: 1px;
+        border-radius: 3px;
+    }
+
+    #txt-chat-message {
+        width: 100%;
+        resize: vertical;
+        margin: 5px;
+        margin-right: 0;
+        min-height: 30px;
+    }
+
+    #btn-chat-message {
+        margin: 5px;
+    }
+
+    #conversation-panel {
+        margin-bottom: 20px;
+        text-align: left;
+        max-height: 200px;
+        overflow: auto;
+        border-top: 1px solid #E5E5E5;
+        width: 106%;
+    }
+
+    #conversation-panel .message {
+        border-bottom: 1px solid #E5E5E5;
+        padding: 5px 10px;
+    }
+
+    #conversation-panel .message img, #conversation-panel .message video, #conversation-panel .message iframe {
+        max-width: 100%;
+    }
+
+    #main-video {
+        width: 100%;
+        margin-top: -9px;
+        border-bottom: 1px solid #121010;
+        display: none;
+        padding-bottom: 1px;
+        display: none;
+    }
+
+    hr{
+        height: 1px;
+        border: 0;
+        background: #E5E5E5;
+    }
+
+    #btn-attach-file{
+        width: 25px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+    }
+
+    #btn-share-screen{
+        width: 25px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+    }
+
+    .checkmark{
+        display:none;
+        width: 15px;
+        vertical-align: middle;
+    }
+
+    #screen-viewer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999999999999;
+        display: none;
+    }
+
+    .chat-mess-right{
+        background: #fff;
+        padding: 5px;
+        text-align: right;
+    }
+    .chat-mess{
+        background: #cce6ff;
+        padding: 5px;
+        text-align: left;
+    }
+
+    /* The animation code */
+    @keyframes raiseQueryAnimation{
+        0% {
+            box-shadow:0px 0px 0px white;
+        }
+        50% {
+            box-shadow: 5px 5px 10px green;
+        }
+        100% {
+            box-shadow:0px 0px 0px white;
+        }
+    }
+
+</style>
+
+<link rel="stylesheet" href="{% static '/core-mod/room-design/style.css' %}">
+<link rel="stylesheet" href="{% static '/core-mod/room-design/responsive.css' %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous" />
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+
+        <!-- admin page -->
+
+<section style="margin: 0px;height: 100%;">
+    <div class="container-fluid" style="padding: 0px;height: 100%;">
+        <div class="row" style="margin: 0px;height: 100%;">
+            <!--------------------- section 1 left-side panel-------------------------->
+            <div style="width:80px;float:left;height: 100%;">
+                <div id="page-container" class="main-admin show-menu">
+                    <nav class="navbar position-fixed">
+                      <div id="open-menu" class="menu-bar">
+                        <div class="bars"></div>
+                      </div>
+                        <ul class="navbar-nav ml-auto">
+                          <li class="nav-item dropdown ets-right-0">
+                          </li>
+                        </ul>
+                    </nav>
+                    <div class="side-bar">
+                        <div class="side-bar-links">
+
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                        <img src="{% static '/core-mod/room-design/img/upload.png' %}" class="left_icon">
+                                        <p> Upload documents</p>
+                                </li>
+                                <li class="nav-item">
+                                        <img src="{% static '/core-mod/room-design/img/whiteboard.png' %}" class="left_icon">
+                                        <p>Start whiteboard</p>
+                                </li>
+                                <li class="nav-item">
+                                        <img src="{% static '/core-mod/room-design/img/group.png' %}" class="left_icon">
+                                        <p>Group</p>
+                                </li>
+                                <li class="nav-item" data-toggle="modal" data-target="#poll_modal" onclick="open_poll_modal()">
+                                        <img src="{% static '/core-mod/room-design/img/quick.jpg' %}"  class="left_icon">
+                                        <p>Quick poll</p>
+                                </li>
+                                <li class="nav-item">
+                                        <img src="{% static '/core-mod/room-design/img/settings.png' %}" class="left_icon">
+                                        <p>Setting</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-bar-icons">
+
+                        </div>
+                    </div>
+                    <div class="main-body-content w-100 ets-pt"></div>
+                </div>
+            </div>
+            <!-- -----------------end-------------------->
+
+
+            <!-------------------- section 2  middle-page------------------------>
+
+
+            <div class='main-room-container' style="width:calc(100% - 80px);float:left;height:100%;">
+                    <div style="width:100%;height: 100%">
+                            <button class="click_button" style="position:absolute;right: 261px;height: 40px;width: 40px;">
+                                <a ><span style="position: absolute;left: 8px;font-size: 17px;font-weight: 600;top: 5px;" >&#8250;</span></a>
+                            </button>
+
+                            <div id="right_bar" style="position: absolute;width: 280px; right:0px; height:100%; background: #fff;z-index:2;">
+                                <div id="nav-menu">
+                                    <ul class="nav nav-tabs">
+                                      <li class="active" onclick="rightBarTabChange(this, 'userListView')"><a href="#">Users</a></li>
+                                      <li onclick="rightBarTabChange(this, 'raisedQueryView')"><a href="#" id="queryTabHead">Queries <span style="display: none; position: absolute;font-size: 13px;color: green;top: 5px;" class="fa fa-circle"></span></a></li>
+                                    </ul>
+                                    <div id="userListView" style="z-index:9; background: #fff;width:100%; min-height:95vh;">
+                                        <div class="right_bar" style="z-index:9; background: #fff">
+                                            <h5>Candidates</h5>
+                                            <div style="width:100%; ">
+                                                <div style="width:50%; float: left;" class="right_icon">
+                                                    <img src="{% static '/core-mod/room-design/img/mute.png' %}">
+                                                    <p>Mute All</p>
+                                                </div>
+                                                <div style="width:50%;float: left;" class="right_icon">
+                                                    <img src="{% static '/core-mod/room-design/img/unmute.png' %}">
+                                                    <p>Unmute All</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <select style="display: none;" multiple="multiple" id="myMulti">
+                                                </select>
+                                            </div>
+                                            <div class="student_icon col-sm-12">
+                                                <div class="row">
+                                                <div class="col-md-12 col-sm-12"  id="onUserStatusChanged">
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                            <div style="width:100%; ">
+                                                <div class="col-md-12 chat_area" style="padding: 5px">
+                                                    <select id="message_to" style="padding: 5px;width: 100%;border: none;background: #fff;">
+                                                        <option value="all">Message To Everyone</option>
+                                                    </select>
+
+
+                                                    <div id="conversation-panel" style="min-height:100px;padding: 5px"></div>
+                                                </div>
+                                            </div>
+                                            <!-- <div style="width:100%; ">
+                                                <div class="col-sm-6 icon_right"><img src="{% static '/core-mod/room-design/img/group.png"><p>User list</p></div>
+                                                <div class="col-sm-6 icon_right"><img src="{% static '/core-mod/room-design/img/raising-hand.png"><p>Raise query</p></div>
+                                            </div> -->
+                                            <div style="position: absolute;bottom: 0px; width:265px;">
+                                                <!--<div id="conversation-panel"></div> -->
+                                                <div id="key-press" style="text-align: right; display: none; font-size: 11px;">
+                                                    <span style="vertical-align: middle;"></span>
+                                                    <img src="{% static '/core-mod/images/key-press.gif" style="height: 12px; vertical-align: middle;">
+                                                </div>
+                                                <textarea id="txt-chat-message"></textarea>
+                                                <button class="btn btn-primary" id="btn-chat-message" disabled>Send</button>
+                                                <img id="btn-attach-file" src="{% static '/core-mod/images/attach-file.png" title="Attach a File">
+                                                <img id="btn-share-screen" src="{% static '/core-mod/images/share-screen.png" title="Share Your Screen">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <!-- box divs -->
+                                            <div id="other-videos"></div>
+                                            <hr>
+                                            <div style="padding: 5px 10px; width: 50%;">
+                                                <!-- <div id="onUserStatusChanged"></div> -->
+                                            </div>
+
+                                            <canvas id="temp-stream-canvas" style="display: none;"></canvas>
+                                        <!-- box div end -->
+                                        </div>
+                                    </div>
+                                    <div id="raisedQueryView" style="display:none;z-index:9; background: #fff;width:100%; min-height:95vh;">
+                                        <h4 style="background: #efefef;text-align: center;margin: 0;padding: 5px;">Raised Queries</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <video style="right:280px; position: absolute; top:0px;width: 320px; height: 240px;" id="main-video" controls playsinline autoplay></video>
+
+                            <div id="widget-container" style="float:left;bottom: 0;right: 0;height: 100%;left:0px;border: 1px solid black; border-top:0; border-bottom: 0;width:100%;"></div>
+                            <video id="screen-viewer" controls playsinline autoplay></video>
+
+                        <div class="main_hover">
+                            <div class="sub_hover">
+                                <div class="image_hover">
+                                    <!-- <ul class="img_icon">
+                                        <li><img class="image_shape" src="core-mod/room-design/img/unmute.png"><p>Mute All</p></li>
+                                        <li><img class="image_shape" src="core-mod/room-design/img/videomute.png"><p>Enable video</p></li>
+                                        <li><img class="image_shape" src="core-mod/room-design/img/screen.png"><p>Share screen</p></li>
+                                        <li> <img class="image_shape" src="core-mod/room-design/img/hang-up.png"><p>End session</p></li>
+                                    </ul>  -->
+                                    <ul class="img_icon">
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/mutemicrophone.png' %}"><p>mute All</p></li>
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/video.png' %}"><p>Enable video</p></li>
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/sharescreen.png' %}"><p>Screen share</p></li>
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/hangup.png' %}"><p>End session</p></a></li>
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/userlist.png' %}"><p>User list</p></li>
+                                        <li id="raise_query"><span style="display: none; position: absolute;font-size: 13px;color: green;top: -5px;margin-left: 5px;" class="fa fa-circle"></span><img  class="image_shape" src="{% static '/core-mod/room-design/img/handraise.png' %}"><p>Query</p></li>
+                                        <li><img  class="image_shape" src="{% static '/core-mod/room-design/img/chat.png' %}"><p>Chat</p></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div id="txt-chat-message-div1" class='private-chat-box' data-height=true style="position: absolute; right:280px; bottom: 0px; width:250px; height: 300px;border: 1px solid #333;">
+                            <div style="background: #ececec; color: blue;">Candidate Name <span style="color:blue; float: right;cursor: pointer; padding: 0px 5px 5px 5px;" onclick="privateChatDivClose(this)">&times</span></div>
+                            <div class="conversation-panel-container" style="height:260px;">
+                                <div class="conversation-panel-div" style="height:240px;"></div>
+                                <textarea id="txt-chat-message1"></textarea>
+                            </div>
+                        </div> -->
+
+                    </div>
+            </div>
+           <!------------------------ end --------------------------------->
+           <!-- ------------------------footer---------------------- -->
+       <!--  <footer>
+            <ul class="logo">
+                <li><img  src="core-mod/room-design/img/mutemicrophone.png">
+            <p>Mute All</p></li>
+            <li><img  src="core-mod/room-design/img/video.png">
+            <p>Enable video</p></li></ul>
+            <nav>
+                <ul class="nav__links">
+                    <li><img  src="core-mod/room-design/img/sharescreen.png">
+                    <p>Screen share</p></li>
+                                <li><img  src="core-mod/room-design/img/userlist.png">
+                    <p>User list</p></li>
+                               <li><img  src="core-mod/room-design/img/handraise.png">
+                    <p>Query</p></li>
+                    <li><img  src="core-mod/room-design/img/chat.png">
+                    <p>Chat</p></li>
+                </ul>
+            </nav>
+            <a class="cta"> <img  src="core-mod/room-design/img/hangup.png"><p>End session</p></a>
+
+
+        </footer> -->
+<!-- ----------------------------end footer--------------------- -->
+
+
+            <!------------------- section 3  right-side panel--------------------->
+
+            <div style="width: 180px; float:left; height:100%; display: none;">
+                <button class="click_button">
+                    <a href="#" class="next round">&#8250;</a>
+                </button>
+                <div class="right_bar">
+                    <h5>Candidates</h5>
+                    <div class="row ">
+                        <div class="col-sm-6 right_icon">
+                            <img src="{% static '/core-mod/room-design/img/mute.png' %}">
+                            <p>Mute All</p>
+                        </div>
+                        <div class="colo-sm-6 right_icon">
+                            <img src="{% static '/core-mod/room-design/img/unmute.png' %}">
+                            <p>Unmute All</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="select-box">
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="text" name="category" class="text" id="Group 1" />
+                                    <label>Group 1</label>
+                                </div>
+                                <div class="option">
+                                    <input type="text" name="category" class="text" id="Group 2" />
+                                    <label>Group 2</label>
+                                </div>
+                            </div>
+                            <div class="selected">
+                                select option
+                            </div>
+                        </div>
+                    </div>
+                    <div class="student_icon  col-sm-12">
+                        <div class="row">
+
+                            <!-- <div class="col-sm-6">
+                                <p>Candidates 1</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <p>Candidates 2</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <p>Candidates 3</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <p>Candidates 4</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <p>Candidates 5</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div>
+
+                            <div class="col-sm-6">
+                                <p>Candidates 6</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/mute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/videomute.png">
+                            </div>
+                            <div class="col-sm-2">
+                                <img src="core-mod/room-design/img/screen.png" class="class-icon">
+                            </div> -->
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="select-box1">
+                                <div class="options-container1">
+                                    <div class="option1">
+                                        <input type="text" name="category" class="text1" id="Everyone" />
+                                        <label for="automobiles">Everyone</label>
+                                    </div>
+                                    <div class="option1">
+                                        <input type="text" name="category" class="text1" id="Candidate1" />
+                                        <label for="automobiles">Candidate 1</label>
+                                    </div>
+                                    <div class="option1">
+                                        <input type="text" name="category" class="text1" id="Candidate2" />
+                                        <label for="automobiles">Candidate 2</label>
+                                    </div>
+                                </div>
+                                <div class="selected1">
+                                    select option
+                                </div>
+                           </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="cursor_icon">
+                                <img src="{% static '/core-mod/room-design/img/cursor.png' %}">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12 chat_area" style="padding: 5px">
+                            <textarea rows="7" style="width:100%; text-align:left">Chat message</textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 icon_right"><img src="{% static '/core-mod/room-design/img/group.png' %}"><p>User list</p></div>
+                        <div class="col-sm-6 icon_right"><img src="{% static '/core-mod/room-design/img/raising-hand.png' %}"><p>Raise query</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <!-- ---------------------end section 3------------------------ -->
+
+
+
+
+
+
+    </div>
+
+
+    <!-- poll modal -->
+
+    
+
+
+
+
+</section>
+
+
+<div id="poll_modal" class="modal fade" style="z-index:99999;" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" style="float: left;" id="poll_modal_header">
+            Create Poll
+        </h4>
+        <button type="button" style="float: right;" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" id="poll_modal_body">
+        <textarea id="queryInput" rows="4" style="width:100%;"></textarea>
+      </div>
+      <div class="modal-footer" id="poll_modal_footer">
+
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script> -->
+
+<!-- Optional JavaScript -->
+    <!-- $ first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script> -->
+<script type="text/javascript">
+
+              // section 1 left-side panel
+
+    $(document).ready(function(){
+        //alert('dsfs');
+        var right_bar = true;
+        $("#open-menu").click(function(){
+            if($('#page-container').hasClass('show-menu')){
+                $("#page-container").removeClass('show-menu');
+            }
+            else{
+                $("#page-container").addClass('show-menu');
+            }
+        });
+
+           // section 3  right-side panel
+        $(".click_button").click(function (e) {
+            if(right_bar){
+                $('#right_bar').animate({width: "0px"}, 500);
+                $(".click_button").animate({right: "-25"}, 500);
+                $("#main-video").animate({right: "0"}, 500);
+                right_bar = false;
+            }else{
+                $('#right_bar').animate({width: "280px"},500);
+                $(".click_button").animate({right: "261px"},500);
+                $("#main-video").animate({right: "280px"},500);
+                right_bar =true;
+            }
+        });
+    });
+
+
+
+
+        // right-side  drop-down
+
+    /*const selected= document.querySelector(".selected");
+    const optionsContainer = document.querySelector(".options-container");
+    const optionsList = document.querySelectorAll(".option");
+    selected.addEventListener("click" , () =>{
+        optionsContainer.classList.toggle("active")
+    });
+
+
+    const selected1= document.querySelector(".selected1");
+    const optionsContainer1 = document.querySelector(".options-container1");
+    const optionsList1 = document.querySelectorAll(".option1");
+    selected1.addEventListener("click" , () =>{
+        optionsContainer1.classList.toggle("active")
+    });
+
+
+var options =[
+       { html: 'Group 1', value: 'Group1' },
+       { html: 'Group 2', value: 'Group2' },
+       { html: 'Group 3', value: 'Group3' },
+       { html: 'Group 4', value: 'Group4' },
+    ];
+var group_html = '<option value="group1" id="g1" >Group 1</option><option value="group2" id="g2" >Group 2</option><option value="group3" id="g3" >Group 3</option>';
+$("#myMulti").html(group_html); 
+var myDrop = new drop({
+   selector:  '#myMulti',
+   //options : options
+   //preselected: [0, 2]
+});
+*/
+
+ //myDrop.addOption(options);
+ //myDrop.setOptions(options);
+ // myDrop.init();
+ // $("#myMulti").click(function(e){
+ //    myDrop.toggle();
+ // });
+
+ // setTimeout(function(e){
+ //    console.log(myDrop.selected);
+ //    console.log(myDrop.html);
+ //    console.log(myDrop.options);
+
+ //    for (var se in myDrop.selected) {
+ //        console.log(myDrop.options[myDrop.selected[se].index].value);
+ //        console.log(myDrop.html.options[myDrop.selected[se].index].value);
+ //    }
+ // }, 10000);
+ 
+</script>
+
+<script>
+
+    //var confData = "{{ conf }}";
+     var conf = '{{ conf|safe }}';
+    var classConfig = JSON.parse(conf);
+    var sid = '{{ user_id }}';
+    //console.log("classConfig");
+    //console.log(classConfig);
+    (function() {
+        var params = {},
+            r = /([^&=]+)=?([^&]*)/g;
+
+        function d(s) {
+            return decodeURIComponent(s.replace(/\+/g, ' '));
+        }
+        var match, search = window.location.search;
+        while (match = r.exec(search.substring(1)))
+            params[d(match[1])] = d(match[2]);
+        window.params = params;
+    })();
+
+    var params = {
+        open : true,
+        publicRoomIdentifier : 'apprentissage_lmsapp',
+        sessionid : '{{ room_id }}',
+        userFullName : '{{ userFullName }}',
+        extra : {
+            open : true,
+            roomOwner: true
+        },
+        duration:'10',
+    };
+
+    var connection = new RTCMultiConnection();
+
+    connection.socketURL = 'https://wss.echel.in:8020/';
+    //connection.socketURL = 'http://localhost:9443/';
+    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+
+    connection.extra.userFullName = params.userFullName;
+
+    /// make this room core-mod
+    connection.publicRoomIdentifier = params.publicRoomIdentifier;
+    //connection.publicRoomIdentifier = "{{ room_id }}";
+
+    connection.socketMessageEvent = 'canvas-dashboard-demo';
+
+    // keep room opened even if owner leaves
+    connection.autoCloseEntireSession = true;
+
+    // https://www.rtcmulticonnection.org/docs/maxParticipantsAllowed/
+    connection.maxParticipantsAllowed = 30;
+    // set value 2 for one-to-one connection
+    // connection.maxParticipantsAllowed = 2;
+
+    // here goes canvas designer
+    var designer = new CanvasDesigner();
+
+    // you can place widget.html anywhere
+    designer.widgetHtmlURL = 'https://zak.web.com/static/core-mod/modules/canvas-designer/widget.html';
+    designer.widgetJsURL = 'widget.min.js'
+
+
+
+    
+    const start = Date.now();
+    var duration_timer = setInterval(() => {
+    const millis = Date.now() - start;
+        var sec = Math.floor(millis / 1000);
+        if(sec == params.duration){
+            end_timer_and_send_message();
+        }
+        console.log(`seconds elapsed = ${Math.floor(millis / 1000)}`);
+    }, 2000);
+
+
+    function end_timer_and_send_message(){
+        clearInterval(duration_timer);
+        alert("session duration has been ended ");
+        connection.send({
+            'session_duration':false
+        });
+        setTimeout(function(){
+            close();
+        },200);
+        
+    }
+
+    designer.addSyncListener(function(data) {
+        connection.send(data);
+    });
+
+    designer.setSelected('pencil');
+
+    designer.setTools({
+        pencil: true,
+        text: true,
+        image: true,
+        pdf: true,
+        eraser: true,
+        line: true,
+        arrow: false,
+        dragSingle: true,
+        dragMultiple: true,
+        arc: true,
+        rectangle: true,
+        quadratic: true,
+        bezier: false,
+        marker: true,
+        zoom: true,
+        lineWidth: true,
+        colorsPicker: true,
+        extraOptions: false,
+        code: false,
+        undo: true
+    });
+
+    //class config setup
+
+    if(classConfig.raisequery == "1"){
+        document.getElementById("raise_query").style.display = "inline";
+    }else{
+        document.getElementById("raise_query").style.display = "block";
+    }
+
+    // here goes RTCMultiConnection
+
+    connection.chunkSize = 16000;
+    connection.enableFileSharing = true;
+
+
+    connection.session = {
+        audio: true,
+        video: true,
+        data: true
+    };
+    connection.sdpConstraints.mandatory = {
+        OfferToReceiveAudio: true,
+        OfferToReceiveVideo: true
+    };
+
+    connection.onUserStatusChanged = function(event) {
+        var infoBar = document.getElementById('onUserStatusChanged');
+        var message_to = document.getElementById('message_to');
+        var names = [];
+        var Candidate_html = '';
+        var chat_dd_option = '<option value="all" selected>Message To Everyone</option>';
+        connection.getAllParticipants().forEach(function(pid) {
+            console.log(connection.peers[pid]);
+            var name = getFullName(pid);
+            names.push({"pid":pid,"name":name});
+            chat_dd_option += '<option value="'+pid+'">'+name+'</option>';
+        });
+
+        if (!names.length) {
+            names[0]= {"name" : 'Only You', "pid": event.userid};
+            // Candidate_html += '<div class="col-sm-6"><label>Only You</label></div><div class="col-sm-2"><img src="core-mod/room-design/img/mute.png"></div><div class="col-sm-2"><img src="core-mod/room-design/img/videomute.png"></div><div class="col-sm-2"><img src="core-mod/room-design/img/screen.png" class="class-icon"></div>';
+            Candidate_html += '<div class="f-wrapper"><div class="col-md-5 col-sm-5 items"><label>Only You</label></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/speech-bubble.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/microphone.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/videomute.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/screen1.png' %}"></div></div>';
+            chat_dd_option += '';
+        } else {
+            //names = [connection.extra.userFullName || 'You'].concat(names);
+
+            // Candidate_html += '<div class="col-sm-6"><label>You</label></div><div class="col-sm-2"><img src="core-mod/room-design/img/mute.png"></div><div class="col-sm-2"><img src="core-mod/room-design/img/videomute.png"></div><div class="col-sm-2"><img src="core-mod/room-design/img/screen.png" class="class-icon"></div>';
+
+            Candidate_html += '<div class="f-wrapper"><div class="col-md-5 col-sm-5 items"><label>You</label></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/speech-bubble.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/microphone.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/videomute.png' %}"></div><div class="items" style="opacity:0.5; cursor: not-allowed;"><img src="{% static '/core-mod/room-design/img/screen1.png' %}"></div></div>';
+
+            for (let n in names){
+                Candidate_html += '<div class="f-wrapper"><div class="col-md-5 col-sm-5 items"><label>'+names[n].name+'</label></div><div class="items" style="cursor: pointer;" onclick="openPrivateChat('+"'"+names[n].name+"'"+", '"+names[n].pid+"'"+')"><img src="{% static '/core-mod/room-design/img/speech-bubble.png' %}"></div><div class="items" style="cursor: pointer;"><img src="{% static '/core-mod/room-design/img/microphone.png' %}"></div><div class="items" style="cursor: pointer;"><img src="{% static '/core-mod/room-design/img/videomute.png' %}"></div><div class="items" style="cursor: pointer;"><img src="{% static '/core-mod/room-design/img/screen1.png' %}"></div></div>';
+            }
+
+        }
+
+
+        //infoBar.innerHTML = '<b>Active users:</b> ' + names.join(', ');
+        infoBar.innerHTML = Candidate_html;
+        message_to.innerHTML = chat_dd_option;
+    };
+
+    connection.onopen = function(event) {
+        connection.onUserStatusChanged(event);
+
+        if (designer.pointsLength <= 0) {
+            // make sure that remote user gets all drawings synced.
+            setTimeout(function() {
+                connection.send('plz-sync-points');
+            }, 1000);
+        }
+
+        document.getElementById('btn-chat-message').disabled = false;
+        document.getElementById('btn-attach-file').style.display = 'inline-block';
+        document.getElementById('btn-share-screen').style.display = 'inline-block';
+    };
+
+    connection.onclose = connection.onerror = connection.onleave = function(event) {
+        connection.onUserStatusChanged(event);
+    };
+
+    connection.onmessage = function(event) {
+        if(event.data.showMainVideo) {
+            // $('#main-video').show();
+            $('#screen-viewer').css({
+                top: $('#widget-container').offset().top,
+                left: $('#widget-container').offset().left,
+                width: $('#widget-container').width(),
+                height: $('#widget-container').height()
+            });
+            $('#screen-viewer').show();
+            return;
+        }
+
+        if(event.data.hideMainVideo) {
+            // $('#main-video').hide();
+            $('#screen-viewer').hide();
+            return;
+        }
+
+        if(event.data.typing === true) {
+            $('#key-press').show().find('span').html(event.extra.userFullName + ' is typing');
+            return;
+        }
+
+        if(event.data.typing === false) {
+            $('#key-press').hide().find('span').html('');
+            return;
+        }
+
+        if (event.data.chatMessage) {
+            appendChatMessage(event);
+            return;
+        }
+        //custom private message
+        if (event.data.custom_mess === true) {
+            if(event.data.receiver_id == connection.userid){
+                let message = event.data;
+                console.log("message-received cu");
+                console.log("message-received", message);
+                if($("#"+message.sender_id).length){
+                    console.log("socketid", message);
+                    var t = $("#txt-chat-message"+message.sender_id);
+                    privateChatDivClose(t);
+                }
+                else{
+                    openPrivateChat(getFullName(message.sender_id), message.sender_id);
+                    var t = $("#txt-chat-message"+message.sender_id);
+                }
+
+                $(t).siblings('.conversation-panel-div').append('<div class="chat-mess">'+message.text+'</div>');
+            }
+            return;
+        }
+
+        if(event.data.poll_answer==true){
+            show_poll_answer_to_modal(event);
+        }
+
+         //on query raised
+        if(event.data.raise_query === true) {
+
+            $("#raise_query").children('span').css('display', "inline");
+            $("#raise_query").css('background', "#29a329");
+            $("#raise_query").css('color', "#fff");
+            $("#raise_query").css('animation-name', "raiseQueryAnimation");
+            $("#raise_query").css('animation-duration', "3s");
+            $("#raise_query").css('animation-iteration-count', "infinite");
+            console.log('query raised by ', getFullName(event.data.sender_id));
+            console.log('query raised', event.data.query);
+
+            $("#raisedQueryView").append('<div class="chat-mess"><label>'+getFullName(event.data.sender_id)+' : </label><p>'+event.data.query+'</p></div>')
+            var t = $("#queryTabHead").parent('li');
+            rightBarTabChange(t, 'raisedQueryView');
+            $("#queryTabHead").children('span').css('display', 'inline');
+            return;
+        }
+
+        if (event.data.checkmark === 'received') {
+            var checkmarkElement = document.getElementById(event.data.checkmark_id);
+            if (checkmarkElement) {
+                checkmarkElement.style.display = 'inline';
+            }
+            return;
+        }
+
+        if (event.data === 'plz-sync-points') {
+            designer.sync();
+            return;
+        }
+
+        designer.syncData(event.data);
+    };
+
+    // extra code
+
+    connection.onstream = function(event) {
+        if (event.stream.isScreen && !event.stream.canvasStream) {
+            $('#screen-viewer').get(0).srcObject = event.stream;
+            $('#screen-viewer').hide();
+        }
+        else if (event.extra.roomOwner === true) {
+            var video = document.getElementById('main-video');
+            video.setAttribute('data-streamid', event.streamid);
+            // video.style.display = 'none';
+            if(event.type === 'local') {
+                video.muted = true;
+                video.volume = 0;
+            }
+            video.srcObject = event.stream;
+            $('#main-video').show();
+        } else {
+            event.mediaElement.controls = false;
+
+            var otherVideos = document.querySelector('#other-videos');
+            otherVideos.appendChild(event.mediaElement);
+        }
+
+        connection.onUserStatusChanged(event);
+    };
+
+    connection.onstreamended = function(event) {
+        var video = document.querySelector('video[data-streamid="' + event.streamid + '"]');
+        if (!video) {
+            video = document.getElementById(event.streamid);
+            if (video) {
+                video.parentNode.removeChild(video);
+                return;
+            }
+        }
+        if (video) {
+            video.srcObject = null;
+            video.style.display = 'none';
+        }
+    };
+
+    var conversationPanel = document.getElementById('conversation-panel');
+
+    function appendChatMessage(event, checkmark_id) {
+        var div = document.createElement('div');
+
+        div.className = 'message';
+
+        if (event.data) {
+            div.innerHTML = '<b>' + (event.extra.userFullName || event.userid) + ':</b><br>' + event.data.chatMessage;
+
+            if (event.data.checkmark_id) {
+                connection.send({
+                    checkmark: 'received',
+                    checkmark_id: event.data.checkmark_id
+                });
+            }
+        } else {
+            div.innerHTML = '<b>You:</b> <img class="checkmark" id="' + checkmark_id + '" title="Received" src="{% static '/core-mod/images/checkmark.png' %}"><br>' + event;
+            div.style.background = '#cbffcb';
+        }
+
+        conversationPanel.appendChild(div);
+
+        conversationPanel.scrollTop = conversationPanel.clientHeight;
+        conversationPanel.scrollTop = conversationPanel.scrollHeight - conversationPanel.scrollTop;
+    }
+
+    var keyPressTimer;
+    var numberOfKeys = 0;
+    $('#txt-chat-message').emojioneArea({
+        pickerPosition: "top",
+        filtersPosition: "bottom",
+        tones: false,
+        autocomplete: true,
+        inline: true,
+        hidePickerOnBlur: true,
+        events: {
+            focus: function() {
+                $('.emojionearea-category').unbind('click').bind('click', function() {
+                    $('.emojionearea-button-close').click();
+                });
+            },
+            keyup: function(e) {
+                var chatMessage = $('.emojionearea-editor').html();
+                if (!chatMessage || !chatMessage.replace(/ /g, '').length) {
+                    connection.send({
+                        typing: false
+                    });
+                }
+
+
+                clearTimeout(keyPressTimer);
+                numberOfKeys++;
+
+                if (numberOfKeys % 3 === 0) {
+                    connection.send({
+                        typing: true
+                    });
+                }
+
+                keyPressTimer = setTimeout(function() {
+                    connection.send({
+                        typing: false
+                    });
+                }, 1200);
+            },
+            blur: function() {
+                // $('#btn-chat-message').click();
+                connection.send({
+                    typing: false
+                });
+            }
+        }
+    });
+
+    setTimeout(function(e){
+        $("#txt-chat-message").siblings('.emojionearea').children('.emojionearea-editor').keydown(function(e) {
+            var code = e.keyCode || e.which;
+            console.log(code);
+            if (code == 13) {
+                $("#btn-chat-message").click();
+            }
+        });
+    }, 2000);
+
+
+    ///-----------------------------------Custom events ----------------------------------
+
+        var custom_Sock = connection.getSocket();
+
+        function rightBarTabChange(t, tabid){
+            $(t).siblings('li').removeClass('active');
+            $(t).addClass('active');
+            $(t).parent('ul').siblings('div').css('display', 'none');
+            $('#'+tabid).css('display', 'block');
+            $("#queryTabHead").children('span').css('display', 'none');
+        }
+        function privateChatDivClose(t){
+            console.log('close the box');
+            let height = "290px";
+            if($(t).parent('div').parent('.private-chat-box').attr('data-height') == "true"){
+                height = "30px";
+                $(t).parent('div').parent('.private-chat-box').attr('data-height', "false");
+                $(t).html('<i class="fa fa-chevron-up" aria-hidden="true"></i>');
+            }else{
+                height = "300px";
+                $(t).parent('div').parent('.private-chat-box').attr('data-height', "true");
+                $(t).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
+            }
+            $(t).parent('div').parent('.private-chat-box').animate({height: height}, 500);//css('display', 'none');
+        }
+
+
+        function appendPrivateChatMessage(event, checkmark_id) {
+            var div = document.createElement('div');
+
+            div.className = 'message';
+
+            if (event.data) {
+                div.innerHTML = '<b>' + (event.extra.userFullName || event.userid) + ':</b><br>' + event.data.chatMessage;
+
+                if (event.data.checkmark_id) {
+                    connection.send({
+                        checkmark: 'received',
+                        checkmark_id: event.data.checkmark_id
+                    });
+                }
+            } else {
+                div.innerHTML = '<b>You:</b> <img class="checkmark" id="' + checkmark_id + '" title="Received" src="{% static '/core-mod/images/checkmark.png' %}"><br>' + event;
+                div.style.background = '#cbffcb';
+            }
+
+            conversationPanel.appendChild(div);
+
+            conversationPanel.scrollTop = conversationPanel.clientHeight;
+            conversationPanel.scrollTop = conversationPanel.scrollHeight - conversationPanel.scrollTop;
+        }
+        /*function privateChatDivOpenOnMessage(t){
+
+            let height = "290px";
+            if($(t).parent('div').parent('.private-chat-box').attr('data-height') == "true"){
+                height = "30px";
+                $(t).parent('div').parent('.private-chat-box').attr('data-height', "false");
+                $(t).html('<i class="fa fa-chevron-up" aria-hidden="true"></i>');
+            }else{
+                height = "300px";
+                $(t).parent('div').parent('.private-chat-box').attr('data-height', "true");
+                $(t).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
+            }
+            $(t).parent('div').parent('.private-chat-box').animate({height: height}, 500);//css('display', 'none');
+        }*/
+
+        function openPrivateChat(name, pid){
+            if($("#"+pid).length){
+                var t = $("#txt-chat-message"+pid);
+                    privateChatDivClose(t);
+                privateChatDivOpenOnMessage(t);
+            }else{
+                let box_count = $('.private-chat-box').length;
+                let right_pos = (box_count * 255)+280;
+                let boxHtml = '<div id="'+pid+'" data-socket="'+pid+'"class="private-chat-box" data-height=true style="background:#fff;position: absolute; right:'+right_pos+'px; bottom: 0px; width:250px; height: 300px;border: 1px solid #333;">'+
+                    '<div style="background: #ececec; color: blue;">'+name+
+                    '<span style="color:blue; float: right;cursor: pointer; padding: 0px 5px 5px 5px;" onclick="privateChatDivClose(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i></span></div>'+
+                        '<div class="conversation-panel-container" style="height:260px;">'+
+                            '<div class="conversation-panel-div" style="height:240px; overflow-y:auto;"></div>'+
+                            '<textarea class="chat-mess-class" id="txt-chat-message'+pid+'" style="bottom:0px"></textarea>'+
+                        '</div>'+
+                    '</div>';
+
+                $(".main-room-container").append(boxHtml);
+
+                $('#txt-chat-message'+pid).emojioneArea({
+                    pickerPosition: "top",
+                    filtersPosition: "bottom",
+                    tones: false,
+                    autocomplete: true,
+                    inline: true,
+                    hidePickerOnBlur: true,
+                    events: {
+                        focus: function() {
+                            $('.emojionearea-category').unbind('click').bind('click', function() {
+                                $('.emojionearea-button-close').click();
+                            });
+                        },
+                        keyup: function(e) {
+                            console.log("e.keyCode :", e);
+                            var chatMessage = $(this).siblings('.emojionearea').children('.emojionearea-editor').html();
+                            if (!chatMessage || !chatMessage.replace(/ /g, '').length) {
+                                custom_Sock.emit("private-mess-typing", {
+                                    socketid : pid,
+                                    receiver_name : name,
+                                    typing: false
+                                });
+                                connection.send({
+                                    typing: false
+                                });
+                            }
+
+
+                            clearTimeout(keyPressTimer);
+                            numberOfKeys++;
+
+                            if (numberOfKeys % 3 === 0) {
+                                custom_Sock.emit("private-mess-typing", {
+                                    socketid : pid,
+                                    receiver_name : name,
+                                    typing: true
+                                });
+                                connection.send({
+                                    typing: true
+                                });
+                            }
+
+                            keyPressTimer = setTimeout(function() {
+                                custom_Sock.emit("private-mess-typing", {
+                                    socketid : pid,
+                                    receiver_name : name,
+                                    typing: false
+                                });
+                                connection.send({
+                                    typing: false
+                                });
+                            }, 1200);
+
+                            var code = e.keyCode || e.which;
+                            console.log("key : ", code);
+                            if (code == 13) {
+                                //$('#btn-chat-message').click();
+
+                                var message_private = chatMessage;
+
+                                custom_Sock.emit("send-private-message-in-session", {
+                                    socketid : pid,
+                                    receiver_name : name,
+                                    text: message_private
+                                });
+
+                                $("#txt-chat-message"+pid).siblings('.conversation-panel-div').html("<div class='chat-mess-class'>"+message_private+"</div>");
+                            }
+                        },
+                        blur: function() {
+                            // $('#btn-chat-message').click();
+                            custom_Sock.emit("private-mess-typing", {
+                                socketid : pid,
+                                receiver_name : name,
+                                typing: true
+                            });
+                            connection.send({
+                                typing: false
+                            });
+                        }
+                    }
+                });
+
+
+                $("#txt-chat-message"+pid).siblings('.emojionearea').children('.emojionearea-editor').keydown(function(e) {
+                    var code = e.keyCode || e.which;
+                    console.log("key DOwn: ", code);
+                    if (code == 13) {
+                        //$('#btn-chat-message').click();
+                        var chatMessage = $(this).html();
+                        $(this).html('');
+                        var message_private = chatMessage;
+
+                        connection.send({
+                            custom_mess : true,
+                            receiver_id : pid,
+                            receiver_name : name,
+                            sender_id : connection.userid,
+                            text: message_private
+                        });
+
+                        $("#txt-chat-message"+pid).siblings('.conversation-panel-div').append("<div class='chat-mess-right'>"+message_private+"</div>");
+                    }
+                });
+            }
+        }
+
+
+        // custom_Sock.on('receive-private-message-in-session',function(message){
+        //     console.log("message-received");
+        //     console.log("message-received", message);
+        //     if($("#"+message.socketid).length){
+        //         console.log("socketid", message);
+        //         var t = $("#txt-chat-message"+message.socketid);
+        //         privateChatDivClose(t);
+        //     }
+        //     else{
+        //         openPrivateChat(message.receiver_name, message.socketid);
+        //         var t = $("#txt-chat-message"+message.socketid);
+        //     }
+
+        //     $(t).siblings('.conversation-panel-div').html(message.text);
+
+        // });
+
+        // custom_Sock.on('typing-private-message-in-session',function(message){
+        //     console.log("message-received", message);
+        //     if($("#"+message.socketid).length){
+        //         console.log("socketid", message);
+        //         var t = $("#txt-chat-message"+message.socketid);
+        //         privateChatDivClose(t);
+        //         if(message.typing){
+        //             $(t).attr("placeholder", "typing...");
+        //         }else{
+        //             $(t).attr("placeholder", "");
+        //         }
+        //     }
+        // });
+
+        function privateChatDivOpenOnMessage(t){
+
+            height = "300px";
+            $(t).parent('div').parent('.private-chat-box').attr('data-height', "true");
+            $(t).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
+
+            $(t).parent('div').parent('.private-chat-box').animate({height: height}, 500);
+        }
+
+
+    //extra sockets events receiver---------------------------------------------------
+
+        // connection.socket.on("send-private-message-in-session", function(message){
+        //         console.log(message);
+        // });
+    //extra sockets events receiver---------------------------------------------------
+
+    ///-----------------------------------------------------------------------------------
+
+    /*window.onkeyup = function(e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            $('#btn-chat-message').click();
+        }
+    };*/
+
+    document.getElementById('btn-chat-message').onclick = function() {
+        var chatMessage = $("#txt-chat-message").siblings('.emojionearea').children('.emojionearea-editor').html();
+        $("#txt-chat-message").siblings('.emojionearea').children('.emojionearea-editor').html('');
+
+        if (!chatMessage || !chatMessage.replace(/ /g, '').length) return;
+
+        var checkmark_id = connection.userid + connection.token();
+
+        appendChatMessage(chatMessage, checkmark_id);
+
+        connection.send({
+            chatMessage: chatMessage,
+            checkmark_id: checkmark_id
+        });
+
+        connection.send({
+            typing: false
+        });
+    };
+
+    var recentFile;
+    document.getElementById('btn-attach-file').onclick = function() {
+        var file = new FileSelector();
+        file.selectSingleFile(function(file) {
+            recentFile = file;
+
+            if(connection.getAllParticipants().length >= 1) {
+                recentFile.userIndex = 0;
+                connection.send(file, connection.getAllParticipants()[recentFile.userIndex]);
+            }
+        });
+    };
+
+    function getFileHTML(file) 
+    {
+        var url = file.url || URL.createObjectURL(file);
+        var attachment = '<a href="' + url + '" target="_blank" download="' + file.name + '">Download: <b>' + file.name + '</b></a>';
+        if (file.name.match(/\.jpg|\.png|\.jpeg|\.gif/gi)) {
+            attachment += '<br><img crossOrigin="anonymous" src="' + url + '">';
+        } else if (file.name.match(/\.wav|\.mp3/gi)) {
+            attachment += '<br><audio src="' + url + '" controls></audio>';
+        } else if (file.name.match(/\.pdf|\.js|\.txt|\.sh/gi)) {
+            attachment += '<iframe class="inline-iframe" src="' + url + '"></iframe></a>';
+        }
+        return attachment;
+    }
+
+    function getFullName(userid) 
+    {
+        var _userFullName = userid;
+        if (connection.peers[userid] && connection.peers[userid].extra.userFullName) {
+            _userFullName = connection.peers[userid].extra.userFullName;
+        }
+        return _userFullName;
+    }
+
+    connection.onFileEnd = function(file) 
+    {
+        var html = getFileHTML(file);
+        var div = progressHelper[file.uuid].div;
+
+        if (file.userid === connection.userid) {
+            div.innerHTML = '<b>You:</b><br>' + html;
+            div.style.background = '#cbffcb';
+
+            if(recentFile) {
+                recentFile.userIndex++;
+                var nextUserId = connection.getAllParticipants()[recentFile.userIndex];
+                if(nextUserId) {
+                    connection.send(recentFile, nextUserId);
+                }
+                else {
+                    recentFile = null;
+                }
+            }
+            else {
+                recentFile = null;
+            }
+        } else {
+            div.innerHTML = '<b>' + getFullName(file.userid) + ':</b><br>' + html;
+        }
+    };
+
+    // to make sure file-saver dialog is not invoked.
+    connection.autoSaveToDisk = false;
+
+    var progressHelper = {};
+
+    connection.onFileProgress = function(chunk, uuid) 
+    {
+        var helper = progressHelper[chunk.uuid];
+        helper.progress.value = chunk.currentPosition || chunk.maxChunks || helper.progress.max;
+        updateLabel(helper.progress, helper.label);
+    };
+
+    connection.onFileStart = function(file) {
+        var div = document.createElement('div');
+        div.className = 'message';
+
+        if (file.userid === connection.userid) {
+            var userFullName = file.remoteUserId;
+            if(connection.peersBackup[file.remoteUserId]) {
+                userFullName = connection.peersBackup[file.remoteUserId].extra.userFullName;
+            }
+
+            div.innerHTML = '<b>You (to: ' + userFullName + '):</b><br><label>0%</label> <progress></progress>';
+            div.style.background = '#cbffcb';
+        } else {
+            div.innerHTML = '<b>' + getFullName(file.userid) + ':</b><br><label>0%</label> <progress></progress>';
+        }
+
+        div.title = file.name;
+        conversationPanel.appendChild(div);
+        progressHelper[file.uuid] = {
+            div: div,
+            progress: div.querySelector('progress'),
+            label: div.querySelector('label')
+        };
+        progressHelper[file.uuid].progress.max = file.maxChunks;
+
+        conversationPanel.scrollTop = conversationPanel.clientHeight;
+        conversationPanel.scrollTop = conversationPanel.scrollHeight - conversationPanel.scrollTop;
+    };
+
+    function updateLabel(progress, label) {
+        if(progress.position == -1) return;
+        var position = +progress.position.toFixed(2).split('.')[1] || 100;
+        label.innerHTML = position + '%';
+    }
+
+    if(!!params.password) {
+        connection.password = params.password;
+    }
+
+    designer.appendTo(document.getElementById('widget-container'), function() {
+        if (params.open === true || params.open === 'true') {
+                var tempStreamCanvas = document.getElementById('temp-stream-canvas');
+                if (navigator.userAgent.indexOf("Firefox") != -1) {
+                 var ctx = tempStreamCanvas.getContext('webgl');
+                }
+                var tempStream = tempStreamCanvas.captureStream();
+                tempStream.isScreen = true;
+                tempStream.streamid = tempStream.id;
+                tempStream.type = 'local';
+                connection.attachStreams.push(tempStream);
+                window.tempStream = tempStream;
+
+                connection.extra.roomOwner = true;
+                connection.open(params.sessionid, function(isRoomOpened, roomid, error) {
+                    if (error) {
+                        if (error === connection.errors.ROOM_NOT_AVAILABLE) {
+                            alert('Someone already created this room. Please either join or create a separate room.');
+                            return;
+                        }
+                        alert(error);
+                    }
+
+                    connection.socket.on('disconnect', function() {
+                        location.reload();
+                    });
+                });
+        } 
+        else {
+            connection.join(params.sessionid, function(isRoomJoined, roomid, error) {
+                if (error) {
+                    if (error === connection.errors.ROOM_NOT_AVAILABLE) {
+                        alert('This room does not exist. Please either create it or wait for moderator to enter in the room.');
+                        return;
+                    }
+                    if (error === connection.errors.ROOM_FULL) {
+                        alert('Room is full.');
+                        return;
+                    }
+                    if (error === connection.errors.INVALID_PASSWORD) {
+                        connection.password = prompt('Please enter room password.') || '';
+                        if(!connection.password.length) {
+                            alert('Invalid password.');
+                            return;
+                        }
+                        connection.join(params.sessionid, function(isRoomJoined, roomid, error) {
+                            if(error) {
+                                alert(error);
+                            }
+                        });
+                        return;
+                    }
+                    //alert(error);
+                }
+
+                connection.socket.on('disconnect', function() {
+                    location.reload();
+                });
+            });
+        }
+    });
+
+    function addStreamStopListener(stream, callback) 
+    {
+        stream.addEventListener('ended', function() {
+            callback();
+            callback = function() {};
+        }, false);
+
+        stream.addEventListener('inactive', function() {
+            callback();
+            callback = function() {};
+        }, false);
+
+        stream.getTracks().forEach(function(track) {
+            track.addEventListener('ended', function() {
+                callback();
+                callback = function() {};
+            }, false);
+
+            track.addEventListener('inactive', function() {
+                callback();
+                callback = function() {};
+            }, false);
+        });
+    }
+
+    function replaceTrack(videoTrack, screenTrackId) 
+    {
+        if (!videoTrack) return;
+        if (videoTrack.readyState === 'ended') {
+            alert('Can not replace an "ended" track. track.readyState: ' + videoTrack.readyState);
+            return;
+        }
+        connection.getAllParticipants().forEach(function(pid) {
+            var peer = connection.peers[pid].peer;
+            if (!peer.getSenders) return;
+            var trackToReplace = videoTrack;
+            peer.getSenders().forEach(function(sender) {
+                if (!sender || !sender.track) return;
+                if(screenTrackId) {
+                    if(trackToReplace && sender.track.id === screenTrackId) {
+                        sender.replaceTrack(trackToReplace);
+                        trackToReplace = null;
+                    }
+                    return;
+                }
+
+                if(sender.track.id !== tempStream.getTracks()[0].id) return;
+                if (sender.track.kind === 'video' && trackToReplace) {
+                    sender.replaceTrack(trackToReplace);
+                    trackToReplace = null;
+                }
+            });
+        });
+    }
+
+    function replaceScreenTrack(stream) {
+        stream.isScreen = true;
+        stream.streamid = stream.id;
+        stream.type = 'local';
+
+        // connection.attachStreams.push(stream);
+        connection.onstream({
+            stream: stream,
+            type: 'local',
+            streamid: stream.id,
+            // mediaElement: video
+        });
+
+        var screenTrackId = stream.getTracks()[0].id;
+        addStreamStopListener(stream, function() {
+            connection.send({
+                hideMainVideo: true
+            });
+
+            // $('#main-video').hide();
+            $('#screen-viewer').hide();
+            $('#btn-share-screen').show();
+            replaceTrack(tempStream.getTracks()[0], screenTrackId);
+        });
+
+        stream.getTracks().forEach(function(track) {
+            if(track.kind === 'video' && track.readyState === 'live') {
+                replaceTrack(track);
+            }
+        });
+
+        connection.send({
+            showMainVideo: true
+        });
+
+        //$('#main-video').show();
+        $('#screen-viewer').css({
+                top: $('#widget-container').offset().top,
+                left: $('#widget-container').offset().left,
+                width: $('#widget-container').width(),
+                height: $('#widget-container').height()
+            });
+
+        $('#screen-viewer').show();
+    }
+
+    $('#btn-share-screen').click(function() {
+        if(!window.tempStream) {
+            alert('Screen sharing is not enabled.');
+            return;
+        }
+
+        $('#btn-share-screen').hide();
+        screen_constraints = {
+            OfferToReceiveAudio: false,
+            OfferToReceiveVideo: true
+        };
+
+        if(navigator.mediaDevices.getDisplayMedia) {
+            navigator.mediaDevices.getDisplayMedia(screen_constraints).then(stream => {
+                replaceScreenTrack(stream);
+            }, error => {
+                alert('Please make sure to use Edge 17 or higher.');
+            });
+        }
+        else if(navigator.getDisplayMedia) {
+            navigator.getDisplayMedia(screen_constraints).then(stream => {
+                replaceScreenTrack(stream);
+            }, error => {
+                alert('Please make sure to use Edge 17 or higher.');
+            });
+        }
+        else {
+            alert('getDisplayMedia API is not available in this browser.');
+        }
+    });
+
+    $('#raise_query').click(function() {
+
+        $("#raise_query").children('span').css('display', "none");
+        $("#raise_query").css('background', "#fff");
+        $("#raise_query").css('color', "#000");
+        $("#raise_query").css('animation-name', "");
+        $("#raise_query").css('animation-duration', "");
+        $("#raise_query").css('animation-iteration-count', "");
+    });
+
+
+</script>
+
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+<style>
+
+
+
+</style>
+
+
+<!-- Optional theme -->
+
+
+<script>
+
+    function add_poll_to_db()
+    {
+
+        var my_array=[];
+        var max_number_of_option=2;
+        var duration = $('#duration').val();
+
+        for(var i=1;i<=4;i++){
+            var temp={};
+            var question=$('#poll_q_'+i).val();
+            if(question!=""){
+                temp['question']=question;
+                for (var j=1;j<=max_number_of_option;j++){
+                    var op_s='#q_'+i+'_o_'+j;
+                    if($(op_s+'_check').is(':checked'))
+                    {
+                        var choice_text=$(op_s).val();
+                        temp['choice_text']=choice_text;
+                    }
+                    //console.log(op_s);
+                    var option=$(op_s).val();
+                    temp['option'+j]=option;
+                }
+                my_array.push(temp);
+            }
+            
+        }
+
+        console.log("data is here");
+        console.log(my_array);
+        
+        //var q_1_o_1 = $('#q_1_o_1').val();
+        //var q_1_o_2 = $('#q_1_o_2').val();
+        // question_data={
+        //     q_1:{'option1':q_1_o_1,'option2':q_1_o_2}
+        // }
+        //var my_array=[{'question':q_1,'option1':q_1_o_1,'option2':q_1_o_2}];
+        $.ajax({
+            url:'{% url "poll:add_poll" %}',
+            type:"post",
+            data:{'user':"{{ user_id }}",'duration':duration,
+            'question_data':JSON.stringify(my_array)},
+            success:function(data){
+                var res=JSON.parse(data);
+                console.log(res);
+                if(res.message == true){
+                    localStorage.setItem("poll_id", res.poll_id);
+                    connection.send({
+                        'poll_message':true,
+                        'poll_id':res.poll_id,
+                    });
+                }
+            }
+        });
+        $("#poll_modal").removeClass('fade');
+        //var correct_option = $("input[name='option']:checked").val();
+        //alert($("input[name='option']").text());
+    }
+
+    function add_option(){
+        //alert();
+    }
+
+
+    function show_poll_answer_to_modal(event)
+    {
+        //alert(event.data);
+        //console.log(event.data);
+        var question_id = event.data.question_id;
+        $.ajax({
+            url:'{% url "poll:get_poll_analytics" %}',
+            type:'post',
+            data:{'question_id':question_id,
+            'poll_id':localStorage.getItem('poll_id')},
+            success:function(data){
+                var res=JSON.parse(data);
+                if(res.message==true){
+                    var str='';
+                    for(var i=0;i<res.data.length;i++){
+                        str+='<p> Question: '+res.data[i].question+' &nbsp;&nbsp;</p>';
+                        str+='<p> Option1: '+res.data[i].option1+' &nbsp;&nbsp;'+res.data[i].option1_count+'</p>';
+                        str+='<p> Option2: '+res.data[i].option2+' &nbsp;&nbsp;'+res.data[i].option2_count+'</p>';
+                    } 
+                    $("#poll_modal_body").html('');
+                    $("#poll_modal_body").html(str);
+                }
+            }
+        });
+
+        //$("#poll_modal_body").html(str_q+'</div>');
+
+    }
+
+
+    function open_poll_modal()
+    {
+        //console.log($('#poll_modal'));
+        //alert();
+        //$('#poll_modal').modal();
+        $("#poll_modal").removeClass('fade');
+        $("#poll_modal").css('display', "block");
+        $("#poll_modal_header").html('Create Poll');
+
+
+
+        var str_q='<div id="content"><p>Poll Duration(In Minutes): <input type="text" class="form-control" id="duration" /></p>'+
+            '<ul id="tabs" class="nav nav-tabs" data-tabs="tabs"><li class="active"><a href="#red" data-toggle="tab">Question1</a></li><li><a href="#orange" data-toggle="tab">Question2</a></li><li><a href="#yellow" data-toggle="tab">Question3</a></li><li><a href="#green" data-toggle="tab">Question4</a></li></ul><div id="my-tab-content" class="tab-content">';
+            for(var i=1;i<=4;i++){
+            if(i==1)
+            {
+                str_q+='<div class="tab-pane active" id="red">';
+            }
+            if(i==2)
+            {
+                str_q+='<div class="tab-pane" id="orange">';
+            }
+            if(i==3)
+            {
+                str_q+='<div class="tab-pane" id="yellow">';
+            }
+            if(i==4)
+            {
+                str_q+='<div class="tab-pane" id="green">';
+            }
+            str_q+='<br/><p>Question'+i+' :<input type="text" class="form-control"'+
+            'id="poll_q_'+i+'" placeholder="enter question"/><br/>'+'Option1 :<input type="text" class="form-control"  id="q_'+i+'_o_1" name="option" placeholder="enter option value" /> <input type="checkbox" id="q_'+i+'_o_1_check" class="form-check-input" /> Is Correct<br/><br/>Option2 :<input type="text" class="form-control" name="option" placeholder="enter option value" id="q_'+i+'_o_2"/><input type="checkbox" id="q_'+i+'_o_2_check" class="form-check-input" /> Is Correct</p></div>';
+            
+        }
+        //<div style="float:left;"><button class="add_option form-control btn-danger" onclick="add_option(this)">Add Option</button></div>
+        str_q+='</div></div><div style="float:right;"><button class="add_poll_to_db form-control btn-success" onclick="add_poll_to_db()">Add Poll</button></div>';
+
+
+        if(localStorage.getItem('poll_id')!=null)
+        {
+            // var str_q='<div id="content" style="width:100%;">';
+            // str_q+='<h3>Poll Answers</h3>';
+            // $.ajax({
+            //     url:'{% url "poll:get_poll" %}',
+            //     type:'post',
+            //     data:{'poll_id':localStorage.getItem('poll_id')},
+            //     success:function(data){
+            //         var res=JSON.parse(data);
+            //         console.log(res);
+            //         if(res.message==true)
+            //         {
+            //             var all_question=res.all_question;
+            //             //var str='';
+            //             var j=1;
+            //             //console.log(typeof(all_question));
+            //             for(var i=0;i<all_question.length;i++)
+            //             {
+            //                 //console.log(all_question[i].question);
+            //                 str_q+='<p id="dnjdn"><h5>Question'+j+' :   '+all_question[i].question+'</h5></p>';
+            //                 //console.log(str_q);
+            //                 j++;
+            //             }
+            //         }
+            //     }
+            // });
+
+            $.ajax({
+                url:'{% url "poll:get_poll_analytics" %}',
+                type:'post',
+                data:{'poll_id':localStorage.getItem('poll_id')},
+                success:function(data){
+                    var res=JSON.parse(data);
+                    if(res.message==true){
+                        var str='';
+                        for(var i=0;i<res.data.length;i++){
+                            str+='<p> Question: '+res.data[i].question+' &nbsp;&nbsp;</p>';
+                            str+='<p> Option1: '+res.data[i].option1+' &nbsp;&nbsp;'+res.data[i].option1_count+'</p>';
+                            str+='<p> Option2: '+res.data[i].option2+' &nbsp;&nbsp;'+res.data[i].option2_count+'</p>';
+                        } 
+                        $("#poll_modal_body").html('');
+                        $("#poll_modal_body").html(str);
+                    }
+                }
+            });
+        }
+
+        //str_q+='</div>';
+
+
+        $("#poll_modal_body").html(str_q+'</div>');
+
+
+
+
+        // $("#poll_modal_body").html('<div id="content"><ul id="tabs" class="nav nav-tabs" data-tabs="tabs"><li class="active"><a href="#red" data-toggle="tab">Question1</a></li><li><a href="#orange" data-toggle="tab">Question2</a></li><li><a href="#yellow" data-toggle="tab">Question3</a></li><li><a href="#green" data-toggle="tab">Question4</a></li></ul> <div id="my-tab-content" class="tab-content"><div class="tab-pane active" id="red"><p><input type="text" class="form-control" id="poll_q_1" placeholder="enter question"/><br/>'+'Option1 :<input type="text" class="form-control"  id="q_1_o_1" name="option" placeholder="enter option value" /> <br/>Option2 :<input type="text" class="form-control" name="option" placeholder="enter option value" id="q_1_o_2"/><br/></p></div><div class="tab-pane" id="orange"><h1>Orange</h1><p>orange orange orange orange orange</p></div><div class="tab-pane" id="yellow"><h1>Yellow</h1><p>yellow yellow yellow yellow yellow</p> </div> <div class="tab-pane" id="green"> <h1>Green</h1> <p>green green green green green</p></div></div><div style="float:right"><button class="add_poll_to_db" onclick="add_poll_to_db()" >Add Poll</button>');
+
+
+
+        //$("#sessionModalFooter").html('<button type="button" class="btn btn-success" onclick="raiseQuery(this)">Send Query</button>');
+        //$("#sessionModal").removeClass('fade');
+    }
+
+
+    $('#student-poll').click(function() 
+    {
+        // $("#sessionModal").css('display', "block");
+        // $("#sessionModalHeader").html('Raise Query');
+        // $("#sessionModalBody").html('<h5>Write your query here.</h5><br/><textarea id="queryInput" rows="4" style="width:100%;"></textarea>');
+        // $("#sessionModalFooter").html('<button type="button" class="btn btn-success" onclick="raiseQuery(this)">Send Query</button>');
+        // $("#sessionModal").removeClass('fade');
+    });
+
+</script>

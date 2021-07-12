@@ -1,0 +1,536 @@
+{% extends 'accounts_header.html' %}
+
+
+
+
+{% block content %}
+{% load static %}
+
+
+<style>
+
+	.sign_form{
+  font-size: 15px !important;
+    padding: 18px 20px;
+    font-weight: 600;
+    color: #fff;
+}
+.sign_form img{
+  width: 130px;
+    margin: 0px 20px;
+}
+
+.center-block a
+{
+  margin: 40px;
+}
+.form-control {
+    width: 100%;
+    border-radius: 3px !important;}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #fff;
+    outline: 0;
+     box-shadow: 0 0 0 0.2rem rgb(200 203 207 / 25%) !important; 
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color:#5EB685;
+    border-color: #5EB685;
+}
+.button_signup {
+    color: #fff;
+    background-color: #5EB685;
+    margin: 0 auto;
+    display: block;
+    width: 90px;
+  border-color: #5EB685;
+  padding: 0 !important;
+}
+
+  .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #5EB685;
+    border-color:#5EB685;}
+    .or_text{margin: 0 auto;
+    display: table;}
+.control-label{
+	font-size: 12px !important;
+}
+
+.omb_login .omb_socialButtons a {
+	color: white; // In yourUse @body-bg 
+	opacity:0.9;
+}
+.omb_login .omb_socialButtons a:hover {
+    color: white;
+	opacity:1;    	
+}
+.omb_login .omb_socialButtons .omb_btn-facebook {background: #3b5998;padding: 0px 9px;}
+.omb_login .omb_socialButtons .omb_btn-twitter {background: #00aced;padding: 0px 9px;}
+.omb_login .omb_socialButtons .omb_btn-google {background: #c32f10;padding: 0px 9px;}
+
+
+
+.omb_login .omb_loginForm .input-group.i {
+	width: 2em;
+}
+.omb_login .omb_loginForm  .help-block {
+    color: red;
+}
+    .tooltip {
+  position: relative;
+  display: inline-block;
+  opacity: unset;
+}
+
+.tooltip .tooltiptext {
+ visibility: hidden;
+    width: 215px;
+    background-color: #5EB685;
+    color: #fff;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    margin-top: 16px;
+    margin-left: -10px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.courses_list{
+	display: flex;
+}
+
+.courses_select{
+  padding: 4px;
+    margin: 15px 0px;
+    width: 100px;
+    border: none;
+    background: #00ACEE;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    text-align: center;
+    list-style-type: none;
+    font-family: sans-serif;
+}
+
+.courses_select:hover{
+  background:#5EB685;
+  cursor:pointer;
+}
+
+.dropdown{
+      z-index: -1;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    color: black;
+    background: #e1e6ea;
+    width: 174px;
+    margin-top: 7px;
+    margin-left: 0px;
+    transition: all 0.3s ease;
+    border-radius: 0px 0px 7px 7px;
+    transform: translateY(15px);
+    cursor: default;
+}
+
+.courses_select:hover > .dropdown{
+  z-index:1;
+  opacity:1;
+  visibility: visible;
+  transform:translateY(0px);
+}
+
+.down {
+  margin-left:63px;
+  border-width: 0 3px 3px 0 !important;
+  display: inline-block;
+  padding: 2px;
+  border: solid white;
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.drop-link{
+display: block;
+    text-align: left;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 15px;
+    transition: all 0.3s ease;
+    color: #000000ba;
+}
+
+.drop-link:hover{
+  font-size:18px;
+  background: #d4dade;
+}
+
+.drop-link:last-of-type{
+  border-radius:0px 0px 7px 7px;
+}
+
+.drop-link:not(:first-child){
+  border-top:1px solid #d4dade;
+}
+.btn span.glyphicon {    			
+	opacity: 0;				
+}
+.btn.active span.glyphicon {				
+	opacity: 1;				
+}
+
+
+/**/
+
+
+.new {
+  padding: 5px;
+}
+
+.check_form{
+  display: block;
+  margin-bottom: 2px;
+}
+
+.check_form input {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.check_form label {
+  position: relative;
+  cursor: pointer;
+}
+
+.check_form label:before {
+  content: '';
+    -webkit-appearance: none;
+    background-color: #5EB685;
+    border: 2px solid #5EB685;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 5%), inset 0px -15px 10px -12px rgb(0 0 0 / 5%);
+    padding: 7px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer
+  margin-right: 5px;
+}
+
+.check_form input:checked + label:after {
+  content: '';
+    display: block;
+    position: absolute;
+    top: 7px;
+    left: 6px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.font_label{
+	color: #00000096 !important;
+	margin-right: 85px;
+}
+.name_class{
+	    margin-left: 15px;
+}
+   .button_next{
+    padding: 2px 0px;
+    background: #5EB685;
+    border-radius: 4px;
+    width: 83px;
+    /* color: #fff; */
+  /*  margin: 8px 64px;
+    height: 30px;*/
+   }
+   .button_next1{
+    padding: 2px 0px;
+    background: #5EB685;
+    border-radius: 4px;
+    width: 83px;
+    height: 30px;
+    margin: 0 auto;
+    margin-bottom: 16px;
+ 
+   }
+    .width_page{
+      width: 335px;
+    }
+    /*card*/
+     .height-card1 {
+    height: 200px;
+    margin-bottom: 26px;}
+    #cards_landscape_wrap-2 .card-flyer {
+    background: #FFFFFF;
+    margin-top: 0px;
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
+    -ms-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+    box-shadow: 0px 3px 4px rgb(0 0 0 / 40%);}
+    #cards_landscape_wrap-2 .card-flyer .image-box {
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0px 2px 15px rgb(0 0 0 / 50%);
+    border-radius: 2px;}
+    @media only screen and (min-width: 1030px) and (max-width: 1366px){
+#cards_landscape_wrap-2 .card-flyer .img-height img {
+    height: 110px;
+}
+}
+#cards_landscape_wrap-2 .card-flyer .image-box img {
+    -webkit-transition: all .9s ease;
+    -moz-transition: all .9s ease;
+    -o-transition: all .9s ease;
+    -ms-transition: all .9s ease;
+    width: 100%;
+    height: 100px;
+}
+.fa-img1 {
+    font-size: 16px !important;
+    position: absolute;
+    top: 9px;
+    color: #fff;
+    /* display: block; */
+    right: 20px;}
+    .box-ul {
+    width: 68px;
+    height: 82px;
+    list-style: none;
+    color: #000000c9;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: #ffffffde;
+    position: absolute;
+    right: -20px;
+    top: 17px;
+    line-height: 17px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+.cta-btn {
+    background: transparent linear-gradient(
+180deg
+, #93F9B9 0%, #47B78F 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    color: #fff;
+    border: 1px solid #47B78F;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;}
+.course_size{
+  font-size: 11px;
+    font-weight: 600;
+    color: #000;
+}
+.fa-img1 {
+    font-size: 16px !important;
+    position: absolute;
+    top: 9px;
+    color: #fff;
+    left: 100px;
+}
+.label.label-default.rank-label_1 {
+    position: absolute;
+    left: 50%;
+    font-size: 23px;
+    top: 9%;
+    color: #00ACEE;
+}
+
+.page_margin
+{
+  width: 130px;
+    float: left;
+    margin: 0px 10px;
+    margin: 0px 12px;
+    margin-left: 0px;
+}
+.fl-rt {
+    float: right;
+    margin-top: -33px;}
+</style>
+
+
+<div class="logincard">
+
+
+	
+
+
+  	<div class="pmd-card card-default pmd-z-depth">
+
+  		
+
+		<div class="login-card">
+
+			{% if messages %}
+				<ul class="messages">
+				    {% for message in messages %}
+				   <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+
+				        {{ message }}
+				    </li>
+				    {% endfor %}
+				</ul>
+			{% endif %}
+			
+			<form method="post" action="{% url 'accounts:login' %}">	
+				<div class="pmd-card-title card-header-border text-center">
+					<div class="loginlogo">
+						<!-- <a href="javascript:void(0);">
+							<img src="{% static 'images/logo-icon.png' %}" alt="LMS"></a> -->
+					</div>
+					<h3>Sign In <span>with <strong>LMS</strong></span></h3>
+				</div>
+				
+				<div class="pmd-card-body">
+					<div class="alert alert-success" role="alert"> 
+						Oh snap! Change a few things up and try submitting again. 
+					</div>
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                        <label for="inputError1" class="control-label pmd-input-group-label">Email</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">perm_identity</i></div>
+                            <input type="text" class="form-control" id="exampleInputAmount" name="email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                        <label for="inputError1" class="control-label pmd-input-group-label">Password</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_outline</i></div>
+                            <input type="password" class="form-control" id="exampleInputAmount" name="password">
+                        </div>
+                    </div>
+                </div>
+				<div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
+					<div class="form-group clearfix">
+						<div class="checkbox pull-left">
+							<label class="pmd-checkbox checkbox-pmd-ripple-effect">
+								<input type="checkbox" checked="" value="">
+								<span class="pmd-checkbox"> Remember me</span>
+							</label>
+						</div>
+						<span class="pull-right forgot-password">
+							<a href="javascript:void(0);">Forgot password?</a>
+						</span>
+					</div>
+					<input type="submit" class="btn pmd-ripple-effect btn-primary btn-block" value="Sign In" name="submit"/>
+                    
+					<p class="redirection-link">Don't have an account? <a href="{% url 'accounts:signup' %}" class="login-register">Sign Up</a>. </p>
+                    
+				</div>
+				
+			</form>
+		</div>
+		
+		
+		
+<!-- 		<div class="forgot-password-card">
+			<form>	
+			  <div class="pmd-card-title card-header-border text-center">
+				<div class="loginlogo">
+					<a href="javascript:void(0);"><img src="{% static 'themes/images/logo-icon.png' %}" alt="Logo"></a>
+				</div>
+				<h3>Forgot password?<br><span>Submit your email address and we'll send you a link to reset your password.</span></h3>
+			</div>
+			  <div class="pmd-card-body">
+					<div class="form-group pmd-textfield pmd-textfield-floating-label">
+                        <label for="inputError1" class="control-label pmd-input-group-label">Email address</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">email</i></div>
+                            <input type="text" class="form-control" id="exampleInputAmount">
+                        </div>
+                    </div>
+				</div>
+			  <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
+			  	<input type="submit"  value="submit" class="btn pmd-ripple-effect btn-primary btn-block" />
+			  	<p class="redirection-link">Already registered? <a href="javascript:void(0);" class="register-login">Sign In</a></p>
+			  </div>
+			</form>
+		</div> -->
+	</div>
+</div>
+
+<!-- Scripts Starts 
+<script src="{% static 'js/jquery-1.12.2.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/propeller.min.js' %}"></script> -->
+
+
+
+<script>
+	$(document).ready(function() {
+		var sPath=window.location.pathname;
+		var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+		$(".pmd-sidebar-nav").each(function(){
+			$(this).find("a[href='"+sPage+"']").parents(".dropdown").addClass("open");
+			$(this).find("a[href='"+sPage+"']").parents(".dropdown").find('.dropdown-menu').css("display", "block");
+			$(this).find("a[href='"+sPage+"']").parents(".dropdown").find('a.dropdown-toggle').addClass("active");
+			$(this).find("a[href='"+sPage+"']").addClass("active");
+		});
+	});
+</script>
+<!-- login page sections show hide -->
+<script type="text/javascript">
+	$(document).ready(function(){
+	 $('.app-list-icon li a').addClass("active");
+		$(".login-for").click(function(){
+			$('.login-card').hide()
+			$('.forgot-password-card').show();
+		});
+		$(".signin").click(function(){
+			$('.login-card').show()
+			$('.forgot-password-card').hide();
+		});
+	});
+</script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+		// $(".login-register").click(function(){
+		// 	$('.login-card').hide()
+		// 	$('.forgot-password-card').hide();
+		// 	$('.register-card').show();
+		// });
+		
+		// $(".register-login").click(function(){
+		// 	$('.register-card').hide()
+		// 	$('.forgot-password-card').hide();
+		// 	$('.login-card').show();
+		// });
+		// $(".forgot-password").click(function(){
+		// 	$('.login-card').hide()
+		// 	$('.register-card').hide()
+		// 	$('.forgot-password-card').show();
+		// });	
+});
+</script> 
+<!-- Scripts Ends -->
+</body>
+</html>
+
+{% endblock %}

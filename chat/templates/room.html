@@ -1,0 +1,429 @@
+<!-- chat/templates/chat/room.html -->
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+     <link rel="stylesheet/less" href="{% static 'less/bootstrap.less' %}" type="text/css"/>
+    <link rel="stylesheet/less" href="{% static 'less/inbox.less' %}" type="text/css" />
+    <link rel="stylesheet/less" href="{% static 'less/jquery.mCustomScrollbar.less' %}" type="text/css" />
+    <link rel="stylesheet/less" href="{% static 'font/font-awesome.less' %}" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <script src="{% static 'js/less.min.js' %}"></script>
+
+</head>
+<body>
+
+
+    <select id="person_list" >
+        <option> Select Person </option>
+    </select>
+
+    <input type="file" id="files" />
+
+    <textarea id="chat-log" cols="100" rows="20"></textarea>
+    <br>
+
+    <input id="chat-message-input" type="text" size="100">
+    <br>
+
+
+    <input id="chat-message-submit" type="button" value="Send">
+
+<!-- <section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inbox">
+                    <div class="messenger-list">
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="message-list" id="recp_list">
+                                    
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                                <div class="chat-box">
+                        <div class="chat-header">
+                            <div class="header-icon">
+                                <img src="images/logo.png">
+                                <i class="fa fa-circle green"></i>
+                            </div>
+                            <div class="header-details">
+                                <h5 class="user-icon">Get Set Ready Girls</h5>
+                                <span class="header-summery font-12">Lady Warriors</span>
+                            </div>
+                        </div>
+                        <div class="chatter">
+                            <div class="chat-wrapper left">
+                                <div class="chatter-title">
+                                    Get Set Ready Girls
+                                </div>
+                                <div class="chatter-message">
+                                    <p>Hi John, how are you doing?</p>
+                                </div>
+                                <div class="time-plate">
+                                    10:24am
+                                </div>
+                            </div>
+                            <div class="chat-wrapper right">
+                                <div class="chatter-title">
+                                    John Cena
+                                </div>
+                                <div class="chatter-message">
+                                    <p>Hi Patt, doing great, when you are joining us?</p>
+                                </div>
+                                <div class="time-plate">
+                                    10:34am
+                                </div>
+                            </div>
+                            
+                            
+                           
+                        </div>
+                        <div class="chat-footer">
+                            <div class="chat-input">
+                                <textarea rows="1" placeholder="Type your message here..."></textarea>
+                                <ul class="chat-action">
+                                    <li><a><img src="images/svg/attachment.svg"/></a></li>
+                                    <li><a><img src="images/svg/upload.svg"/></a></li>
+                                    <li><a><img src="images/svg/smiling.svg"/></a></li>
+                                </ul>
+                                <button class="btn btn-blue btn-sm chat-btn"><img src="images/svg/fly-send.svg"/></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ -->
+<script>
+         
+
+</script>
+
+
+
+
+
+<script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script> 
+<script>
+    (function($){
+        $(window).on("load",function(){
+            $(".message-list, .chatter, .comment-section, .storyline").mCustomScrollbar({
+                theme:"dark-3"
+            });
+        });
+    })(jQuery);
+</script>
+    
+    
+
+    
+
+    {{ room_name|json_script:"room-name" }}
+
+    {{ user |json_script:'user' }}
+    
+    <script>
+        
+        // var person = prompt("Please enter your name", "");
+        // if(person==""){
+        //     alert('please enter your name');
+            
+        // }
+        //alert(window.location.host);
+        var x=document.getElementById('person_list');
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const user = JSON.parse(document.getElementById('user').textContent);
+        // // const userName = JSON.parse(document.getElementById('user-name').textContent);
+        //var x = document.getElementsByClassName("message-title");
+        var l_rcp=document.getElementById("recp_list")
+
+// var l='<li class="unread"><a><div class="messenger-icon"><img src=""><i class="fa fa-circle light-gray"></i></div><div class="messenger-message"><h5 class="message-title">'+user+'</h5></a></li>';
+
+//     var jj=document.createElement('li');
+//     jj.setAttribute('class','unread');
+//     jj.appendChild(document.createElement('a'));
+
+//     console.log(jj);
+//     var ii=document.createElement('H5');
+//     ii.setAttribute('class','message-title');
+    
+//     ii.appendChild(document.createTextNode(user));
+//     //alert(ii);
+//     var kk=document.createElement('div');
+//     kk.setAttribute('class','messenger-message');
+//     kk.appendChild(ii);
+//     jj.appendChild(kk);
+
+//     l_rcp.appendChild(jj);
+
+//        l_rcp.innerHTML=l
+//         for(var i=0;i< x.length;i++){
+//             //x[i].innerText
+//         }
+
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'+user+'/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if(typeof(data.userlist)!='undefined')
+            {     
+            console.log((data.userlist));
+               var options = document.querySelectorAll('#person_list option');
+               options.forEach(o => o.remove());
+
+                for(var i=0;i< data.userlist.length;i++)
+                {
+                    var option = document.createElement("option");
+                    option.text = data.userlist[i];
+                    option.value=data.userlist[i];
+                    x.add(option, x[i]);
+                } 
+                
+            }
+            else if(data.file){
+                var aTag = document.createElement('a');
+                aTag.setAttribute('href',"/chat/get_file/"+data.message);
+                aTag.innerText = data.message;
+                // html_response='<a href="/chat/get_file/">'+data.message+'</a>';
+               //document.querySelector('#chat-log').value += (aTag + '\n'); 
+               document.querySelector('#chat-log').appendChild(aTag);
+               document.querySelector('#chat-log').value += '\n';
+            }
+            else
+            {
+               document.querySelector('#chat-log').value += (data.message + '\n');
+            }
+            
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) 
+        {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+
+            var to_send=document.getElementById("person_list").value;
+            alert("sending to "+to_send)
+
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'to_send':to_send,
+                'from':user,
+                'type':'text',
+                
+            }));
+            messageInputDom.value = '';
+            document.querySelector('#chat-log').value += ('you: '+message + '\n');
+
+        };
+
+
+
+        // function get_websocket(){
+        //     return chatSocket;
+        // }
+
+        // var ws = get_websocket(url, function(){
+        //         this.send(JSON.stringify(init_params));
+        // });
+
+  //       var load_data = function(index) {
+  //           var end =  index + this.chunk_size;
+  //           if (index >= this.file.size)
+  //               return;
+  //           if (end > this.file.size)
+  //               end = this.file.size;
+  // chatSocket.send(JSON.stringify({'action':'prepare','file_name':'','type':'file','message':this.file.slice(index, end)}));
+  //       }
+
+        // var parseFile = function (file) {
+
+        //                 var chunkSize = 1024 * 16; 
+        //                 var fileSize = file.size;
+        //                 var currentChunk = 1;
+        //                 var totalChunks = Math.ceil((fileSize/chunkSize), chunkSize);
+
+
+        //                 chatSocket.send(JSON.stringify({
+        //                     'to_send':to_send,
+        //                     'from':user,
+        //                     'type':'file',
+        //                     'filesize':fileSize,
+        //                 }));
+        //                 while (currentChunk <= totalChunks) 
+        //                 {
+
+        //                     var offset = (currentChunk-1) * chunkSize;
+        //                     var currentFilePart = file.slice(offset, (offset+chunkSize));
+
+        //                     console.log('Current chunk number is ', currentChunk);
+        //                     console.log('Current chunk data', currentFilePart);
+
+        //                     currentChunk++;
+        //                 }
+        // };
+
+
+// function ReadFile() {
+//     var input = document.getElementsByTagName("input")[0];
+//     var output = document.getElementsByTagName("textarea")[0];
+
+//     if (input.files.length === 0) {
+//         output.value = 'No file selected';
+//         window.setTimeout(ReadFile, 1000);
+//         return;
+//     }
+
+//     readFileAsArrayBuffer(input.files[0], function(data) {
+//         var array = new Int8Array(data);
+//         output.value = JSON.stringify(array, null, '  ');
+//         window.setTimeout(ReadFile, 1000);
+//     }, function (e) {
+//         console.error(e);
+//     });
+// }
+
+// ReadFile();
+
+// function readFileAsArrayBuffer(file, success, error) {
+//     var fr = new FileReader();
+//     fr.addEventListener('error', error, false);
+//     if (fr.readAsBinaryString) {
+//         fr.addEventListener('load', function () {
+//             var string = this.resultString != null ? this.resultString : this.result;
+//             var result = new Uint8Array(string.length);
+//             for (var i = 0; i < string.length; i++) {
+//                 result[i] = string.charCodeAt(i);
+//             }
+//             success(result.buffer);
+//         }, false);
+//         return fr.readAsBinaryString(file);
+//     } else {
+//         fr.addEventListener('load', function () {
+//             success(this.result);
+//         }, false);
+//         return fr.readAsArrayBuffer(file);
+//     }
+// } 
+         document.querySelector('#files').onchange = function(e) 
+         {
+            var to_send=document.getElementById("person_list").value;
+            var file=this.files[0];
+            console.log(file);
+            var filesize=file.size;
+            var filename=file.name;
+
+            var fd=new FormData();
+            fd.append('file',file);
+            fd.append('size',filesize);
+            fd.append('name',filename);
+            fd.append('from',user);
+            fd.append('to',to_send);
+            fd.append('room',roomName);
+
+            // var fd={'file',file,'size':filesize,
+            // 'name':filename,'from':from,'to':to_send,'room':roomName};
+
+            $.ajax({
+            url: '/chat/uploads/',
+            type: 'post',
+            data: fd,
+            contentType: false,
+            processData: false,
+                success: function(response){
+                    if(response != 0){
+                        alert('success');
+                    }else{
+                        alert('file not uploaded');
+                    }
+                },
+            });
+                    //var files = document.getElementById('files').files;
+                    //alert(files[0])
+                    //var file = files[0];  
+                    //  var fr=new FileReader(); 
+                    //  var to_send=document.getElementById("person_list").value;
+                    //  //alert(to_send);
+                    // fr.onload=function(e){ 
+                    //     //console.log(e.target.result);
+                    //     chatSocket.send(JSON.stringify({
+                    //         'type':'file',
+                    //         'from':user,
+                    //         'to_send':to_send,
+                    //         'filesize':'344',
+                    //         'filetype':'csv',
+                    //         'ArrayBuffer':e.target.result,
+                    //         'message':e.target.result
+                    //     }));
+                    // } 
+                      
+                    // //fr.readAsText(this.files[0])  
+                    // fr.readAsArrayBuffer(this.files[0]);
+
+                    //parseFile(file)
+                    // action = 'prepare';
+                    // file_name = file.name;
+                    // file_size = file.size;
+                    // var init_params={}
+                    // this.file = field.files[0];
+                    // alert(this.file);
+                    // init_params.action = 'prepare';
+                    // init_params.file_name = this.file.name;
+                    // init_params.file_size = this.file.size;
+
+                    // var start = parseInt(startByte) || 0;
+                    // var stop = parseInt(endByte) || file.size - 1;
+
+                    // var reader = new FileReader();
+                    // reader.onload = function(event){
+                    //     if (evt.target.readyState == FileReader.DONE) { 
+                    //         //document.getElementById('content').textContent = evt.target.result;        
+                    //     }
+                        
+                    // }
+                    
+                    //reader.readAsDataURL(e.target.files[0]);  
+                    // var blob = file.slice(start, stop + 1);
+                    //  fileReader.readAsBinaryString(blob);   
+                
+        };
+
+
+
+    </script>
+</body>
+</html>

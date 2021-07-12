@@ -1,0 +1,220 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apprentissage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  <link href="{% static 'user_lms/bootstrap-4/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'user_lms/owl-carousel/owl.carousel.min.css' %}" rel="stylesheet">
+  <link href="{% static 'user_lms/owl-carousel/owl.theme.default.min.css' %}" rel="stylesheet">
+  <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
+  <link href="{% static 'user_lms/css/style.css' %}?{% now 'U' %}" rel="stylesheet">
+  <style type="text/css">
+    .owl-theme .owl-dots .owl-dot span{
+      width:30px;
+      background: #fff;
+      border:1px solid #28a745;
+    }
+
+    .owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
+      background: #28a745;
+    }
+  </style>
+  <script type="text/javascript">
+    function refToLink(link){
+      window.location.href = link;
+    }
+  </script>
+</head>
+<body>
+
+
+  <div class="section-apprentissage-header" style="position: fixed; background: #fff; width: 100%;top:0px; z-index: 9999;">
+
+
+    <nav class="navbar navbar-expand-lg navbar-light nav-box">
+
+    
+
+    
+            <!-- toggler -->
+            <!-- <a data-toggle="collapse" href="#" data-target=".collapse" role="button" class="p-1">
+                <i class="fa fa-bars fa-lg"></i>
+            </a> -->
+      
+
+
+      <a class="navbar-brand ml-5" href="https://apprentissage.in/"><img style="height: 40px;" 
+        src="{% static 'user_lms/img/Apprentissage-Logo.png' %}"/></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="form-inline mr-auto ml-auto wd-full">
+            <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+          <label class="sr-only" for="inlineFormInputGroupSearch">Search</label>
+          <div class="input-group search-bar-wd wd-full">
+              <div class="input-group-prepend">
+                <div class="input-group-text search-btn ht-30-lg fs-13-lg pl-2 pr-2"><i class="fa fa-search"></i>&nbsp;Search</div>
+              </div>
+              <input type="text" class="form-control ht-30-lg fs-13-lg" id="inlineFormInputGroupSearch" placeholder="Search your learning topics here...">
+          </div>
+        </div>
+        <div class="dropdown wd-full fs-13-lg p-tb-10">
+            <a class="dropdown-toggle nav-dd-item" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Browse
+            </a>
+            <div class="dropdown-menu dd-browse" aria-labelledby="navbarDropdown">
+              <div class="browse-menu-content">
+                <div class="row">
+                  <div class="col-sm">
+                    <div class="dropdown-item ">Retail<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+                    <div class="dropdown-item">Startups<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+                  </div>
+                  <div class="col-sm py-2">
+                    <div class="dropdown-item ">Retail Sales Associate<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+                    <div class="dropdown-item ">Basic of Digital Marketing<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+                    <div class="dropdown-item ">Basic of Finances<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+                  </div>
+                  <div class="col-sm">
+                    <h5 class="justiy-content-center mb-2" style="text-align: center;">Trending Courses</h5>
+                    <div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+                      <div class="card-inner">
+                        <img src="{{ object_list.0.thumbnail.url }}" style="height:125px; width:175px;" />
+                        <div class="card-inner-content">
+                          <div class="card-course-name"><label class="cc-name">{{ object_list.0.name }}</label></div>
+                          <div class="card-course-price">
+                            <span>
+                              <strike class="card-course-price-strike">Rs. {{ object_list.0.price }}</strike>
+                            </span> Free
+                          </div>
+                          <div class="fs-13">
+                            <label class="card-course-rating-star">
+                              <!-- <i class="material-icons fs-15" aria-hidden="true">star</i>
+                              <i class="material-icons fs-15" aria-hidden="true">star</i>
+                              <i class="material-icons fs-15" aria-hidden="true">star</i>
+                              <i class="material-icons fs-15" aria-hidden="true">star_half</i>
+                              <i class="material-icons fs-15" aria-hidden="true">star_outline</i> -->
+                              (New)
+                            </label>
+                            <span class="card-enroll-count fl-rt">
+                              <i class="fa fa-users" aria-hidden="true"></i>
+                              {{ object_list.0.total_view }}
+                            </span>
+                          </div>
+                          <div>
+                            <button    class="cta-btn btn-wdth-120 fs-13" 
+                onclick="refToLink('{{object_list.0.link}}')" >Enroll Now</button>
+                            <span class="fav-not fl-rt">
+                              <i class="fa fa-heart" aria-hidden="true"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="ml-auto mr-5">
+          <ul class="navbar-nav">
+            {% if sess.login == True %}
+              <li class="dropdown nav-item active wd-full fs-13-lg">
+                  <a class="dropdown-toggle nav-dd-item nav-link" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img alt="Profile Image" src="https://apprentissage.in/media/course_images/RSA.png" style="border-radius: 50%;width: 40px; height: 40px;">
+                  <span class="fs-13 ml-3 pt-2">Profile</span>
+                </a>
+                  <div class="dropdown-menu fs-13" aria-labelledby="navbarDropdownProfile">
+                    <div class="px-3 py-1"><i class="far fa-user cta-color" aria-hidden="true" style="width:30px"></i> Profile</div>
+                    <div class="px-3 py-1"><i class="far fa-file-video cta-color" aria-hidden="true" style="width:30px"></i> My Courses</div>
+                    <div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Wishlist</div>
+                    <div class="px-3 py-1"><i class="far fa-bookmark cta-color" aria-hidden="true" style="width:30px"></i> Grade</div>
+                    <div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Certificate</div>
+                    <div class="px-3 py-1"><i class="far fa-comments cta-color" aria-hidden="true" style="width:30px"></i> Chat</div>
+                    <div class="px-3 py-1"><i class="far fa-question-circle cta-color" aria-hidden="true" style="width:30px"></i> FAQ</div>
+                    <div class="px-3 py-1"><i class="fa fa-phone cta-color" aria-hidden="true" style="width:30px"></i> Contact Us</div>
+                    <div class="px-3 py-1"><i class="fa fa-sign-out-alt cta-color" aria-hidden="true" style="width:30px"></i> Logout</div>
+                  </div>
+              </li>
+              <li class="nav-item active wd-full fs-13-lg p-tb-10 ml-2-mbl-ml-0">
+                  <a class="nav-link" href="#">
+                    <i class="fa fa-shopping-cart cta-color" aria-hidden="true"></i>&nbsp;Cart</a>
+              </li>
+              <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-15-lg fw-800">
+                  <a class="nav-link" href="#">
+                    <i class="far fa-bell cta-color" aria-hidden="true"></i>
+                  </a>
+              </li>
+          {% else %}
+              <li class="nav-item active wd-full fs-13-lg p-tb-10">
+                  <a class="nav-link" href="#">
+                    <i class="fa fa-shopping-cart cta-color" aria-hidden="true"></i>&nbsp;Cart</a>
+              </li>
+              <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 pl-lg-x20-sm-5 fs-13-lg">
+
+
+                  {% if not user.is_anonymous %}
+                <button class="login-btn py-1 fs-13" 
+                onclick="refToLink('{% url "accounts:logout" %}')">
+                  Logout
+              </button>
+                {% else %}
+                <!-- refToLink('https://learning.apprentissage.in/login/index.php') -->
+            <button class="login-btn py-1 fs-13" 
+            onclick="refToLink('{% url "accounts:login" %}')">
+                Login</button>
+                {% endif %}
+              </li>
+              <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-13-lg">
+                  <button class="signup-btn py-1 fs-13" onclick="refToLink('{{settings.BASE_LMS_URL}}/login/signup.php')">Enroll</button>
+              </li>
+            {% endif %}
+          </ul>
+      </div>
+      </div>
+    </nav>
+  </div>
+  <div class="my-3" style="min-height: 40px;"></div>
+  <div class="clearfix"></div>
+
+<!--   <div class="container-fluid px-0 h-100">
+    <div class="row vh-100 collapse show no-gutters d-flex h-100 position-relative">
+   
+   <div class="col-3 p-0 vh-100 h-100 text-white w-sidebar navbar-collapse collapse d-none d-md-flex sidebar">
+           
+            <div class="navbar-dark bg-dark position-fixed h-100 w-sidebar">
+                <h6 class="px-3 pt-3">Fixed Menu</h6>
+                <ul class="nav flex-column flex-nowrap text-truncate">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+
+
+    <div class="col p-3">
+
+    </div> -->
+
+    
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+ <div id="content" class="pmd-content inner-page">
+     {{ user.username |json_script:'user' }}
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'customadmin:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    <script type="text/javascript">
+      
+      
+
+
+    </script>
+
+
+    <div class="page-content profile-edit section-custom" style="height:auto">
+      <div class="pmd-card pmd-z-depth" style="height: 1300px;">
+        <div class="pmd-card-body">
+          <div class="row">
+
+            
+
+             <form class="form-horizontal">
+                          {{ form.as_p }}
+                    <input type="submit" value="submit" />
+             </form>
+
+            <div data-provides="fileinput" class="fileinput fileinput-new col-lg-3">
+              <div data-trigger="fileinput" class="fileinput-preview thumbnail img-circle img-responsive">
+                <img src="{{ object.thumbnail.url }}">
+              </div>
+             <!--  <div class="action-button"> 
+                <span class="btn btn-default btn-raised btn-file ripple-effect">
+                  <span class="fileinput-new"><i class="material-icons md-light pmd-xs">add</i></span>
+                  <span class="fileinput-exists"><i class="material-icons md-light pmd-xs">mode_edit</i></span>
+                  <input type="file" name="...">
+                </span> 
+                <a data-dismiss="fileinput" class="btn btn-default btn-raised btn-file ripple-effect fileinput-exists" href="javascript:void(0);"><i class="material-icons md-light pmd-xs">close</i></a>
+              </div> -->
+            </div>
+
+                 
+            
+            <div class="col-lg-9 custom-col-9">
+              <h3 class="heading">Course Info</h3>
+              <div class="row">
+                
+                  <fieldset>
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3"> Course Name</label>
+                      <div class="col-sm-9">
+                      <p class="form-control-static"><strong>{{ object.name }}</strong></p>
+                      </div>
+                    </div>
+                    <!-- <div class="form-group pmd-textfield">
+                      <label class="col-sm-3 control-label" for="u_fname">Course Description</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control empty" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                      </div>
+                    </div>
+                    <div class="form-group pmd-textfield">
+                      <label class="col-sm-3 control-label" for="u_fname">Last Name</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control empty" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                      </div>
+                    </div> -->
+                    
+
+
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                      <label class="col-sm-3 control-label" for="u_fname">Description</label>
+                      <div class="col-sm-9">
+                      {% if not user.is_anonymous %}
+                        <input type="email" class="form-control empty" value="{{ object.about }}" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                      {% else %}
+
+                      <p class="form-control-static"><strong>{{ object.name }}</strong></p>
+                      
+                       {% endif %}  
+
+
+                      </div>
+                    </div>
+
+                    <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                        <label class="col-sm-3 control-label" for="u_fname">Intructor </label>
+                        <div class="col-sm-9">
+                           <span> {{ object.teacher }}</span>
+
+                        </div>
+
+                      </div>
+
+                    <!-- <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                        <label class="col-sm-3 control-label" for="u_fname">Assign Instructor</label>
+                        <div class="col-sm-9">
+                          <input type="email" class="form-control empty" value="{{ all_teacher }}" id="inputEmail" placeholder=""><span class="pmd-textfield-focused"></span>
+                        </div>
+                        <select class="form-control empty">
+                        {% for teacher in all_teacher %}
+                          
+                          <option value="{{ teacher.id}}">{{ teacher.username }} </option>
+                         
+                        {% endfor %}
+                        </select >
+
+
+                        </div>
+
+                      </div> -->
+
+
+                      
+
+
+                    <!-- <div class="form-group btns margin-bot-30">
+                      <div class="col-sm-9 col-sm-offset-3">
+                      <button type="submit" class="btn btn-primary pmd-ripple-effect">Update</button>
+                      <button class="btn btn-default btn-link pmd-ripple-effect">Cancel</button>
+                      </div>
+                    </div> -->
+
+
+                  </fieldset>
+                
+
+
+              </div>
+
+
+              <h3 class="heading">Topics & Activity</h3>
+              <div class="row"> 
+
+               
+               {% for activity in activity_list %}
+
+                 
+                  <div class="col-md-12 pmd-card">
+                  <div class="form-group pmd-textfield pmd-textfield-floating-label-completed">
+                   <!--  <label class="control-label col-sm-3" for="u_password">Topic </label>
+ -->
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3"> Topic</label>
+                      <div class="col-sm-9">
+                      <p class="form-control-static"><strong>{{ activity.topic_name }}</strong></p>
+                      
+                      </div>
+                    </div>
+                    <div class="form-group prousername pmd-textfield">
+                      <label class="control-label col-sm-3">Topic About </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_about }}</strong></p>
+                      
+                      </div>
+                    </div>
+                     <div class="form-group prousername pmd-textfield">
+                     <label class="control-label col-sm-3">Topic Author </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_author }}</strong></p>
+                      
+                      </div>
+                      <div class="form-group prousername pmd-textfield">
+                     <label class="control-label col-sm-3">Duration </label>
+                      <p class="form-control-static"><strong>{{ activity.topic_duration }}</strong></p>
+                      
+                      </div>
+                      <div style="margin-left:5%;">
+                        <h3> >> Activity Details << </h3>
+
+                        <div class="form-group prousername pmd-textfield">
+                           
+                        
+
+                          {% for a in activity.activity %}
+                              
+                          <label class="control-label col-sm-3">Activity Name </label> 
+                            <p class="form-control-static">
+                              <strong>{{ a.activity_name }}</strong></p>
+                              <label class="control-label col-sm-3">Activity Type </label>
+                            <p class="form-control-static">
+                              <strong>{{ a.activity_type }}
+
+                                &nbsp;&nbsp;&nbsp;
+                                  <a href="" >Enroll</a>
+                              
+                              </strong>
+
+                              
+                            </p>
+
+
+                                
+                          {% endfor %}
+                        
+                      </div>
+                    </div>
+                    </div>
+
+
+                    
+                      
+                    <!-- <div class="col-sm-9">
+                      <input type="text" class="form-control empty" id="inputEmail" value="password"><span class="pmd-textfield-focused"></span>
+                    </div> -->
+                  
+                  
+                {% endfor %}
+
+
+
+
+
+
+                </div>
+
+
+                  </div>
+
+
+          
+               
+
+                <div class="col-sm-12" style="height:200px">
+                  <!-- <div class="col-sm-3" style="height: 200px;">
+                    <button data-attr="can1" onclick="chatBoxOpen(this)" class="btn btn-success">Candiadate 1</button>
+                    <button data-attr="can2"  onclick="chatBoxOpen(this)" class="btn btn-success">Candiadate 2</button>
+                    <button data-attr="can3"  onclick="chatBoxOpen(this)" class="btn btn-success">Candiadate 3</button>
+                  </div> -->
+                  
+                  <select id="person_list">
+                    <option>Select Person</option>
+                  </select>
+                
+                  <div id="chatBoxContainer" class="col-sm-9" style="height: 200px;">
+                  </div>
+
+
+
+
+                
+              </div>
+
+                <br/>
+              <div id="text-messages"  style="width:200px;height:200px;">
+                  </div>
+
+
+
+
+
+              </div> 
+
+
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+
+
+
+<script>
+          var x=document.getElementById('person_list');
+            roomName='abcabcabc12';
+            const user = JSON.parse(document.getElementById('user').textContent);
+            const chatSocket = new WebSocket(
+                          'ws://127.0.0.1:8888'
+                          + '/ws/chat/'
+                          + roomName
+                          + '/'+user+'/'
+            );
+          $(document).ready(function()
+          {
+           chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if(typeof(data.userlist)!='undefined')
+            {    
+              //alert(data.userlist);
+              console.log(data.userlist);
+              var options = document.querySelectorAll('#person_list option');
+              options.forEach(o => o.remove());
+               var option = document.createElement("option");
+               option.text = "Select Person"
+               option.value = "Select Person"
+               x.add(option, x[0]);
+                for(var i=0;i < data.userlist.length;i++)
+                {
+                  if(data.userlist[i]!=user){
+                    var option = document.createElement("option");
+                    option.setAttribute("data-attr",data.userlist[i])
+                    option.setAttribute("onclick","chatBoxOpen(this)")
+                    option.text = data.userlist[i];
+                    option.value = data.userlist[i];
+                    //alert(option);
+                    x.add(option, x[i+1]);
+                  }
+                    //alert(option);
+                    //console.log(option);
+                } 
+                var option = document.createElement("option");
+                option.text="All";
+                option.value="All";
+                option.setAttribute("onClick","chatBoxOpen()")
+                x.add(option,x[data.userlist.length+1]);
+                
+            }
+            else if(data.file){
+                var aTag = document.createElement('a');
+                aTag.setAttribute('href',"/chat/get_file/"+data.message);
+                aTag.innerText = data.message;
+                // html_response='<a href="/chat/get_file/">'+data.message+'</a>';
+               //document.querySelector('#chat-log').value += (aTag + '\n'); 
+               document.querySelector('#chat-log').appendChild(aTag);
+               document.querySelector('#chat-log').value += '\n';
+            }
+            else
+            {
+              var ch=$('#text-messages').text();
+              $('#text-messages').text(ch+data.message + '\n');
+              //document.querySelector('#send-messages').value += (data.message + '\n');
+            }
+            
+        };
+
+      });
+
+
+      // document.querySelector('#send-message').onclick = function(e) 
+      //   {
+      //     alert();
+      //       const messageInputDom = document.querySelector('#msg');
+      //       const message = messageInputDom.value;
+
+      //       var to_send=document.getElementById("person_list").value;
+      //       alert("sending to "+to_send)
+
+      //       chatSocket.send(JSON.stringify({
+      //           'message': message,
+      //           'to_send':to_send,
+      //           'from':user,
+      //           'type':'text',
+                
+      //       }));
+      //       messageInputDom.value = '';
+      //       document.querySelector('#chatBoxContainer').value += ('you: '+message + '\n');
+
+      //   };
+
+      function sendMessage(obj)
+      {
+          const messageInputDom = document.querySelector('#msg');
+            const message = messageInputDom.value;
+
+            var to_send=document.getElementById("person_list").value;
+            alert("sending to "+to_send)
+            //alert(message);
+
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'to_send':to_send,
+                'from':user,
+                'type':'text',
+                
+            }));
+          messageInputDom.value = '';
+          //alert($('#'+to_send+'text-messages').val());
+          var ch=$('#text-messages').text();
+          $('#text-messages').text(ch+'you: '+message + '\n');
+      }
+
+
+
+
+      function chatBoxOpen(t){
+        //console.log('chatBoxOpen');
+              var da = $(t).attr("data-attr");
+              if($("#"+da).length < 1)
+              {
+                var box = '<div id="'+da+'" class="col-sm-6" style="height:200px; border:1px solid black"><h3>'+da+'<span class="close" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;">x</span></h3><input style="margin-top:45%;margin-left:-10px;width:81%" type="text" id="msg" /><input type="button" value="SM" onClick="sendMessage(this)"style="margin-left:-20px" id="send-message" ></div>';
+
+
+
+                  $("#chatBoxContainer").append(box);
+              }
+          }
+
+</script>
+
+
+                    <!-- {% for obj in object_list %}
+                  <div style="background:#D3D3D3">
+                    <img src="/{{ obj.thumbnail }}" alt="thumbnail" /> <br/>
+                    Course Name : {{ obj.name }} <br/>
+                    Course Desc : {{ obj.about }} <br/>
+                    Course Start Date : {{ obj.start_date }} <br/>
+                    Course EndDate : {{ obj.end_date }} <br/>
+                    Course Organization  :{{ organization_name }} <br/>
+                    Want to Enroll <a href="#"> Click Here </a>
+                  </div>
+
+                  {% endfor %} -->
+
+<!--                  <form method="post" enctype="multipart/form-data">-->
+
+
+<!--                    {{ form.as_p }}-->
+
+<!--                    {% csrf_token %}-->
+
+<!--                    <br/>-->
+
+<!--                    <div class="form-group">-->
+<!--                      <input type="submit" class="btn btn-primary btn-user btn-block" id="exampleInputPassword"  value="submit" name="submit" placeholder="Permission Description"/>-->
+<!--                    </div>-->
+
+
+<!--                  </form>-->
+                  <!--<form class="user">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Permission Name">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputPassword" placeholder="Permission Description">
+                    </div>
+
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    </form>-->
+                    <!--<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    <hr>
+                    <a href="index.html" class="btn btn-google btn-user btn-block">
+                      <i class="fab fa-google fa-fw"></i> Login with Google
+                    </a>
+                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a>-->
+
+                
+                  <!--<div class="text-center">
+                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="register.html">Create an Account!</a>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2020:2080",
+      // You can put more options here.
+
+    });
+  });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}

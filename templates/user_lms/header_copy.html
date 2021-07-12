@@ -1,0 +1,145 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Apprentissage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+	<link href="{% static 'user_lms/bootstrap-4/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+	<div class="section-apprentissage-header">
+		<nav class="navbar navbar-expand-lg navbar-light nav-box">
+		  <a class="navbar-brand ml-5" href="#"><img style="height: 40px;" 
+		  	src="{% static 'user_lms/img/Apprentissage-Logo.png' %}"/></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		  	<div class="form-inline mr-auto ml-auto wd-full">
+			      <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+			      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+			    <label class="sr-only" for="inlineFormInputGroupSearch">Search</label>
+			    <div class="input-group search-bar-wd wd-full">
+			        <div class="input-group-prepend">
+			          <div class="input-group-text search-btn ht-30-lg fs-13-lg pl-2 pr-2"><i class="fa fa-search"></i>&nbsp;Search</div>
+			        </div>
+			        <input type="text" class="form-control ht-30-lg fs-13-lg" id="inlineFormInputGroupSearch" placeholder="Search your learning topics here...">
+		    	</div>
+		    </div>
+		    <div class="dropdown wd-full fs-13-lg">
+		        <a class="dropdown-toggle nav-dd-item" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          Browse
+		        </a>
+		        <div class="dropdown-menu dd-browse" aria-labelledby="navbarDropdown">
+		          <div class="browse-menu-content">
+		          	<div class="row">
+			          	<div class="col-sm">
+			          		<div class="dropdown-item ">Tourism<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item">Banking & Finance<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Health Care<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item">General<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          	</div>
+			          	<div class="col-sm py-2">
+			          		<div class="dropdown-item ">Industrial Skill<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Staff Management<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Sales Technique<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Technical Skill<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          	</div>
+			          	<div class="col-sm">
+			          		<h5 class="justiy-content-center">Trending Courses</h5>
+			          		<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+			          			<div class="card-inner">
+			          				<img src="{% static 'user_lms/img/tobias-rehbein-ch-14.png' %}" style="height:125px; width:175px;" />
+			          				<div class="card-inner-content">
+			          					<div class="card-course-name"><label>Staff Management</label></div>
+			          					<div class="card-course-price">
+			          						<span>
+			          							<strike class="card-course-price-strike">Rs. 336</strike>
+			          						</span> Free
+			          					</div>
+			          					<div class="fs-13">
+			          						<label class="card-course-rating-star">
+			          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+			          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+			          							<i class="material-icons fs-15" aria-hidden="true">star</i>
+			          							<i class="material-icons fs-15" aria-hidden="true">star_half</i>
+			          							<i class="material-icons fs-15" aria-hidden="true">star_outline</i>
+			          						</label>
+			          						<span class="card-enroll-count fl-rt">
+			          							<i class="fa fa-users" aria-hidden="true"></i>
+			          							(5,203)
+			          						</span>
+			          					</div>
+			          					<div>
+			          						<button class="cta-btn btn-wdth-120 fs-13">Add To Cart</button>
+			          						<span class="fav-not fl-rt">
+			          							<i class="fa fa-heart" aria-hidden="true"></i>
+			          						</span>
+			          					</div>
+			          				</div>
+			          			</div>
+			          		</div>
+			          	</div>
+		          		
+		          	</div>
+		          </div>
+		        </div>
+		    </div>
+		    <div class="ml-auto mr-5">
+			    <ul class="navbar-nav">
+			    	<li class="nav-item active wd-full fs-13-lg">
+				        <a class="nav-link" href="#">
+				        	<i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Cart</a>
+				    </li>
+				    <li class="nav-item wd-full ml-2 pl-lg-x20-sm-5 fs-13-lg">
+				        <button class="cta-btn py-1 fs-13">Login</button>
+				    </li>
+				    <li class="nav-item wd-full ml-2 fs-13-lg">
+				        <button class="cta-btn py-1 fs-13">Enroll</button>
+				    </li>
+			    </ul>
+			</div>
+		  </div>
+		</nav>
+	</div>
+
+
+
+{% block course_details %}
+
+{% endblock %}
+
+
+
+{% block user_banner %}
+
+{% endblock %}
+
+
+{% block user_card-slider %}
+
+{% endblock %}
+
+
+{% block user_why %}
+
+{% endblock %}
+
+
+{% block user_course-offered %}
+
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}
+
+

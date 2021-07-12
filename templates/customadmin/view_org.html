@@ -1,0 +1,334 @@
+{% extends 'head2.html' %} {% block inner_content %} {% load static %} {% load mytag %}
+
+
+
+
+
+<style>
+    @media only screen and (min-width:1030px) and (max-width:1366px) {
+        #cards_landscape_wrap-2 .card-flyer .img-height img {
+            height: 110px;
+        }
+        .btn-save {
+            float: right;
+            position: relative;
+            top: 2px;
+            right: 0;
+        }
+        .height-card1 {
+            height: 240px;
+        }
+        #cards_landscape_wrap-2 .card-flyer .text-box h6 {
+            font-size: 10px;
+        }
+        .right_col {
+            min-height: 635px !important;
+        }
+        .ul-management li {
+            margin: 0px 3px !important;
+            font-size: 10px !important;
+        }
+        .ul-management img {
+            width: 8px !important;
+        }
+        #cards_landscape_wrap-2 .card-flyer .text-box .text-container {
+            padding: 10px 1px;
+        }
+    }
+    
+    .panel-heading a:after {
+        font-family: 'FontAwesome';
+        content: "\f078";
+        float: right;
+        transition: all 0.5s;
+        font-size: 12px;
+        padding: 1px;
+    }
+    
+    .panel-heading.active a:after {
+        -webkit-transform: rotate( 180deg);
+        -moz-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+</style>
+
+
+
+
+
+
+<div class="right_col" role="main">
+    <!--row 1  -->
+
+
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+                      <i class="fa fa-close"></i>
+                  </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph border_radius">
+                <div class="col-md-6 col-sm-6 border_radius1">
+                    <h2>View Company</h2>
+
+                </div>
+                <div class="col-md-6 col-sm-6 left-courses border_radius1">
+                    <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                    <p>Company<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                    <p>View Company<i></i></p>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <br> {% if org.is_active %} {% else %}
+    <div style="height: 20px;border:1px solid #ff7f7f;border-radius:2px;">
+        This Organization is inactive
+    </div><br/> {% endif %}
+
+    <!--row 2  -->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel">
+
+                <div class="x_title table_head">
+                    <h2 class="head-tag1">Company Information</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li class="td_img-01">
+                            <img src="{% static 'boimage/edit.svg' %}" class="edit_org" alt="" obj-id="{{ org.id}}">
+                            <img src="{% static 'boimage/delete.svg' %}" class="delete_org" obj-id="{{ org.id }}" alt="">
+                        </li>
+                    </ul>
+                </div>
+                <!-- Company Information -->
+                <div class="x_panel table_head">
+                    <div class="col-md-8">
+                        <div class="col-md-12">
+
+
+                            <h2 class="head-tag">Company Name</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.organization_name }}" class="form-control" name="fullname">
+
+                        </div>
+                        <div class="col-md-12">
+                            <h2 class="head-tag">Assigned Person Name</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.contact_person_name }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="head-tag">Assigned Person Mobile Number</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.contact_person_phone }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="head-tag">Assigned Person E-mail ID</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.contact_person_email }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="head-tag">Sector</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.sector_type }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="head-tag">No of Users</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.no_of_candidates }}" class="form-control" name="fullname">
+                        </div>
+                    </div>
+                    <!-- /col-8 -->
+                    <div class="col-md-4">
+                        <div class="thumb_nail2">
+                            <img src="{{ org.logo.url }}" alt="">
+                        </div>
+                    </div>
+                    <!-- /col-4 -->
+                </div>
+                <!-- /row -->
+                <!-- /Company Information-->
+
+
+                <!-- company address -->
+                <div class="x_panel table_head">
+                    <div class="col-md-12">
+                        <h2 class="head-tag1">Company Address</h2>
+                        <div class="col-md-4">
+                            <h2 class="head-tag">City</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.city }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-4">
+                            <h2 class="head-tag">State</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.state }}" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-md-4">
+                            <h2 class="head-tag">Pincode</h2>
+                            <input type="text" id="fullname" readonly="readonly" value="{{ org.pin }}" class="form-control" name="fullname">
+                        </div>
+                        <!--  <div class="col-md-4">
+                      <h2 class="head-tag">Start Date</h2>
+                    <input type="text" id="fullname"  value="{{ org.start_date }}" class="form-control" name="fullname">
+                    </div>
+                    <div class="col-md-4">
+                      <h2 class="head-tag">End Date</h2>
+                    <input type="text" id="fullname"  value="{{ org.end_date }}" class="form-control" name="fullname">
+                    </div> -->
+                        <div class="col-md-4">
+                            <h2 class="head-tag">Organisation Code</h2>
+                            <input type="text" id="fullname" value="{{ org.unique_code }}" readonly="readonly" class="form-control" name="fullname">
+                        </div>
+                    </div>
+                    <!-- /Company Address -->
+                </div>
+                <!-- course dropdown -->
+
+                <div class="x_panel table_head">
+                    <div class="col-md-12">
+                        <div class="panel-heading info-hover" role="tab" id="headingOne8">
+                            <h2 class="head-tag2"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse08" aria-expanded="true" aria-controls="collapseOne8">Courses</a></h2>
+
+                        </div>
+                        <div id="collapse08" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne8" style="padding: 15px;">
+                            <div class="col-md-12">
+                                <div class="box_bottom1">
+
+                                    {% for course in org.course.all %}
+                                    <div id="cards_landscape_wrap-2">
+                                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" style="margin-right: 40px;">
+                                            <div class="card-flyer height-card1">
+                                                <div class="text-box">
+                                                    <div class="image-box img-height">
+                                                        <img src="{{ course.thumbnail.url }}" alt="" />
+                                                        <span class="fa-img1">.
+                                    <i class="fa fa-ellipsis-v  box_show" aria-hidden="true" >
+                                      <ul style="display:none;" class="box_hide box-ul">
+                                      <li>View</li>
+                                       <li>Edit</li>
+                                        <li>Suspend</li>
+                                         <li>Delete</li>
+                                    </ul>
+                                    </i>
+                                  </span>
+                                                    </div>
+                                                    <div class="text-container">
+                                                        <h6>{{ course.name }}</h6>
+                                                        <ul class="ul-management">
+                                                            <li><img src="{% static 'boimage/education.svg' %}" alt=""></li>
+                                                            <li>Students</li>
+                                                            <li>25 Students</li>
+                                                        </ul>
+                                                        <ul class="ul-management">
+                                                            <li><img src="{% static 'boimage/clock.svg' %}" alt=""></li>
+                                                            <li>Duration</li>
+                                                            <li>3h 30 Min</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="btn-view">
+                                                        <a class="btn view_btn show_course" href="#">
+                                                            <i class="fa fa-arrow-circle-o-down" obj-id="{{ course.id }}" aria-hidden="true"></i><span>View More</span></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <!-- /col-12 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- /dropdown -->
+
+                <!-- course dropdown 2 -->
+                <!-- <div class="x_panel table_head">
+    <div class="col-md-12">
+              <div class="panel-heading info-hover" role="tab" id="headingOne1">
+            <h2 class="head-tag2" style="width: 190px;"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" aria-controls="collapseOne1">Company Documents</a></h2>
+         
+          </div>
+           <div id="collapse1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne1">
+            <div class="col-md-12">
+              <div class="col-md-4">
+                         
+                <div class="x_panel thumb_nail sign-width">
+
+                <div class="x_content" style='height: 133px;border-bottom: 2px solid #80808040'>
+                
+                </div>
+                <div class="x_content">
+                 <p class="center-p">Sign</p>
+                   
+                </div>
+             </div> 
+           </div>
+                 <div class="col-md-4">
+                   <div class="x_panel thumb_nail sign-width">
+
+                <div class="x_conten thumb_nail_logo" style='height: 141px;border-bottom: 2px solid #E6E9ED;'>
+               
+                <img src="" alt="">
+               
+                </div>
+                <div class="x_content">
+                 <p class="center-p"></p>
+                   
+                </div>
+             </div> 
+                 
+                  </div>
+
+                   <div class="col-md-4"></div>
+                     <div class="clearfix"></div>
+                         </div>
+                   </div>
+
+                 </div>
+               </div>
+   </div> -->
+                <!-- /dropdown -->
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %} {% block inpage_script %}
+
+
+<script>
+    $(document).ready(function() {
+        $(".box_show").click(function() {
+            $(this).children(".box_hide").toggle();
+        });
+    });
+
+
+    $('.edit_org').click(function() {
+        var obj_id = $(this).attr("obj-id");
+        window.location.href = "{% url 'customadmin:edit_organization' %}" + obj_id + "/";
+    });
+
+
+    $('.delete_org').click(function() {
+        var obj_id = $(this).attr("obj-id");
+        window.location.href = "{% url 'customadmin:delete_organization' %}" + obj_id + "/";
+    });
+</script>
+{% endblock %}

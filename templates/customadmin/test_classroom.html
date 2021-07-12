@@ -1,0 +1,132 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    <section class="row component-section">
+
+     
+
+       <img src="{{ frame }}" alt="" width="444" height="444" />
+
+
+  
+  </section>
+</div>
+                    <!-- {% for obj in object_list %}
+                  <div style="background:#D3D3D3">
+                    <img src="/{{ obj.thumbnail }}" alt="thumbnail" /> <br/>
+                    Course Name : {{ obj.name }} <br/>
+                    Course Desc : {{ obj.about }} <br/>
+                    Course Start Date : {{ obj.start_date }} <br/>
+                    Course EndDate : {{ obj.end_date }} <br/>
+                    Course Organization  :{{ organization_name }} <br/>
+                    Want to Enroll <a href="#"> Click Here </a>
+                  </div>
+
+                  {% endfor %} -->
+
+<!--                  <form method="post" enctype="multipart/form-data">-->
+
+
+<!--                    {{ form.as_p }}-->
+
+<!--                    {% csrf_token %}-->
+
+<!--                    <br/>-->
+
+<!--                    <div class="form-group">-->
+<!--                      <input type="submit" class="btn btn-primary btn-user btn-block" id="exampleInputPassword"  value="submit" name="submit" placeholder="Permission Description"/>-->
+<!--                    </div>-->
+
+
+<!--                  </form>-->
+                  <!--<form class="user">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Permission Name">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" id="exampleInputPassword" placeholder="Permission Description">
+                    </div>
+
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    </form>-->
+                    <!--<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                      Login
+                    </a>
+                    <hr>
+                    <a href="index.html" class="btn btn-google btn-user btn-block">
+                      <i class="fab fa-google fa-fw"></i> Login with Google
+                    </a>
+                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a>-->
+
+                
+                  <!--<div class="text-center">
+                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="register.html">Create an Account!</a>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+
+
+  
+ <script>
+  // $(function() {
+  //   $( ".datepicker" ).datepicker({
+  //     changeMonth: true,
+  //     changeYear: true,
+  //     yearRange: "2020:2080",
+  //     // You can put more options here.
+
+  //   });
+  // });
+  </script>
+
+
+</body>
+
+</html>
+
+  {% endblock %}
