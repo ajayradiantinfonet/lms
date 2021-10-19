@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect  ,reverse
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect, request
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -11,13 +11,15 @@ from django.contrib.auth.models import Group
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 from django.urls import reverse_lazy
-
+from LMS.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
 # Create your views here.
 from .models import *
 from .forms import CreateUserForm
 # from .filters import OrderFilter
 import time
 from custompermission.models import Perm
+from django.contrib.sites.shortcuts import get_current_site
 
 
 #generic.generate_
@@ -39,37 +41,41 @@ def check_email(request):
 			if ac[0].is_verified:
 				return HttpResponse("true")
 	return HttpResponse("something is not right")
+
 def account_verify(request):
 	to=request.POST.get('to',None)
+	# subject = 'Verification Link for LMS'
+	# message = 'Hope you are enjoying your Django Tutorials'
+	# send_mail(subject, 
+    #         message, EMAIL_HOST_USER, [to], fail_silently = False)
 	if to is not None:
 		email_user(request,to)
 		return HttpResponse(f"verification link has been send to {to}")
 	return HttpResponse("Please check your email is right.")
 
 def email_user(request,to):
+	print(to)
 	token = get_random_string(16)
+	# tokenn = str(token)+ "/" + str(to)
+	# print(tokenn)
+	print(token)
+	
+	
 	context = {
 		'subject': 'Verification Link for LMS',
 		'url': request.build_absolute_uri(
-		reverse_lazy('accounts:account_activate', kwargs={'token': token})),
+		reverse_lazy('accounts:account_activate' ,kwargs={'token':token})),
+			
 	}
-
 	html_content = render_to_string(f'accounts/email_designs/activate_account.html', context)
-	'''try:
-		msg = EmailMultiAlternatives(context['subject'], html_content, settings.EMAIL_HOST_USER, [to])
-		msg.attach_alternative(html_content, 'text/html')
-		msg.send()
 
-		AccountVerify.objects.get_or_create(email=to,token=token)
-	except:
-		pass'''
+
 	try:
-		#s = smtplib.SMTP('localhost')
-		s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-		s.ehlo()
-		s.login(me, settings.EMAIL_HOST_PASSWORD)
-		s.sendmail(me, to, msg.as_string())
+		subject = 'Verification Link for LMS'
+		send_mail(subject,html_content, EMAIL_HOST_USER, [to], fail_silently = False)
 		AccountVerify.objects.get_or_create(email=to,token=token)
+		
+		
 	except:
 		print("error occured while sending email")
 
@@ -87,16 +93,20 @@ def create_or_get_group():
 			return None
 	return g
 
-def account_activate(request):
-	token=request.GET.get('token',False)
-	email = request.GET.get('email',False)
+
+def account_activate(request,**kwargs):
+	token= kwargs.get('token',None)
+	print(token)
+	
 	if token:
-		ac=AccountVerify.objects.filter(email=email).order_by('-id')
+		ac=AccountVerify.objects.filter(token=token).order_by('-id')
+		
 		if len(ac) > 0:
 			if ac[0].token == token:
 				ac[0].is_verified=True
 				ac[0].save()
-				return HttpResponse("account has been verified")
+				messages.success(request, "account has been verified")
+				return redirect("accounts:signup")
 	return HttpResponse("error occured")
 
 def registerPage(request):
@@ -154,8 +164,15 @@ from django.urls import reverse_lazy
 from organization.models import UserInformation
 from django.conf import settings
 
+
 def permission_failure(request):
 	return redirect("userlms:home")
+
+
+
+
+
+
 
 def loginPage(request):
 	try:
@@ -167,35 +184,63 @@ def loginPage(request):
 	except Exception as e:
 		print(e)
 
-	if not request.user.is_anonymous:
-		#print(reverse_lazy('customadmin:home'))
-		#check user_type
-		if request.user.is_superuser:
-			return redirect('customadmin:admin_home')
-		if request.user.groups.filter(name=settings.END_USER_GROUP).exists():
-			return HttpResponseRedirect(reverse_lazy('userlms:home'))
+	# if not request.user.is_anonymous:
+	# 	#print(reverse_lazy('customadmin:home'))
+	# 	#check user_type
+	# 	if request.user.is_superuser:
+	# 		return redirect('customadmin:admin_home')
+	# 	if request.user.groups.filter(name=settings.END_USER_GROUP).exists():
+	# 		return HttpResponseRedirect(reverse_lazy('userlms:home'))
 
 	if request.method == 'POST':
 		#username = request.POST.get('username',None)
 		email = request.POST.get('email',None)
+		print(email)
 		password = request.POST.get('password',None)
+		print(password)
 
 		#if username is not None and password is not None:
 		if email is not None and password is not None:
 			#user = authenticate(request, username=username, password=password)
 			user = authenticate(request,email=email,password=password)
-			#print(user)
+			print(user.roles)
 			if user is not None:
 				try:
-					if user.is_superuser:
+
+					if user.is_superuser == 1:
 						#print("user is superuser")
-						login(request,user)
-						#print("dhdhhdhdhdhdhhd")
+						login(request,user) 
+						print("user is superuser")
 						return HttpResponseRedirect(reverse_lazy('customadmin:admin_home'))
-						#print("heerrr")
+					if user.roles == 'super_user':
+						#print("user is superuser")
+						login(request,user) 
+						print("user is superuser")
+						return HttpResponseRedirect(reverse_lazy('customadmin:admin_home'))
+				
+					
+					if user.roles == 'company_admin':
+						login(request,user)
+						print("user is company admin")
+						return HttpResponseRedirect(reverse_lazy('customadmin:admin_home'))		
+						
 						#return render(request, 'accounts/register.html', {})
 						#return redirect('customadmin:admin_home')
+					
+                
+					elif user.roles == 'clg_admin': #elif user.is_superuser == 2:
+
+						login(request,user)
+						print("user is clg_admin")
+						return HttpResponseRedirect(reverse_lazy('customadmin:clg_home'))	
+
+				    		
 					else:
+						print("login as a normal user")
+							#pass
+						login(request,user)
+						return HttpResponseRedirect(reverse_lazy('userlms:home'))
+
 						orgs=user.organization_student.all()
 						if len(orgs) > 1:
 							print("against normal structure of product")
@@ -222,10 +267,12 @@ def loginPage(request):
 							else:
 								login(request,user)
 								return redirect('customadmin:admin_home')'''
-						
+
+
+
 				except:
 					pass
-				#return HttpResponse("hi")
+				
 			else:
 				messages.info(request, 'Username OR password is incorrect')
 		else:

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.base import Model
 from django.utils import timezone
 # Create your models here.
 #from django.contrib.auth.models import User
@@ -34,6 +35,22 @@ topic_choices=(('topic','topic'),('subtopic','subtopic'))
 #activity_choice = (('pdf','pdf'),('questionnaire','questionnaire'))
 #sector_type=(('GOVERNMENT','government'),('CORPORATE','corporate'))
 from accounts.models import User
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 LANGUAGES =[]
 
@@ -417,6 +434,8 @@ class CoursesEndUser(models.Model):
 	thumbnail = models.ImageField(upload_to='course_images/',default=None)
 	category = models.ForeignKey(UserCategories,related_name='courses_user_categories',null=True,on_delete=models.SET_NULL)
 	self_enrollment = models.BooleanField(default=True)
+	###ajay##
+	favourites=models.ManyToManyField(User,related_name='favourite',default=None,blank=True	)
 	
 	#is_trial=models.BooleanField(default=False)
 	#objects=CoursesManager()
@@ -657,6 +676,8 @@ class Courses(models.Model):
 				new_topic.save()
 				if len(all_content) > 0:
 					for content in all_content:
+
+						
 						#TopicRelation.objects.create(topic_father_id=None,topic_id=new_topic.id)
 						#content.topic=new_topic
 						#content.save()
@@ -1011,7 +1032,7 @@ class Activities(DateTimeModel):
 		return self.topic.name
 
 
-
+# add many activity----    ===== add activity(ajay)
 class SpinActivity(DateTimeModel):
 	name=models.CharField(max_length=125)
 	no_of_topic = models.IntegerField()
@@ -1020,15 +1041,73 @@ class SpinActivity(DateTimeModel):
 	block_slice_after_open=models.BooleanField(default=False)
 	topic_details = models.ManyToManyField(TopicDetails,related_name='topic_details')
 
-
+#assigementactivity code
 class AssignmentActivity(models.Model):
+	name = models.CharField(max_length=120,default=None)
 	description = models.CharField(max_length=125)
 	activity = models.ForeignKey(Activities,on_delete=models.CASCADE)
 	question_file = models.FileField(upload_to='assignment_file/')
-	#answer_file = models.FileField(upload_to='assignment_file/')
+	# answer_file = models.FileField(upload_to='assignment_file/')
 	no_of_submission = models.CharField(max_length=2,
 		help_text='how many time user can submit assignment')
+	last_date = models.DateTimeField(default=timezone.now)	
 	created_at = models.DateTimeField(default=timezone.now)
+	status = models.BooleanField(default=False)
+
+# urlactivity code 
+class UrlActivity(models.Model):
+	name = models.CharField(max_length=120)
+	description = models.CharField(max_length=125)
+	activity = models.ForeignKey(Activities,on_delete=models.CASCADE,null=True)
+	img = models.ImageField(upload_to="urlactivityimage/")
+	website = models.URLField(max_length=255 )
+
+# PPT activity code 
+class PPTActivity(models.Model):
+	name = models.CharField(max_length=120)
+	description = models.CharField(max_length=120)
+	activity = models.ForeignKey(Activities,on_delete=models.CASCADE, null=True)
+	pptfile = models.FileField(upload_to="pptactivity/")
+
+# pdfactivity code 
+class PDFActivity(models.Model):
+	name = models.CharField(max_length=120)
+	description = models.CharField(max_length=120)
+	activity = models.ForeignKey(Activities,on_delete=models.CASCADE,null = True)
+	pdffile = models.FileField(upload_to="pdfactivity/")
+
+# new pdf activity working code
+class PDFFActivity(models.Model):
+	name = models.CharField(max_length=120)
+	description = models.CharField(max_length=120)
+	activity = models.ForeignKey(Activities,on_delete=models.CASCADE,null = True)
+	pdffile = models.FileField(upload_to="pdfactivity/")
+
+
+
+
+# doc activity code 
+class DocActivity(models.Model):
+	name =models.CharField(max_length=120)
+	description = models.CharField(max_length=120)
+	activity = models.ForeignKey(Activities,on_delete=models.CASCADE,null = True)
+	docfile = models.FileField(upload_to="docfile/")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 class AssignmentAnswer(models.Model):
@@ -1038,6 +1117,7 @@ class AssignmentAnswer(models.Model):
 	activity = models.ForeignKey(AssignmentActivity,null=True,on_delete=models.SET_NULL)
 	answer_date = models.DateTimeField(default=timezone.now)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL,null=True,on_delete=models.SET_NULL)
+	grade=models.CharField(max_length=5)
 	submission = models.CharField(max_length=2,default=0,
 		help_text='how many time user has submitted assignment')
 
@@ -1114,8 +1194,8 @@ class TopicWiseAnswerpaper(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	date_registered = models.DateTimeField(default=timezone.now)
 	is_completed = models.BooleanField(default=False)
-	is_open=models.BooleanField(default=False)
-	content_video_length=models.CharField(max_length=123)
+	is_open = models.BooleanField(default=False)
+	content_video_length= models.CharField(max_length=123)
 	#completion_percentage = models.CharField(max_length=2)
 
 	class Meta:
@@ -1307,6 +1387,7 @@ class LanguageCourse(models.Model):
 
 
 class PdfActivity():
+
 	pdf_file = models.FileField(upload_to='pdf_activity/')
 	#topic = models.ForeignKey(Topic,on_delete=models.CASCADE,related_name='pdfactivity_topic')
 	activity_id=models.ForeignKey(Activities,on_delete=models.CASCADE)
@@ -1364,7 +1445,7 @@ class SessionActivity(models.Model):
 	download_session_resource = models.BooleanField(default=False)
 	capture_photo_after_every= models.CharField(max_length=5)
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
-	start_date = models.DateTimeField(default=timezone.now,null=False)
+	start_date = models.DateField(default=timezone.now,null=False)
 	mute_participant_upon_entry = models.BooleanField(default=False)
 	record_session_visibility_to_students=models.BooleanField(default=False)
 	display_description=models.BooleanField(default=False)
@@ -1372,15 +1453,15 @@ class SessionActivity(models.Model):
 
 
 class SubTopic(DateTimeModel):
-	name=models.CharField(max_length=125)
+	name = models.CharField(max_length=125)
 	about = models.CharField(max_length=125)
-	topic=models.ForeignKey(Topic,on_delete=models.CASCADE,related_name='topic_subtopic')
+	topic = models.ForeignKey(Topic,on_delete=models.CASCADE,related_name='topic_subtopic')
 	duration = models.DurationField()
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 
 
 class classroom(models.Model):
-	user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 	sessionactivity=models.ForeignKey(SessionActivity,on_delete=models.CASCADE)
 	#room_id=models.CharField(unique=True,max_length=125)
 	
@@ -1399,11 +1480,18 @@ class ActivityAdding(DateTimeModel):
 		return self.course_id
 
 
+############################ group #############
+from django.contrib.auth.models import Group
+Group.add_to_class('u_id',models.CharField(max_length=120,default=None,null = True))
+Group.add_to_class('org',models.ForeignKey(Organization,on_delete=models.CASCADE,default=None,null = True))
+
+
+
 # class ProductFilter(django_filters.FilterSet):
 #     class Meta:
 #         model = UserInformation
 #         fields = {
-#             'position': ['lt', 'gt'],
+#             'position': ['lt', 'gt'], 
 #             'release_date': ['exact', 'year__gt'],
 #         }
 
@@ -1428,10 +1516,40 @@ class ActivityAdding(DateTimeModel):
 #for task management
 
 
+class UserGrade(models.Model):
+	grade = models.CharField(max_length=125)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
 
 
 
 
+# this is college model
+class College(models.Model):
+	organization = models.ForeignKey(Organization,on_delete=models.CASCADE,null=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,null=True,on_delete=models.CASCADE)
+	clg_name = models.CharField(max_length=100)
+	website = models.URLField(max_length=255,unique=True )
+	address = models.TextField()
+	pin = models.CharField(max_length=10,null=True)
+	start_date = models.DateField(default=timezone.now)
+	no_of_candidates = models.IntegerField(blank=True,null=True)
+	logo = models.ImageField(upload_to='college_logo/')
+	logo1 = models.ImageField(upload_to='college_logo/',null=True)
+	show_second_logo = models.BooleanField(default=False)
+	contact_person_name = models.CharField(max_length=225,null=True)
+	contact_person_email = models.EmailField(unique=True)
+	contact_person_phone = models.CharField(max_length=10,unique=True)
+	password = models.CharField(max_length=256)
+	sector_type= models.CharField(choices=sector_type,
+		max_length=125,default=sector_type[0][0])
+	city = models.ForeignKey(City,on_delete=models.CASCADE,null=True)
+	country = models.ForeignKey(Country,on_delete=models.CASCADE,null=True)
+	state = models.ForeignKey(State,on_delete=models.CASCADE,null=True)
+	certificate = models.TextField(null=True)
+
+	def __str__(self):
+		return self.clg_name
+	
 
 
 

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from .models import Room,FileInformation
 from django.views.decorators.csrf import csrf_exempt
 
-import websocket
+# import websocket
 from django.conf import settings
 #ws = websocket.WebSocket()
 

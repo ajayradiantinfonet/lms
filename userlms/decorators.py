@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import HttpResponseRedirect,render
 from django.conf import settings
 
+
 def is_profile_complete(next=None):
 	def decorator(view_func):
 		def wrapper_function(request,*args,**kwargs):

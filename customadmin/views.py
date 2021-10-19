@@ -1,10 +1,13 @@
+import re
+from notifications_app.tasks import broadcast_notification
+import customadmin
 from django.shortcuts import render,redirect,reverse
 # Create your views here.
 from custompermission import enums
 from custompermission.models import Perm
 from django.contrib.auth.decorators import login_required
 from custompermission.decorators import has_generic_permission
-from django.http import HttpResponse,Http404
+from django.http import HttpResponse,Http404, request
 from django.views import View
 #from .forms import PermissionForm,UserForm,PermissionCreationForm,CreateOrganizationForm
 from django.shortcuts import HttpResponseRedirect
@@ -22,10 +25,19 @@ from django.views.generic.edit import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 import threading,cv2
 from django.http import StreamingHttpResponse
-from django.template import Context, Template
+from django.template import Context, Template, context
+
+from channels.layers import get_channel_layer
+import json
+# Create your views here.
+from django.template import RequestContext
+
+
+
+
 
 from django.db.models import Q
-from .forms import (CreateCourseForm , TopicForm ,
+from .forms import (AddCollegeUser, CreateCourseForm , TopicForm ,
 	CreateCourseForSuperuser,AddActivityForm,CategoryForm,CourseEnrollForm,
 	PermissionForm,UserForm,PermissionCreationForm,CreateOrganizationForm,
 	AddOrganizationUser,
@@ -54,6 +66,8 @@ from userlms.decorators import is_profile_complete
 import logging
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from customadmin import models
 
 logger=logging.getLogger('django')
 
@@ -90,48 +104,111 @@ def handle_uploads(request, keys):
 
 @is_profile_complete()
 def admin_home(request):
-	#all_user = UserInformation.objects.all()
-	#all_organization = Organization.objects.all()
-	#all_course = CoursesEndUser.objects.all()
 
-	#print(request.user)
-	page = request.GET.get('page', 1)
+    page = request.GET.get('page', 1)
 
-	if request.user.is_superuser:
-		all_user = get_user_model().objects.all()
-		all_organization = Organization.objects.all()
-		all_course = CoursesEndUser.objects.all()
-		paginator = Paginator(all_course, 8)
+    if request.user.is_superuser  == 1:
+        all_user = get_user_model().objects.all()
 
-	elif (request.user.perms.has_perm("generic.can_view_admin_panel") or 
-		request.user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists()):
+        all_organization = Organization.objects.all()
+        all_course = CoursesEndUser.objects.all()
+        all_college = College.objects.all()
 
-		user=request.user
-		orgs=user.organization_student.all()
-		if len(orgs) > 0:
-			org=orgs[0]
-			all_course = org.get_all_courses()
-			paginator = Paginator(all_course, 8)
-			all_organization = orgs
-			all_user = org.students.all()
+        paginator = Paginator(all_course, 8)
 
-	else:
-		return HttpResponseRedirect(reverse_lazy('userlms:home'))
-		# ui=UserInformation.objects.filter(user=request.user)
-		# if len(ui) > 0:
-		# 	all_course=ui[0].organization.get_all_courses()
-		# 	all_organization=Organization.objects.filter(id=ui[0].organization_id)
-		# 	all_user = UserInformation.objects.filter(organization=ui[0].organization)
-	try:
-		course = paginator.page(page)
-	except PageNotAnInteger:
-		course = paginator.page(1)
-	except EmptyPage:
-		course = paginator.page(paginator.num_pages)
 
-	return render(request,'customadmin/dashboard.html',{'users':all_user,
-		'organizations':all_organization,'courses':all_course,'course':course,'user':request.user})
-	
+    elif (request.user.perms.has_perm("generic.can_view_admin_panel") or
+          request.user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists()):
+
+        user = request.user
+        print(user)
+
+        orgs = user.organization_student.all()
+        print(orgs)
+        for i in orgs:
+            org_id = i
+            print(org_id)
+        # all_college = College.objects.all()
+        all_college = College.objects.filter(organization_id=org_id)
+        # print('all_college',all_college)
+
+        if len(orgs) > 0:
+            org = orgs[0]
+            all_course = org.get_all_courses()
+            paginator = Paginator(all_course, 8)
+            all_organization = orgs
+            all_user = org.students.all()
+
+        try:
+            course = paginator.page(page)
+        except PageNotAnInteger:
+            course = paginator.page(1)
+        except EmptyPage:
+            course = paginator.page(paginator.num_pages)
+        return render(request, 'customadmin/cadmin_dashboard.html',
+                      {'users': all_user, 'college': all_college, 'organizations': all_organization, 'course': course,
+                       'courses': all_course, 'user': request.user})
+
+
+
+    else:
+        return HttpResponseRedirect(reverse_lazy('userlms:home'))
+   
+    try:
+        course = paginator.page(page)
+    except PageNotAnInteger:
+        course = paginator.page(1)
+    except EmptyPage:
+        course = paginator.page(paginator.num_pages)
+
+    ##this is kaif code for chart
+    gr_active = 0
+    gr_inactive = 0
+    orglist = []
+    for i in all_organization:
+        orglist.append(i.id)
+        if (i.is_active == True):
+            # print(i.is_active)
+            # print(i.organization_name)
+            gr_active = gr_active + 1
+        if (i.is_active == False):
+            print(i.is_active)
+            gr_inactive = gr_inactive + 1
+    # print(orglist)
+    all_gr = []
+    all_gr_name = []
+    all_gr_name.append('Active')
+    all_gr_name.append('InActive')
+    all_gr.append(gr_active)
+    all_gr.append(gr_inactive)
+
+    all_gr = json.dumps(all_gr)
+    jksuper = []
+    orglist = []
+    
+
+    a = College.objects.all()
+    # print(a)
+    for i in a:
+        
+        jksuper.append(str(len(get_user_model().objects.filter(clg_name=i.clg_name))))
+        orglist.append(i.clg_name)
+    orgcolor = []
+    for i in range(len(orglist)):
+        if i % 2 == 0:
+            orgcolor.append('red')
+        else:
+            orgcolor.append('blue')
+    orglist = json.dumps(orglist)
+    jksuper = json.dumps(jksuper)
+    orgcolor = json.dumps(orgcolor)
+
+   
+    return render(request, 'customadmin/sadmin_dashboard.html',
+                  {'room_name': "broadcast", 'college': all_college, 'users': all_user,
+                   'organizations': all_organization, 'orglist': orglist, 'all_gr': all_gr, 'jksuper': jksuper,
+                   'courses': all_course, 'course': course, 'gr_inactive': gr_inactive, 'gr_active': all_gr_name,
+                   'course': course, 'user': request.user, 'orgcolor': orgcolor})	
 
 
 
@@ -325,7 +402,8 @@ def assignment(request,pk):
 			'desc':'Add Assignment','next':nextval})
 	else:
 		form = AssignmentForm(request.POST,request.FILES)
-		#print(form)
+		# print(form)
+		print(request.POST)
 		if form.is_valid():
 			description=form.cleaned_data.get("description",None)
 			topic = form.cleaned_data.get('topic',None)
@@ -342,6 +420,7 @@ def assignment(request,pk):
 			a.content_id=obj.id
 			a.save()
 			messages.success(request,"assignment activity added successfully")
+			return HttpResponseRedirect(reverse_lazy('customadmin:assignment'))
 			if nextval:
 				return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
 			return render(request,'customadmin/add_topics.html',
@@ -350,8 +429,284 @@ def assignment(request,pk):
 			print(form.errors)
 			#messages.success(request,form.errors)
 			return render(request,'customadmin/add_topics.html',{'form':form,'desc':'Add Assignment'})
+## this is for URLactivity ###########################
+
+from .forms import UrlActivityForm,PPTActivityForm, DocActivityForm,PDFFActivityForm
+
+from .models import UrlActivity,PPTActivity,DocActivity,PDFFActivity
+def edit_urlactivity(request,pk):
+	ac= Activities.objects.filter(content_id=int(pk),activity_type='urlactivity')
+	print(ac)
+	if len(ac) > 0:
+		asac=UrlActivity.objects.get(id=pk)
+	if request.method=="GET":
+		print(pk)
+		nextval=request.GET.get('next',False)
+		form = UrlActivityForm(initial={'topic':int(ac[0].topic_id)},instance=asac)
+		print(form)
+		#if form.is_valid():
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'Edit Urlactivity','next':nextval})
+			#else:
+		#print(form.errors)
+		#return HttpResponse("ddd")
+	if request.method=="POST":
+		nextval=request.POST.get('next','')
+		form = UrlActivityForm(request.POST,request.FILES,
+			instance=asac)
+		if form.is_valid():
+			form.save()
+			messages.success(request,'url activity has been edited')
+			return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+		return render(request,'customadmin/add_topics.html',{'form':form,
+				'desc':'Edit Urlactivity','next':nextval})
 
 
+def urlactivity(request,pk):
+	redirect_url ='customadmin:edit_course_user'
+	if request.method=="GET":
+		nextval=request.GET.get('next',False)
+		try:
+			t=Topic.objects.get(id=pk)
+		except Topic.DoesNotExist:
+			return HttpResponseRedirect(reverse_lazy(redirect_url))
+		form = UrlActivityForm(initial={'topic':t})
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'add Urlactivity','next':nextval})
+	else:
+		form = UrlActivityForm(request.POST,request.FILES)
+		# print(form)
+		print(request.POST)
+		if form.is_valid():
+			description=form.cleaned_data.get("description",None)
+			topic = form.cleaned_data.get('topic',None)
+			nextval=request.POST.get('next',False)
+			#print(nextval)
+			a=Activities(activity_name=description,
+				activity_type='urlactivity',author=request.user,
+				topic_id=topic.id)
+			a.save()
+
+			obj=form.save(commit=False)
+			obj.activity_id = a.id
+			obj.save()
+			a.content_id=obj.id
+			a.save()
+			messages.success(request,"url activity added successfully")
+			return HttpResponseRedirect(reverse_lazy('customadmin:assignment'))
+			if nextval:
+				return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+			return render(request,'customadmin/add_topics.html',
+			{'form':form,'desc':'add Urlactivity '})
+		else:
+			print(form.errors)
+			#messages.success(request,form.errors)
+			return render(request,'customadmin/add_topics.html',{'form':form,'desc':'add Urlactivity'})
+
+	####### this is pdf activity#######	
+def edit_pdfactivity(request,pk):
+	ac= Activities.objects.filter(content_id=int(pk),activity_type='urlactivity')
+	print(ac)
+	if len(ac) > 0:
+		asac=UrlActivity.objects.get(id=pk)
+	if request.method=="GET":
+		print(pk)
+		nextval=request.GET.get('next',False)
+		form = UrlActivityForm(initial={'topic':int(ac[0].topic_id)},instance=asac)
+		print(form)
+		#if form.is_valid():
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'Edit pdfactivity','next':nextval})
+			#else:
+		#print(form.errors)
+		#return HttpResponse("ddd")
+	if request.method=="POST":
+		nextval=request.POST.get('next','')
+		form = UrlActivityForm(request.POST,request.FILES,
+			instance=asac)
+		if form.is_valid():
+			form.save()
+			messages.success(request,'url activity has been edited')
+			return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+		return render(request,'customadmin/add_topics.html',{'form':form,
+				'desc':'Edit pdfactivity','next':nextval})
+
+
+
+
+
+def pdfactivity(request,pk):
+	redirect_url ='customadmin:edit_course_user'
+	if request.method=="GET":
+
+
+		nextval=request.GET.get('next',False)
+		try:
+			t=Topic.objects.get(id=pk)
+		except Topic.DoesNotExist:
+			return HttpResponseRedirect(reverse_lazy(redirect_url))
+		form = PDFFActivityForm(initial={'topic':t})
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'add pdfactivity','next':nextval})
+	else:
+		form = PDFFActivityForm(request.POST,request.FILES)
+		# print(form)
+		print(request.POST)
+		if form.is_valid():
+			description=form.cleaned_data.get("description",None)
+			topic = form.cleaned_data.get('topic',None)
+			nextval=request.POST.get('next',False)
+			#print(nextval)
+			a=Activities(activity_name=description,
+				activity_type='pdfactivity',author=request.user,
+				topic_id=topic.id)
+			a.save()
+
+			obj=form.save(commit=False)
+			obj.activity_id = a.id
+			obj.save()
+			a.content_id=obj.id
+			a.save()
+			messages.success(request,"pdf activity added successfully")
+			return HttpResponseRedirect(reverse_lazy('customadmin:assignment'))
+			if nextval:
+				return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+			return render(request,'customadmin/add_topics.html',
+			{'form':form,'desc':'add pdfactivity '})
+		else:
+			print(form.errors)
+			#messages.success(request,form.errors)
+			return render(request,'customadmin/add_topics.html',{'form':form,'desc':'add pdfactivity'})
+
+
+
+#########ppt activity################
+def pptactivity(request,pk):
+	redirect_url ='customadmin:edit_course_user'
+	if request.method=="GET":
+		nextval=request.GET.get('next',False)
+		try:
+			t=Topic.objects.get(id=pk)
+		except Topic.DoesNotExist:
+			return HttpResponseRedirect(reverse_lazy(redirect_url))
+		form = PPTActivityForm(initial={'topic':t})
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'add pptactivity','next':nextval})
+	else:
+		form = PPTActivityForm(request.POST,request.FILES)
+		# print(form)
+		print(request.POST)
+		if form.is_valid():
+			description=form.cleaned_data.get("description",None)
+			topic = form.cleaned_data.get('topic',None)
+			nextval=request.POST.get('next',False)
+			#print(nextval)
+			a=Activities(activity_name=description,
+				activity_type='pptactivity',author=request.user,
+				topic_id=topic.id)
+			a.save()
+
+			obj=form.save(commit=False)
+			obj.activity_id = a.id
+			obj.save()
+			a.content_id=obj.id
+			a.save()
+			messages.success(request,"ppt activity added successfully")
+			return HttpResponseRedirect(reverse_lazy('customadmin:assignment'))
+			if nextval:
+				return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+			return render(request,'customadmin/add_topics.html',
+			{'form':form,'desc':'add pptactivity '})
+		else:
+			print(form.errors)
+			#messages.success(request,form.errors)
+			return render(request,'customadmin/add_topics.html',{'form':form,'desc':'add pptactivity'})
+		#########this is doc activity##########
+		
+def docactivity(request,pk):
+	redirect_url ='customadmin:edit_course_user'
+	if request.method=="GET":
+		nextval=request.GET.get('next',False)
+		try:
+			t=Topic.objects.get(id=pk)
+		except Topic.DoesNotExist:
+			return HttpResponseRedirect(reverse_lazy(redirect_url))
+		form = DocActivityForm(initial={'topic':t})
+		return render(request,'customadmin/add_topics.html',{'form':form,
+			'desc':'add docactivity','next':nextval})
+	else:
+		form =  DocActivityForm(request.POST,request.FILES)
+		# print(form)
+		print(request.POST)
+		if form.is_valid():
+			description=form.cleaned_data.get("description",None)
+			topic = form.cleaned_data.get('topic',None)
+			nextval=request.POST.get('next',False)
+			#print(nextval)
+			a=Activities(activity_name=description,
+				activity_type='docactivity',author=request.user,
+				topic_id=topic.id)
+			a.save()
+
+			obj=form.save(commit=False)
+			obj.activity_id = a.id
+			obj.save()
+			a.content_id=obj.id
+			a.save()
+			messages.success(request,"doc activity added successfully")
+			return HttpResponseRedirect(reverse_lazy('customadmin:assignment'))
+			if nextval:
+				return HttpResponseRedirect(settings.EXTRA_URL+nextval.replace("$","#"))
+			return render(request,'customadmin/add_topics.html',
+			{'form':form,'desc':'add docactivity '})
+		else:
+			print(form.errors)
+			#messages.success(request,form.errors)
+			return render(request,'customadmin/add_topics.html',{'form':form,'desc':'add docactivity'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################3333333333333333333333
 def get_iana_from_windows(windows_tz_name):
 	if windows_tz_name in settings.ZONE_MAPPINGS:
 		return settings.ZONE_MAPPINGS[windows_tz_name]
@@ -412,6 +767,35 @@ def initialize_context(request):
 
 #@has_generic_permission('generic.can_see_calendar','you dont have permission')
 def calendar(request):
+	now = timezone.now()
+	obj=SessionActivity.objects.all().order_by('start_date')
+	today = date.today()
+	d1 = int(today.strftime("%d"))
+	m1 = int(today.strftime("%m"))
+	y1 = int(today.strftime("%Y"))
+	li=[]
+	la=[]
+	for i in obj:
+		if today==i.start_date:
+			print(i.id)
+			print('*'*10)
+			asd=SessionActivity.objects.get(id=i.id)
+			li.append(asd)
+			print(i.start_date)
+			if(len(li)>=3):
+				break
+		elif today<=i.start_date:
+			asd=SessionActivity.objects.get(id=i.id)
+			li.append(asd)
+			print(i.start_date)
+			if(len(li)>=3):
+				break
+		elif today>=i.start_date:
+			asd=SessionActivity.objects.get(id=i.id)
+			la.append(asd)
+		else:
+			print('non condition id is ',i.id)
+	return render(request, 'customadmin/calendar_1.html', {'user': request.user,"obj":obj,'li':li,'la':la})				
 	# context = initialize_context(request)
 	# user = context['user']
 
@@ -505,20 +889,20 @@ def create_permission(request):
 
 import json
 @login_required
-def user_permission(request):
-	user=request.user
-	l=[]
+# def user_permission(request):
+# 	user=request.user
+# 	l=[]
 	
-	for permission in user.perms.all():
-		dic={}
-		dic['codename']=permission.codename
-		dic['type']=permission.type
-		dic['description']=permission.description
-		l.append(dic)
+# 	for permission in user.perms.all():
+# 		dic={}
+# 		dic['codename']=permission.codename
+# 		dic['type']=permission.type
+# 		dic['description']=permission.description
+# 		l.append(dic)
 
-	#print(json.dumps(l))
+# 	#print(json.dumps(l))
 
-	return render(request,'tables.html',{'data':json.dumps(l)})
+# 	return render(request,'tables.html',{'data':json.dumps(l)})
 
 
 @login_required
@@ -729,23 +1113,73 @@ class DeleteOrganization(CustomMixin,DeleteView):
 		ctx['desc']='Delete Organization'
 		return ctx
 
+	# def post(self,*args,**kwargs):
+	# 	self.obj=self.get_object()
+	# 	#u=User.objects.get(username=self.obj.contact_person_email)
+	# 	#g=Group.objects.get(name='company_admin_group')
+	# 	#g.user_set.remove(u)
+	# 	#ui=UserInformation.objects.filter(user_id=u.id)
+	# 	#if len(ui) > 0:
+	# 		#ui[0].delete()
+	# 	#u.delete()
+	# 	#self.obj.delete()
+	# 	self.obj.is_active = False
+	# 	self.obj.save()
+	# 	messages.success(self.request,f"Company {self.obj.organization_name} is inactive now")
+	# 	return HttpResponseRedirect(self.success_url)
 	def post(self,*args,**kwargs):
 		self.obj=self.get_object()
-		#u=User.objects.get(username=self.obj.contact_person_email)
-		#g=Group.objects.get(name='company_admin_group')
-		#g.user_set.remove(u)
-		#ui=UserInformation.objects.filter(user_id=u.id)
-		#if len(ui) > 0:
-			#ui[0].delete()
-		#u.delete()
-		#self.obj.delete()
 		self.obj.is_active = False
 		self.obj.save()
-		messages.success(self.request,f"Organization {self.obj.organization_name} is inactive now")
+		messages.success(self.request,f"Company {self.obj.organization_name} is inactive now")
 		return HttpResponseRedirect(self.success_url)
+
 	
 	def get(self, *args, **kwargs):
 		return self.post(*args, **kwargs)
+
+
+class DeleteOrganizationn(CustomMixin,DeleteView):
+	model = Organization
+	form_class = CreateOrganizationForm
+	success_url = reverse_lazy('customadmin:all_organization')
+
+	def check_user(self,user):
+		if user.is_authenticated:
+			if user.is_superuser or user.perms.has_perm("generic.can_delete_organization"):
+				return True
+		return False
+
+	def get_context_data(self,**kwargs):
+		ctx = super(DeleteOrganizationn, self).get_context_data(**kwargs)
+		ctx['desc']='Delete Organizationn'
+		return ctx
+
+	
+	def post(self,*args,**kwargs):
+		self.obj=self.get_object()
+		self.obj.is_active = True
+		self.obj.save()
+		messages.success(self.request,f"Company {self.obj.organization_name} is active now")
+		return HttpResponseRedirect(self.success_url)
+
+	
+	def get(self, *args, **kwargs):
+		return self.post(*args, **kwargs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class EditOrganization(CustomMixin,UpdateView):
@@ -796,6 +1230,7 @@ def save_org_cer_img(request):
 class CreateOrganization(CustomMixin,CreateView):
 	#model = Organization
 	template_name_suffix = '_create_form_2'
+	# template_name = 'customadmin/first.html'
 	#fields = ('name','email','password','address','website','no_of_candidates','company_logo',
 	#'end_date','phone',)
 
@@ -854,6 +1289,7 @@ class CreateOrganization(CustomMixin,CreateView):
 					phone=form.cleaned_data['contact_person_phone'])
 				user_obj.set_password(form.cleaned_data['password'])
 				user_obj.position='admin'
+				user_obj.roles = 'company_admin'
 				user_obj.save()
 				g.user_set.add(user_obj)
 
@@ -900,7 +1336,7 @@ class CreateOrganization(CustomMixin,CreateView):
 				self.request.user.save()
 				return HttpResponseRedirect(reverse_lazy('userlms:home'))
 			return HttpResponseRedirect(self.success_url)
-			#return super(CreateOrganization, self).form_valid(form)
+			return super(CreateOrganization, self).form_valid(form)
 		except Exception as e:
 			print(e)
 			raise KeyError(e)
@@ -911,7 +1347,101 @@ class CreateOrganization(CustomMixin,CreateView):
 		return render(self.request,'customadmin/organization_create_form_1.html',{'form':form})
 		#return HttpResponseRedirect(self.success_url)
 
+###################create clg user################3
+class CreateCollegeUser(CustomMixin,CreateView):
+	model = get_user_model()
+	template_name = 'college/clg_user_profile.html'
+	form_class = AddCollegeUser
+	success_url = reverse_lazy('customadmin:students')
 
+	def form_valid(self,form):
+				
+		try:
+			user_obj = get_user_model().objects.create_user(email=form.cleaned_data['email'],
+				first_name=form.cleaned_data['first_name'],phone=form.cleaned_data['phone'],
+				last_name=form.cleaned_data['last_name'],clg_name =form.cleaned_data['clg_name'],
+				organization_name =form.cleaned_data['organization_name'],
+				position = form.cleaned_data['position'],gender = form.cleaned_data['gender'],
+				dob = form.cleaned_data.get('dob',None),image = form.cleaned_data.get('image',None),
+				address = form.cleaned_data['address'],address1 = form.cleaned_data['address1'],
+				houseno = form.cleaned_data['houseno'],
+				pincode = form.cleaned_data['pincode']
+				)
+			# user_obj = User.objects.create_user(username=form.cleaned_data['email'],
+			# 	first_name=form.cleaned_data['first_name'],last_name=form.cleaned_data['last_name'])
+			user_obj.set_password(form.cleaned_data['password'])
+			user_obj.save()
+			#if form.cleaned_data['position'] =='teacher':
+			#user_obj.perms.add_perm(p_can_see_all)
+			#user_obj.perms.add_perm(p_can_enroll_courses)
+			#self.obj = form.save(commit=False)
+			#print(self.obj)
+			#self.obj.user_id=user_obj.id
+			position=form.cleaned_data.get('position',None)
+			if position == "student":
+				my_group,created = Group.objects.get_or_create(name=settings.END_USER_GROUP)
+			elif position=="teacher":
+				my_group,created = Group.objects.get_or_create(name=settings.COMPANY_INSTRUCTOR_GROUP)
+			print(my_group)
+			# my_group.user_set.add(user_obj)
+			#user_obj.groups.add(settings.END_USER_GROUP)
+			#self.obj.end_user=0
+			user_obj.is_active = 1
+			user_obj.is_superuser = 2
+			
+			#self.obj.is_active=1
+			#self.obj.organization_id = organization_id
+			#print(form.cleaned_data)
+			#self.obj.email=form.cleaned_data['email']
+			# user_obj.email = form.cleaned_data['email']
+			# user_obj.gender = form.cleaned_data['gender']
+			# user_obj.position = form.cleaned_data['position']
+			# user_obj.dob = form.cleaned_data.get('dob',None)
+			#user_obj.phone = form.cleaned_data['phone']
+			
+			#self.obj.phone=form.cleaned_data['phone']
+			#self.obj.registration_date=datetime.now().today()
+			#self.obj.date_joined=datetime.now().today()
+			#self.obj.image = form.cleaned_data.get('image',None)
+			# user_obj.image = form.cleaned_data.get('image',None)
+			#print(self.obj.__dict__)
+			try:
+				#self.obj.save()
+				user_obj.save()
+			except:
+				# my_group.user_set.remove(user_obj)
+				#self.obj.delete()
+				user_obj.delete()
+			#org=form.cleaned_data.get('organization',None)
+			#if org is not None:
+			
+			messages.add_message(self.request,messages.INFO,'User added successfully')
+			return HttpResponseRedirect(self.success_url)
+			#return super(CreateOrganizationUser, self).form_valid(form)
+		except Exception as e:
+			print(e)
+			# user_obj = UserInformation.objects.filter(user=form.cleaned_data['email'])
+			# if len(user_obj) > 0:
+			# 	my_group.user_set.remove(user_obj[0])
+			# 	user_obj[0].delete()
+			messages.add_message(self.request,messages.INFO,'Problem with Input Data')
+			return render(self.request,self.template_name,{'form':form})
+		return super(CreateOrganizationUser, self).form_valid(form)
+
+	def form_invalid(self,form):
+		print(form.errors)
+		messages.add_message(self.request,messages.INFO,form.errors)
+		return HttpResponseRedirect(self.success_url)
+
+
+
+
+    
+	
+	
+
+
+##############################3
 
 
 class CreateOrganizationUser(CustomMixin,CreateView):
@@ -1372,6 +1902,23 @@ def all_org_ajax(request):
 	pass
 
 
+###all clg_uni##
+
+
+def AllOrganizationCollege(request):
+	template_name ='college/all_clg_org.html'
+	euser=request.user.clg_name	
+	all_user = get_user_model().objects.filter(clg_name=euser)
+	college = College.objects.filter(clg_name =euser)
+	for i in college:
+		org_id =i.organization_id
+	all_organization = Organization.objects.filter(id=org_id)
+	return render(request,template_name,{'all_organization':all_organization})
+###############
+
+
+
+
 class AllOrganization(CustomMixin,ListView):
 	""" Show All Organization """
 	model=Organization
@@ -1568,7 +2115,7 @@ class CourseDetail(DetailView):
 			ctx['user']=self.request.user
 
 
-			print(activity_list)
+			# print(activity_list)
 				#pass
 
 			# elif self.request.user.is_superuser:
@@ -1868,6 +2415,30 @@ def assign_course(request):
 				pass
 	return HttpResponse("error")
 
+
+##clg-enduser_course
+
+def AllCourseForClgEndUser(request):
+	user_id = request.user.id
+	course = CoursesEndUser.objects.filter(author_id=user_id)	
+	# model= CoursesEndUser
+	template_name ='college/all_course_for_clg_enduser.html'
+	# paginate_by = 8
+	# ordering = ['id']
+	return render(request,template_name,{'course':course})
+
+	
+#####
+
+
+
+
+
+
+
+
+
+
 					
 
 class AllCourseForEndUser(CustomMixin,ListView):
@@ -2059,7 +2630,7 @@ class AllCategoryForEndUser(CustomMixin,ListView):
 		return ctx  
 
 
-
+ 
 from preassesment.forms import QuizForm
 
 
@@ -2102,7 +2673,7 @@ class EditCourseForEndUser(CustomMixin,UpdateView):
 		ctx['desc']='Edit Course'
 		self.object = self.get_object()
 		topic_activity_list=all_available_topic_and_subtopic()
-		#print(topic_activity_list)
+		# print(topic_activity_list)
 		ctx['topic_activity_list'] = topic_activity_list
 		course_topic_list = all_available_topic_and_subtopic(courseid=self.object.id)
 		ctx['course_topic_list'] = course_topic_list
@@ -2119,7 +2690,7 @@ class EditCourseForEndUser(CustomMixin,UpdateView):
 		return ctx
 
 
-from preassesment.models import Quiz,QuestionPaper
+from preassesment.models import Assesments, Quiz,QuestionPaper
 def all_available_topic_and_subtopic(courseid=None,user=None):
 	from collections import OrderedDict
 	if courseid is not None:
@@ -2213,7 +2784,9 @@ def all_available_topic_and_subtopic(courseid=None,user=None):
 				
 	
 	return object_list
+###createCourse for college###################
 
+##############################createCourse for college##########
 class CreateCourseForEndUser(CustomMixin,CreateView):
 	""" Create Courses for Organization """
 	form_class = CreateCourseForEndUser
@@ -2229,7 +2802,7 @@ class CreateCourseForEndUser(CustomMixin,CreateView):
 
 	def check_user(self,user):
 		if user.is_authenticated:
-			if user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists() or user.is_superuser:
+			if user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists() or user.is_superuser==2:
 				return True
 			return False
 		else:
@@ -2579,6 +3152,105 @@ class EditStudents(CustomMixin,UpdateView):
 		#ctx['user_permission'] = Perm.objects.all()
 		return ctx
 
+######clg_student_user_edit###
+class EditStudents_clg(CustomMixin,UpdateView):
+	#model = UserInformation
+	model = get_user_model()
+	template_name ='college/clg_user_profile_edit.html'
+	#ordering =['id']
+	#form_class = UserInformationForm
+	form_class = AddCollegeUser
+	success_url = reverse_lazy('customadmin:students')
+
+
+	def post(self,request,*args,**kwargs):
+		self.object=self.get_object()
+		forms=self.form_class(request.POST,request.FILES,
+			#initial={'user':self.object.user},
+			instance=self.object)
+		#print(forms.errors)
+		if forms.is_valid():
+			self.obj=forms.save(commit=False)
+			#print(self.obj.first_name)
+			#self.obj.user_id=self.object.user.id
+			self.obj.is_active=1
+			#self.obj.save()
+			self.object.image = forms.cleaned_data.get('image',None)
+			self.object.first_name = forms.cleaned_data.get('first_name',None)
+			self.object.last_name = forms.cleaned_data.get('last_name',None)
+			self.object.gender = forms.cleaned_data.get('gender',None)
+			self.object.address= forms.cleaned_data.get('address',None)
+			self.object.address1=forms.cleaned_data.get('address1',None)
+			self.object.houseno = forms.cleaned_data.get('houseno',None)
+			self.object.pincode = forms.cleaned_data.get('pincode',None)
+			self.object.phone = forms.cleaned_data.get('phone',None)
+			self.object.save()
+			#u=User.objects.filter(id=self.object.id)
+			#if len(u) > 0:
+				#u[0].username = forms.cleaned_data['email']
+				#u[0].first_name = forms.cleaned_data['first_name']
+				#u[0].last_name = forms.cleaned_data['last_name']
+				#u[0].save()
+			messages.add_message(request, messages.INFO, 'Profile Updated')
+			return HttpResponseRedirect(self.success_url)
+		messages.add_message(request, messages.INFO, forms.errors)
+		return HttpResponseRedirect(self.success_url)
+
+		#self.get_object().update(**request.POST)
+
+	# def check_user(self,user):
+	# 	if user.is_superuser or user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists():
+	# 		return True
+	# 	return False
+
+	# def get_user_obj(self):
+	# 	#return User.objects.get(id=self.get_object().user_id)
+	# 	return get_user_model().objects.get(id=self.get_object().id)
+
+	# def get_context_data(self,**kwargs):
+	# 	ctx = super(EditStudents, self).get_context_data(**kwargs)
+	# 	ctx['desc']= 'Edit Students'
+	# 	#print(self.get_object())
+	# 	ctx['cuser'] = self.get_object()
+	# 	ctx['media_url'] = "/media/user_profile/"
+	# 	all_group = Group.objects.all()
+	# 	ctx['roles'] = all_group
+	# 	ctx['user_group'] = self.get_user_obj().groups.all()
+	# 	#print(self.get_user_obj().perms.all())
+	# 	user_permission=[]
+	# 	for p in self.get_user_obj().perms.all():
+	# 		user_permission.append(p)
+	# 	for g in self.get_user_obj().groups.all():
+	# 		#print(g.perms.all())
+	# 		for gg in g.perms.all():
+	# 			#print("herer")
+	# 			if gg not in user_permission:
+	# 				user_permission.append(gg)
+	# 	#user_permission.extend(self.get_user_obj.)
+	# 	print(user_permission)
+	# 	ctx['user_permission'] = user_permission
+	# 	from custompermission.models import Perm
+	# 	ctx['permissions'] = Perm.objects.all()
+	# 	ctx['EXTRA_URL'] = settings.EXTRA_URL
+	# 	all_group_perm={}
+	# 	for g in all_group:
+	# 		all_group_perm[g]=g.perms.all()
+
+	# 	ctx['group_permissions'] = all_group_perm
+	# 	#ctx['user_permission'] = Perm.objects.all()
+	# 	return ctx
+
+
+
+
+
+
+
+
+###33
+
+
+
 
 class DeleteStudents(CustomMixin,DeleteView):
 	#model = UserInformation
@@ -2610,6 +3282,26 @@ class DeleteStudents(CustomMixin,DeleteView):
 		ctx=super(DeleteStudents,self).get_context_data(**kwargs)
 		ctx['desc']= 'Delete Students'
 		return ctx
+
+
+
+######studnetin clg########33
+
+
+def AllStudents_clg(request):
+	euser=request.user.clg_name
+	all_user = get_user_model().objects.filter(clg_name=euser)
+	template_name ='college/students_clg.html'
+	return render(request,template_name,{'all_user':all_user})
+
+######################333
+
+
+
+
+
+
+
 
 
 class AllStudents(CustomMixin,ListView):
@@ -2919,7 +3611,13 @@ class Assign_permission(CustomMixin,View):
 	def get(self, request, *args, **kwargs):
 		form = self.form_class(initial=self.initial)
 		form2=self.form2_class(user=request.user)
-		return render(request, self.template_name,{'form': form,'form2':form2,'desc':'assign permission','action':'customadmin:assign_permission'})
+		user = User.objects.all()
+		user1=[]
+		
+		for i in user:
+			if(i.is_superuser!=1):
+				user1.append(i)
+		return render(request, self.template_name,{'form': form,'user1':user1,'form2':form2,'desc':'assign permission','action':'customadmin:assign_permission'})
 
 	def post(self, request, *args, **kwargs):
 		form1 = self.form_class(request.POST)
@@ -2936,9 +3634,55 @@ class Assign_permission(CustomMixin,View):
 		user=request.user
 		#string_name=permtype+'.'+perm
 		choice.perms.add_perm(Perm.objects.get(codename=perm,type=permtype))
-			#Perm.objects.create(codename=perm,type=permtype)
+		user = User.objects.all()
+		user1=[]
+		
+		for i in user:
+			if(i.is_superuser!=1):
+				user1.append(i)
+		return render(request, self.template_name, {'form': form1,'user1':user1,'form2':form2,'action':'customadmin:assign_permission'})
 
-		return render(request, self.template_name, {'form': form1,'form2':form2,'action':'customadmin:assign_permission'})
+
+def Showuserperm(request, pk):
+    user = User.objects.get(id=pk)
+    model = get_user_model()
+    idk = pk
+
+    def get_user_obj():
+        print(idk)
+        # return User.objects.get(id=self.get_object().user_id)
+        return get_user_model().objects.get(id=idk)
+
+    user_permission = []
+    for p in get_user_obj().perms.all():
+        user_permission.append(p)
+    from custompermission.models import Perm
+    permissions = Perm.objects.all()
+
+    if request.method == "POST":
+        car=request.POST.get('cars')
+        user.perms.remove_perm(Perm.objects.get(codename=car))
+        user_permission = []
+        for p in get_user_obj().perms.all():
+            user_permission.append(p)
+        permissions = Perm.objects.all()
+
+    return render(request, 'customadmin/showuserper.html', {'user': user,'user_permission':user_permission,'permissions':permissions})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Activity(CustomMixin,CreateView):
 	def get_context_data(self,**kwargs):
@@ -3263,22 +4007,79 @@ class SpinActivities(View):
 		#return render(request,self.template_name,{'form':form})
 
 
-from .models import AssignmentAnswer
+from .models import AssignmentAnswer,UserGrade
 from grades.models import GradingSystem,GradeRange
 @login_required
 def all_assignment(request):
 	if request.user.is_superuser or request.user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists():
 		all_a_answer = AssignmentAnswer.objects.all()
-		all_grade=GradingSystem.objects.all()
+		all_grade = GradingSystem.objects.all()
+		grade_value = UserGrade.objects.all()
+		# print(all_grade)
 		grades=[]
+		print(grades)
 		try:
 			ranges = all_grade[0].graderange_set .all()
+			print(ranges)
 			for r in ranges:
 				grades.append({'id':r.id,'grade':r.grade})
 		except ValueError:
 			pass
+
+		if request.method =='POST':
+			grade_assign =request.POST.get('g_name')
+			print(grade_assign)
 		return render(request,'customadmin/assignment.html',{'assignments':all_a_answer,
-			'grade':grades})
+			'grade':grades,'grade_value':grade_value})
+
+def addgrade(request,id):
+	gradeid=AssignmentAnswer.objects.get(id=id)
+	# if request.user.is_superuser or request.user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists():
+	# 	all_a_answer = AssignmentAnswer.objects.all()
+	all_grade=GradingSystem.objects.all()
+	grade_value = UserGrade.objects.all()
+	grades=[]
+	print(grades)
+	try:
+		ranges = all_grade[0].graderange_set .all()
+		print(ranges)
+		for r in ranges:
+			grades.append({'id':r.id,'grade':r.grade})
+	except ValueError:
+		pass
+	if request.method=='POST':
+		g_name=request.POST.get('g_name')
+		if g_name=='Select a Grade.':
+			g_name='N/A'
+		gradeid.grade=g_name
+		gradeid.save()
+		# sub=AssignmentAnswer(id=id,grade=g_name,answer_file=assignment_answer,user=user)
+		# sub.save()
+		return redirect('/admin/assignment/')
+
+	# 	print(request.POST)
+		# for i in request.POST:
+		# 	kaif=i
+		# 	break
+		# print(request.POST)
+		# grade_assign=request.POST.get('g_name')
+		# grade_assign=request.session.get('grade_assign')
+		# print('the grade is',grade_assign)
+		# from django.db import connection, transaction
+		# cursor = connection.cursor()
+		# a='UPDATE customadmin_assignmentanswer SET grade = {} '.format(grade_assign)
+		# cursor.execute(a+"WHERE id = %s", [id])
+		# transaction.commit_unless_managed()
+		# user_grade_name=request.POST.get(kaif)
+		# print(grade_assign)
+		# print(user_grade_name)
+		# savegrade=GradSysytem(grade=grade_assign,username=user_grade_name)
+		# savegrade.save()
+		# AssignmentAnswer(request.POST,grade=grade_assign).save()
+		# print('data saved ')
+	return render(request,'customadmin/gradeassign.html',{'id':id,'grade':grades,'gradeid':gradeid})
+
+
 
 
 
@@ -3381,7 +4182,7 @@ class ScheduleSession(View):
 						sed={}
 						sed['title'] = se.topic
 						sed['start'] = timezone.localtime(se.start_date).strftime("%Y-%m-%d %H:%M:%S")
-						sed['teacher']=se.teacher.get_full_name()
+						sed['teacher']= se.teacher.get_full_name()
 						sed['description'] = se.description
 						sed['link']=se.session_room_id
 
@@ -3466,10 +4267,15 @@ class ScheduleSession(View):
 		if not request.user.is_anonymous:
 
 			if request.user.is_superuser:
-				#print("in super user",request.POST)
+				print("in super user",request.POST)
 				from .forms import ScheduleSessionFormSuperuser
-				form = ScheduleSessionFormSuperuser(request.POST)
+				form = ScheduleSessionFormSuperuser(request.POST )
+				teacher = request.POST.get('teacher')
+				print("$$$$$$$$$$$$$$$")
+				print('teacher',teacher)
+				
 				if form.is_valid():
+					print(form.is_valid())
 					print("hererer")
 					form.author=request.user
 					#f.organization = Organization.objects.get(id=s_org_id)
@@ -3481,7 +4287,8 @@ class ScheduleSession(View):
 					messages.success(request,"class room session has been scheduled")
 					return HttpResponseRedirect(reverse_lazy("customadmin:calendar"))
 				else:
-					print(form.errors)
+					# print("erroe")
+					print(form.errors.as_data())
 					#return render(request,"")
 					
 			if request.user.groups.filter(name=settings.COMPANY_ADMIN_GROUP).exists() or \
@@ -3495,13 +4302,13 @@ class ScheduleSession(View):
 				initial['course'] = Organization.objects.get(id=s_org_id).course.all()
 				initial['organization'] = Organization.objects.get(id=s_org_id)
 				
-				form=self.form_class(data=request.POST,initial=initial)
-				#print(form.errors)
+				form = self.form_class(data=request.POST,initial=initial)
+				print(form.errors)
 				if form.is_valid():
-					f=form.save(commit=False)
+					f = form.save(commit=False)
 					f.author=request.user
 					f.organization = Organization.objects.get(id=s_org_id)
-					times=form.cleaned_data['start_date'].timestamp()
+					times = form.cleaned_data['start_date'].timestamp()
 					f.session_room_id = form.cleaned_data['topic']+str(times)+str(form.cleaned_data['teacher'])
 					f.save()
 					return HttpResponseRedirect(reverse('customadmin:calendar'))
@@ -3513,8 +4320,14 @@ class ScheduleSession(View):
 
 			
 
-			return HttpResponse("Not Authorised")
-		return HttpResponse("Not Authorised")
+			return HttpResponse("Not Authorised under ")
+		return HttpResponse("Not Authorised above")
+	
+			
+
+		return HttpResponse("Not Authorised under ")
+    # return HttpResponse("Not Authorised above")
+
 
 
 class MeasureType(CreateView):
@@ -3616,7 +4429,7 @@ def course_report(request):
 			{'courses':all_course,'users':all_user})
 
 	if request.method =="POST":
-		#print(request.POST)
+		# print(request.POST)
 		userid=request.POST.get('userid',False)
 		courseid= request.POST.get('courseid',False)
 		if userid!='' and courseid!='':
@@ -3749,22 +4562,42 @@ def course_report(request):
 		# 		row_num=r
 		# 	wb.save(response)
 		# 	return response
+#########################
 
-
+######### CreateGroup ##############
 class CreateGroup(View):
 	form_class=CreateGroupForm
 
 	def get(self,request):
 		form=self.form_class()
 		return render(request,'customadmin/create_group.html',{'form':form})
+		# return render(request,'customadmin/show_group.html')
 
 	def post(self,request):
 		form=self.form_class(request.POST or None)
+		print('regjhgf')
+		print(request.POST)
 		if form.is_valid():
-			#print(form)
-			#print(form.cleaned_data)
+			print(form.is_valid())
 			form.save()
-			return render(request,'customadmin/create_group.html',{'form':form,'msg':'group created'})
+			groupdata  = Group.objects.all()
+			return render(request,'customadmin/create_group.html',{'form':form,'msg':'group created','groupdata':groupdata})
+
+
+def show_group(request):
+	obj = Group.objects.all()
+	
+	return render(request,'customadmin/show_group.html',{'obj':obj})
+
+
+
+
+
+
+
+
+
+
 
 
 def delete_activity_of_subtopic(subtopic):
@@ -4154,9 +4987,353 @@ class CategoriesView(View):
 			return render(request,'customadmin/categories.html',{'categories':dic,'form':form})
 		raise Http404("Page Does not Found")
 
+###################################################################33333
+
+
+
+from django.shortcuts import render
+from django.http import HttpResponse,JsonResponse
+from datetime import datetime
+from django.views import View
+from accounts.models import User
+import io,csv
+from customadmin.models import User 
+
+
+end_user_perms = [
+    'generic.can_see_all_published_courses',
+    'generic.can_see_published_courses_activity',
+    'generic.can_enroll_into_courses'
+]
+
+def create_or_get_group():
+    g, created = Group.objects.get_or_create(name='end_user_group')
+    if created:
+        try:
+            for p in end_user_perms:
+                g.perms.add_perm(Perm.objects.get_from_str(p))
+
+        except:
+            print("deleting grp", g.id)
+            g.delete()
+            return None
+    return g
+
+
+class EmployeeUploadView(View):
+
+    def get(self, request):
+        template_name = 'customadmin/importemployee.html'
+        return render(request, template_name)
+
+    def post(self, request):
+        paramFile = io.TextIOWrapper(request.FILES['employeefile'].file)
+        portfolio1 = csv.DictReader(paramFile)
+        list_of_dict = list(portfolio1)
+
+        for row in list_of_dict:
+            objs = User.objects.create_user(
+                first_name=row['first_name'],
+                last_name=row['last_name'],
+                position=row['position'],
+                phone=row['phone'],
+                email=row['email'],
+                houseno=row['houseno'],
+                address=row['address'],
+                address1=row['address1'],
+                password=row['password'],
+                pincode=row['pincode'],
+
+            )
+
+            grp = create_or_get_group()
+            try:
+                objs.save()
+                grp.user_set.add(objs)
+                returnmsg = {"status_code": 200}
+                print('uploaded  successfully')
+            except Exception as e:
+                print('Error While Importing Data: ', e)
+                returnmsg = {"status_code": 500}
+
+        return redirect('customadmin:admin')
+		 
+
+
+ 
+
+
+from django.contrib.auth import authenticate, login, logout
+def logoutUser(request):
+	logout(request)
+	return redirect('accounts:login')
+
+############this notification  code  ##########
+
+from django.shortcuts import render, HttpResponse
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+def test(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "notification_broadcast",
+        {
+            'type': 'send_notification',
+            'message': json.dumps("Notification")
+        }
+    )
+    return HttpResponse("Done")
+
+from .forms import  BroadcastNotificationForm
+from notifications_app.models import BroadcastNotification
+# class Notification_add(CreateView):
+# 	model=BroadcastNotification
+# 	template_name ='customadmin/notification_form.html'
+# 	fields = ['message', 'broadcast_on','sent']
+
+
+# Create your views here.
+def Notification_add(request):
+	context ={}
+	form = BroadcastNotificationForm(request.POST or None)
+	
+	if form.is_valid():
+		form.save()
+
+	context['form']= BroadcastNotificationForm()
+	return render(request, "customadmin/notification_form.html", context)
+
+
+
+def bulkupload(request):
+	HttpResponse('this is bulk')
+
+# college add
+from .models import College
+from customadmin.forms import CreateCollegeForm
+
+
+
+from django.views.generic import View
+
+
+## create college save user table
+
+class CreateCollege(CustomMixin,CreateView):
+	
+	template_name = 'college/college_create.html'
+	form_class = CreateCollegeForm
+	model = College
+
+	def check_user(self,user):
+		if user.is_authenticated:
+			if user.is_superuser or user.perms.has_perm("generic.can_create_organization"):
+				return True
+		return False
+	# # def get_initial(self):
+	# #     initial_data = super(CreateOrganization, self).get_initial()
+	# #     #initial_data['first_name'] = 'from initial data'
+	# #     #initial_data['title']='Create Organization'
+	# #     return initial_data
+
+	def get_context_data(self, **kwargs):
+		ctx = super(CreateCollege, self).get_context_data(**kwargs)
+		ctx['desc'] = 'Create College'
+		#print(ctx)
+		return ctx
+
+
+	def form_valid(self, form):
+		#print(type(model))
+		#print(self.request.POST)
+		try:
+			g=create_group_for('company_admin')
+			if g is None:
+				return HttpResponse("problem with permission")
+			#p_can_add_user=Perm.objects.get(codename='can_add_user_of_organization', type='generic')
+			#p_can_see_all=Perm.objects.get(codename='can_see_all_courses', type='generic')
+			#p_can_create=Perm.objects.get(codename='can_create_courses_for_organization', type='generic')
+		except ObjectDoesNotExist as e:
+			print("required permission need to be created")
+			raise KeyError("permission need to be created")
+		try:
+			post_data={
+				'username':form.cleaned_data['contact_person_email'],
+				'password1':form.cleaned_data['password']
+			}
+			profile_update=self.request.POST.get('profile_update',False)
+			try:
+				self.obj = form.save(commit=True)
+			except:
+				messages.success(self.request,'clg could not be created...')
+				return HttpResponseRedirect(self.success_url)
+			if not profile_update:
+				if get_user_model().objects.filter(email=form.cleaned_data['contact_person_email']).exists():
+					messages.info(self.request,"clg with this email already exist")
+					return HttpResponseRedirect(self.success_url)
+				user_obj=get_user_model().objects.create_user(email=form.cleaned_data['contact_person_email'],
+					phone=form.cleaned_data['contact_person_phone'])
+				user_obj.set_password(form.cleaned_data['password'])
+				user_obj.position='admin' 
+				# this is for is_superuser for clg
+				user_obj.roles = 'clg_admin' ##this is retrun error(is_superuser is support trueand false )  
+				user_obj.save()
+				g.user_set.add(user_obj)
+
+				# for p in settings.COMPANY_ADMIN_PERM:
+				# 	po=Perm.objects.get_from_str(p)
+				# 	user_obj.perms.add(po)
+
+
+				
+				# self.obj.students.add(user_obj)
+			else:
+				#self.obj=form.save(commit=True)
+				self.obj.students.add(self.request.user)
+
+			#UserInformation.objects.create(user=user_obj,end_user=False,position='admin',phone=form.cleaned_data['contact_person_phone'],
+			#email=form.cleaned_data['contact_person_email'],is_active=True,organization=self.obj)
+			"""Assign permission to created User """
+			#user_obj.perms.add_perm(p_can_add_user)
+			#user_obj.perms.add_perm(Perm.objects.get(codename='can_see_organization_courses', type='generic'))
+			#user_obj.perms.add_perm(p_can_see_all)
+			#user_obj.perms.add_perm(p_can_create)
+			#user_form = CreateUserForm(post_data)
+			# if user_form.is_valid():
+			#   user_form.save()
+			# else:
+			#   return HttpResponse("hi")
+			self.request.session['organization'] = self.obj.website
+			#self.obj=form.save(commit=False)
+			if self.obj.certificate is not None:
+				#import os 
+				#import webkit2png
+				#os.system('webkit2png escape(self.obj.certificate) -o BASE_DIR+"uploads/organization_certificate/"+self.obj.name+".png"')
+				self.obj.certificate = escape(self.obj.certificate)
+			
+			try:
+				self.obj.save()
+				messages.success(self.request,'college created')
+			except:
+				messages.success(self.request,'clg could not be created...')
+			
+			if self.request.POST.get('ajax_request',False):
+				self.request.user.profile_complete=1
+				self.request.user.has_organization=1
+				self.request.user.save()
+				return HttpResponseRedirect(reverse_lazy('userlms:home'))
+			return HttpResponseRedirect(self.success_url)
+			#return super(CreateOrganization, self).form_valid(form)
+		except Exception as e:
+			print(e)
+			raise KeyError(e)
+
+	def form_invalid(self,form):
+		print(form.errors)
+		messages.info(self.request,form.errors)
+		return render(self.request,'college/college_create.html',{'form':form})
+		#return HttpResponseRedirect(self.success_url)
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ViewClg(CustomMixin,DetailView):
+	model = College
+	template_name = 'college/view_org.html'
+	context_object_name = 'org'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['object'] = self.get_object()
+		#context['course_list'] = CoursesEndUser.objects.all()
+		#context['shared_org'] = self.get_object().organization_course.all()
+		#context['all_topics'] = all_available_topic_and_subtopic(courseid=self.get_object().id)
+		return context
+
+
+
+class EditCollege(UpdateView):
+	model = College
+	form_class = CreateCollegeForm
+	template_name = 'college/college_update.html'
+	success_url = reverse_lazy('customadmin:all_organization')
+
+
+
+	def form_invalid(self,form):
+		messages.info(self.request,"organization could not be edited")
+		return HttpResponseRedirect(self.success_url)
+
+
+	def get_context_data(self,**kwargs):
+		ctx = super(EditCollege, self).get_context_data(**kwargs)
+		ctx['desc']='Edit Organization'
+		ctx['editing'] = True
+		ctx['obj'] = self.get_object()
+		return ctx
+
+
+class DeleteCollege(CustomMixin,DeleteView):
+	model = College
+	form_class = CreateCollegeForm
+	success_url = reverse_lazy('customadmin:all_organization')
+
+
+	def get_context_data(self,**kwargs):
+		ctx = super(DeleteCollege, self).get_context_data(**kwargs)
+		ctx['desc']='Delete Organizationn'
+		return ctx
+
+	
+	def post(self,*args,**kwargs):
+		self.obj=self.get_object()
+		self.obj.is_active = False
+		self.obj.save()
+		messages.success(self.request,f"Company {self.obj.clg_name} is inactive now")
+		return HttpResponseRedirect(self.success_url)
+
+	
+	def get(self, *args, **kwargs):
+		return self.post(*args, **kwargs)
+
+
+def save_image_to_folder(folder,image,name):
+	import os
+	from PIL import image
+	i=Image.open(image)
+
+	i.save(settings.MEDIA_ROOT+folder+name+".png")
+
+
+def clg_home(request):
+	org_id= None
+	euser=request.user.clg_name
+	user_id = request.user.id
+	course = CoursesEndUser.objects.filter(author_id=user_id)	
+	all_user = get_user_model().objects.filter(clg_name=euser)
+	college = College.objects.filter(clg_name =euser)
+	for i in college:
+		org_id =i.organization_id
+	all_organization = Organization.objects.filter(id=org_id)
+	return render(request, 'college/clgadmin_dashboard.html',{'users':all_user,'course':course ,'college':college, 'organizations':all_organization,'user':request.user })

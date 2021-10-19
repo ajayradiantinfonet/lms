@@ -3,7 +3,10 @@ from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
+
     path('', views.home ,name='home'), 
+    path('fav/<int:id>/',views.fav,name='fav'),
+    path('Wishlistfun/',views.Wishlistfun,name='Wishlistfun'),
     path('course_details/<int:pk>/details/',views.CourseDetails.as_view(),name='course_details'),
     path('course_details/',views.AllCourse.as_view(),name='course_details'),
     path('my/',views.useradmin,name='my'),
@@ -13,6 +16,8 @@ urlpatterns = [
     path('open_next_topic',views.open_next_topic,name='open_next_topic'),
     path('activity_completed',views.activity_completed,name='activity_completed'),
     path('add_discussion',views.add_discussion,name='add_discussion'),
+    path('add_notes/',views.add_notes,name='add_notes'),
+    path('show_notes/',views.show_notes,name="show_notes"),
     path('get_online_user',views.get_online_user,name='get_online_user'),
     path('show_spin_activity',views.show_spin_activity,name='show_spin_activity'),
     path('show_spin_activity/<int:pk>/',views.show_spin_activity,name='show_spin_activity'),

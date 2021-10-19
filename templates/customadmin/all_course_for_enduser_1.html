@@ -61,9 +61,9 @@
                     <ul class="nav navbar-right panel_toolbox">
                       <li>
                         <div class="btn_dashgraph" data-toggle="buttons">
-                          <label class="btn btn_upload">
+                          <!-- <label class="btn btn_upload">
                             <i class="fa fa-cloud-upload bulk_img" aria-hidden="true"></i><span>Bulk Upload</span>
-                          </label>
+                          </label> -->
                           <label class="btn btn_add add_course_user">
                            <img src="{% static 'boimage/plus.svg' %}"  alt=""><span> Add Courses</span>
                           </label>         
@@ -92,7 +92,8 @@
                                       <ul style="display:none;" class="box_hide box-ul">
                                         <a class="show_course" obj_id="{{obj.id}}"><li>View</li></a>
                                         <a class="edit_course" obj_id="{{obj.id}}"><li>Edit</li></a>
-                                        <a><li>Suspend</li></a>
+                                        <a class="delete_course" obj_id="{{obj.id}}"><li>Suspend</li></a>
+                                        <!-- <a><li>Suspend</li></a> -->
                                         <!-- <a href=""><li>Delete</li></a> -->
                                     </ul>
                                     </i>
@@ -194,7 +195,12 @@
 
     $('.edit_course').click(function(){
         var obj_id=$(this).attr("obj_id");
+        console.log(10)
         window.location.href="{% url 'customadmin:all_course_user'  %}"+obj_id+"/edit/";
+    });
+    $('.delete_course').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        window.location.href="{% url 'customadmin:all_course_user'  %}"+obj_id+"/delete/";
     });
 
   </script>

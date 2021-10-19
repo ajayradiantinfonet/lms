@@ -2,216 +2,210 @@
 <!-- End of Topbar -->
 
 <!-- Begin Page Content -->
-{% block inner_content %}
-{% load static %}
-{% load mytag %}
-{% load crispy_forms_tags %}
+{% block inner_content %} {% load static %} {% load mytag %} {% load crispy_forms_tags %}
 
 
 
 
 
 <style>
-  .form-control{
-      font-size:15px;
-      padding:2px;
-  }
-      @media only screen and (min-width:1030px) and (max-width:1366px) {
-    .btn_add1{
-    width: 85px;
-    font-size: 9px;
+    .form-control {
+        font-size: 15px;
+        padding: 2px;
     }
-  
-
-  }
-.panel-heading a:before {
-          font-family: 'FontAwesome';
-          content: "\f078";
-          float: left;
-          transition: all 0.5s;}
-          .panel-heading.active a:before {
-          -webkit-transform: rotate(
-            180deg
-          );
-          -moz-transform: rotate(180deg);
-          transform: rotate(180deg);
-      }
+    
+    @media only screen and (min-width:1030px) and (max-width:1366px) {
+        .btn_add1 {
+            width: 85px;
+            font-size: 9px;
+        }
+    }
+    
+    .panel-heading a:before {
+        font-family: 'FontAwesome';
+        content: "\f078";
+        float: left;
+        transition: all 0.5s;
+    }
+    
+    .panel-heading.active a:before {
+        -webkit-transform: rotate( 180deg);
+        -moz-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
 </style>
 
 
 
-  <div class="right_col" role="main">
+<div class="right_col" role="main">
 
 
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-dismissible alert-{{ message.tags }}">
-                    <button type="button" class="close" data-dismiss="alert">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
                         <i class="fa fa-close"></i>
                     </button>
-                    <strong>{{ message }}</strong>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
+
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph border_radius">
+                <div class="col-md-6 col-sm-6 border_radius1">
+                    <h2>Courses</h2>
                 </div>
-              {% endfor %}
-            {% endif %}
-
-
-            
-            <div class="row">
-            <div class="col-md-12 col-sm-12 ">
-              <div class="dashboard_graph border_radius">
-                              <div class="col-md-6 col-sm-6 border_radius1">
-                                <h2>Courses</h2>
-                              </div>
-                            <div class="col-md-6 col-sm-6 left-courses border_radius1">
-                            <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
-                            <p>Courses<i class="fa fa-angle-right" aria-hidden="true"></i>
-                            </p>
-                            {% if is_editing %}
-                                <p>Edit Course<i></i></p>
-                            {% else %}
-                              <p>Add Course<i></i></p>
-                            {% endif %}
+                <div class="col-md-6 col-sm-6 left-courses border_radius1">
+                    <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                    <p>Courses<i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </p>
+                    {% if is_editing %}
+                    <p>Edit Course<i></i></p>
+                    {% else %}
+                    <p>Add Course<i></i></p>
+                    {% endif %}
 
 
 
-                            </div>     
-                     <div class="clearfix"></div>
                 </div>
-                </div>
-                </div>
-             <br>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <br>
 
-       <!--row 2  -->
-             <div class="row">
-             <div class="col-md-12 col-sm-12 ">
-                <div class="x_panel ">
-                  <div class="x_content">
+    <!--row 2  -->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel ">
+                <div class="x_content">
 
                     <ul class="nav" id="myTab" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active detail_font" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Course Details</a>
-                      </li>
-
-                      {% if is_editing %}
                         <li class="nav-item">
-                          <a class="nav-link detail_font1" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Course Content</a>
+                            <a class="nav-link active detail_font" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Course Details</a>
                         </li>
-                      {% endif %}
-                      
+
+                        {% if is_editing %}
+                        <li class="nav-item">
+                            <a class="nav-link detail_font1" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Course Content</a>
+                        </li>
+                        {% endif %}
+
                     </ul>
                     <!---course details--->
                     <div class="tab-content" id="myTabContent">
-                      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <!-- 1 -->
-   <div class="row">
-            <div class="col-md-8">
-              <div class="x_panel left_column1">
-                  <form id="demo-form" method="post" 
-                  enctype="multipart/form-data" data-parsley-validate>
-                    <h2 class="head-tag">Title*</h2>
-                    <!-- <input type="text" style="padding-left:2px;font-size:15px;" value="{{ object.name }}" id="name" class="form-control"
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <!-- 1 -->
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="x_panel left_column1">
+                                        <form id="demo-form" method="post" enctype="multipart/form-data" data-parsley-validate>
+                                            <h2 class="head-tag">Title*</h2>
+                                            <!-- <input type="text" style="padding-left:2px;font-size:15px;" value="{{ object.name }}" id="name" class="form-control"
                       name="name" required /> -->
 
-                      {{ form.name }}
-                
-                  <div class="clearfix"></div>
-              </div>
+                                            {{ form.name }}
+
+                                            <div class="clearfix"></div>
+                                    </div>
 
 
-              <div class="x_panel left_column1">
-                  <h2 class="head-tag">Description</h2>
-                 <div class="clearfix"></div>
+                                    <div class="x_panel left_column1">
+                                        <h2 class="head-tag">Description</h2>
+                                        <div class="clearfix"></div>
 
-                 <!-- <input type="text" name="about" id="about" /> -->
-                 {{ form.about }}
-                <!-- <div class="x_content left_column2">
+                                        <!-- <input type="text" name="about" id="about" /> -->
+                                        {{ form.about }}
+                                        <!-- <div class="x_content left_column2">
                  
               </div> -->
-              </div>
+                                    </div>
 
-              <div class="x_panel left_column1">
-                  <h2 class="head-tag">Overview</h2>
-                 <div class="clearfix"></div>
-                  {{ form.overview }}
-                 <!-- <input type="text" name="overview" id="overview" /> -->
-               <!-- <div class="x_content left_column2">
+                                    <div class="x_panel left_column1">
+                                        <h2 class="head-tag">Overview</h2>
+                                        <div class="clearfix"></div>
+                                        {{ form.overview }}
+                                        <!-- <input type="text" name="overview" id="overview" /> -->
+                                        <!-- <div class="x_content left_column2">
                   ckeditor
               </div> -->
-              </div>
+                                    </div>
 
 
-              <div class="x_panel left_column1">
-                  <h2 class="head-tag">Highlight</h2>
-                   <div class="clearfix"></div>
-                   {{ form.highlights }}
-                    <!-- <input type="text" name="highlights" id="highlights" /> -->
-                 <!-- <div class="x_content left_column2">
+                                    <div class="x_panel left_column1">
+                                        <h2 class="head-tag">Highlight</h2>
+                                        <div class="clearfix"></div>
+                                        {{ form.highlights }}
+                                        <!-- <input type="text" name="highlights" id="highlights" /> -->
+                                        <!-- <div class="x_content left_column2">
                   ckeditor
               </div> -->
-              </div>
+                                    </div>
 
 
-              {% if is_editing %}
-              <div class="x_panel left_column1 ">
-                <div class="x_content left_column3 table-tag">
-                  <h2 class="head-tag">Shared With</h2>
-      
-               
-                  <div class="card-box table-responsive add_course">
-                   <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table_content" cellspacing="0" width="100%">
-                        <thead>
-                          <tr>
-                            <th>Company</th>
-                            <th>Registration Date</th>
-                            <th>City</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-
-                          {% for org in object.organization_course.all %}
-                            <tr>
-                              <td>{{ org.organization_name }}</td>
-                              <td>{{ org.start_date }}</td>
-                              <td>{{ org.city }}</td>
-                              <td class="td_img">
-                                <img src="{% static 'boimage/edit.svg' %}" alt="">
-                                 <img src="{% static 'boimage/delete.svg' %}" alt="">
-                              </td>
-                            </tr>
-                          {% endfor %}
-                        
-                         
-                      </tbody>
-                    </table>
-                 </div>
-              </div>
-              </div>
-
-              {% endif %}
+                                    {% if is_editing %}
+                                    <div class="x_panel left_column1 ">
+                                        <div class="x_content left_column3 table-tag">
+                                            <h2 class="head-tag">Shared With</h2>
 
 
-            </div><!-- col-8 -->
-                 
-            <div class="col-md-4">
-              <!--thumbnail-->
-              <h2 class="head-tag">Thumbnail*</h2>
-                  
-              <div class="x_panel thumb_nail">
-                <img src="{{ object.thumbnail.url }}"  
-                style="width:inherit;height:inherit;" alt="" style="width: 200px;height: 150px;" />
+                                            <div class="card-box table-responsive add_course">
+                                                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap table_content" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Company</th>
+                                                            <th>Registration Date</th>
+                                                            <th>City</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                
+                                                        {% for org in object.organization_course.all %}
+                                                        <tr>
+                                                            <td>{{ org.organization_name }}</td>
+                                                            <td>{{ org.start_date }}</td>
+                                                            <td>{{ org.city }}</td>
+                                                            <td class="td_img">
+                                                                <img src="{% static 'boimage/edit.svg' %}" alt="">
+                                                                <img src="{% static 'boimage/delete.svg' %}" alt="">
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
 
-                <!-- <div class="x_title thumbnail_height">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+
+
+                                </div>
+                                <!-- col-8 -->
+
+                                <div class="col-md-4">
+                                    <!--thumbnail-->
+                                    <h2 class="head-tag">Thumbnail*</h2>
+
+                                    <div class="x_panel thumb_nail">
+                                        <img src="{{ object.thumbnail.url }}" style="width:inherit;height:inherit;" alt="" style="width: 200px;height: 150px;" />
+
+
+
+                                        <!-- <div class="x_title thumbnail_height">
                    
                   <div class="clearfix"></div>
                 </div> -->
-                <div class="clearfix"></div>
-                <!-- <div class="clearfix"></div> -->
+                                        <div class="clearfix"></div>
+                                        <!-- <div class="clearfix"></div> -->
 
-                {{ form.thumbnail }}
-                 <!--<div class="x_content thmbnl" style="margin-top:4px;">
+                                        {{ form.thumbnail }}
+                                        <!--<div class="x_content thmbnl" style="margin-top:4px;">
 
                    <div class="col-md-6">
 
@@ -233,49 +227,48 @@
                         </div>
                     </div>
                 </div> -->
-             </div>
-           <!-- price -->
-          <div class="x_panel thumb_nail">
-                <div class="x_title price_height1 bg-clr">
-                  <h2 class="head-tag">Price</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                 <div class="col-md-6">
-                   <h2 class="price-h2">Original Price</h2>
-                    </div>
-                    <div class="col-md-6 price_tag"> 
-                   <i class="fa fa-inr price_i" aria-hidden="true"></i>
-                     {{ form.price }}
-                    <!-- <input type="text" id="fullname" class="form-control" name="price" value="{{ object.price }}" required /> -->
-                      </div>
-                       <div class="col-md-6">
-                   <h2 class="price-h2">Discounted Price</h2>
-                    </div>
-                    <div class="col-md-6 price_tag"> 
-                      <i class="fa fa-inr price_i" aria-hidden="true"></i>
-                  <!-- <input type="text" value="{{ object.discount_price }}" id="fullname" class="form-control" name="discount_price" required /> -->
-                       {{ form.discount_price }}
-                    </div>
-                </div>
+                                    </div>
+                                    <!-- price -->
+                                    <div class="x_panel thumb_nail">
+                                        <div class="x_title price_height1 bg-clr">
+                                            <h2 class="head-tag">Price</h2>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="col-md-6">
+                                                <h2 class="price-h2">Original Price</h2>
+                                            </div>
+                                            <div class="col-md-6 price_tag">
+                                                <i class="fa fa-inr price_i" aria-hidden="true"></i> {{ form.price }}
+                                                <!-- <input type="text" id="fullname" class="form-control" name="price" value="{{ object.price }}" required /> -->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h2 class="price-h2">Discounted Price</h2>
+                                            </div>
+                                            <div class="col-md-6 price_tag">
+                                                <i class="fa fa-inr price_i" aria-hidden="true"></i>
+                                                <!-- <input type="text" value="{{ object.discount_price }}" id="fullname" class="form-control" name="discount_price" required /> -->
+                                                {{ form.discount_price }}
+                                            </div>
+                                        </div>
 
-                  <div class="col-md-9 offset-md-4">
-                    <button type="submit" class="btn btn-primary paid-btn">Paid</button>
-                    <button type="submit" class="btn btn-success free-btn">Free</button>
-                  </div>
-                  
-             </div>
-             <!-- category -->
-             <div class="x_panel thumb_nail category_height">
-                <div class="x_title bg-clr">
-                  <h2 class="head-tag">Category</h2>
-                  
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content dropdown_category">
+                                        <div class="col-md-9 offset-md-4">
+                                            <button type="submit" class="btn btn-primary paid-btn">Paid</button>
+                                            <button type="submit" class="btn btn-success free-btn">Free</button>
+                                        </div>
 
-                      {{ form.category }}
-                        <!-- <div class="dropdown">
+                                    </div>
+                                    <!-- category -->
+                                    <div class="x_panel thumb_nail category_height">
+                                        <div class="x_title bg-clr">
+                                            <h2 class="head-tag">Category</h2>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content dropdown_category">
+
+                                            {{ form.category }}
+                                            <!-- <div class="dropdown">
                         <button id="dLabel" class="dropdown-select dLabel-drop" type="button" aria-haspopup="true" aria-expanded="false">
                           Select
                           <span class="caret"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
@@ -289,179 +282,157 @@
                         <li>Lorem Ipsum</li>
                       </ul>
                   </div> -->
-      
-                    </div>
-             </div>
-             <!-- tags -->
-              <div class="x_panel thumb_nail">
-                <div class="x_title bg-clr">
-                  <h2 class="head-tag">Tags</h2>
-                  
-                  <div class="clearfix"></div>
-                </div>
 
-                <div class="x_content" style='height: 100px;border-bottom: 2px solid #E6E9ED;'>
+                                        </div>
+                                    </div>
+                                    <!-- tags -->
+                                    <div class="x_panel thumb_nail">
+                                        <div class="x_title bg-clr">
+                                            <h2 class="head-tag">Tags</h2>
 
-                    {% for t in object.course_tag.all %}
-                     
-                     <span class="label label-primary" style="background: green;padding:5px;border-radius:2px;color:black;">{{ t }}</span>
-  
-                    {% endfor %}
-                
-                </div>
-                <div class="x_content">
-                 <div class="col-md-9" style='border-right: 2px solid #E6E9ED;'>
-                   Tag* : {{ form.course_tag }}
-                 </div>
-                   
-                   <!--  <div class="col-md-3 add-line">Add Tags</div> -->
-                 
-                </div>
-             </div>
+                                            <div class="clearfix"></div>
+                                        </div>
 
-              {{ form.star|as_crispy_field }} <br/>
-              
-              State:{{ form.state }}<br/><br/>
+                                        <div class="x_content" style='height: 100px;border-bottom: 2px solid #E6E9ED;'>
 
-              Access:{{ form.access }} <br/>
+                                            {% for t in object.course_tag.all %}
 
-              
+                                            <span class="label label-primary" style="background: green;padding:5px;border-radius:2px;color:black;">{{ t }}</span> {% endfor %}
 
-              {{ form.language|as_crispy_field }} <br/>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="col-md-9" style='border-right: 2px solid #E6E9ED;'>
+                                                Tag* : {{ form.course_tag }}
+                                            </div>
 
-              {{ form.author }}
+                                            <!--  <div class="col-md-3 add-line">Add Tags</div> -->
 
-               <!-- /tags -->
-             
-              
-              
+                                        </div>
+                                    </div>
 
-            </div>
-          
-                      <div class="col-md-9 offset-md-5">
-                          <input type="submit" value="submit" class="btn btn-primary save-delete" />
-                          <button type="submit" class="btn btn-danger save-delete">Delete</button>
-                      </div>
+                                    {{ form.star|as_crispy_field }} <br/> State:{{ form.state }}<br/><br/> Access:{{ form.access }} <br/> {{ form.language|as_crispy_field }} <br/> {{ form.author }}
 
-                    </form>
-                    </div>
+                                    <!-- /tags -->
 
 
-                    </div>
-                   <!---course content--->
 
 
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                </div>
+
+                                <div class="col-md-9 offset-md-5">
+                                    <input type="submit" value="submit" class="btn btn-primary save-delete" />
+                                    <button type="submit" class="btn btn-danger save-delete">Delete</button>
+                                </div>
+
+                                </form>
+                            </div>
 
 
-                        <a class="add_topic" data-href="{{ object.id }}">
-                          <label class="btn btn_add btn-right">
+                        </div>
+                        <!---course content--->
+
+
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+
+                            <a class="add_topic" data-href="{{ object.id }}">
+                                <label class="btn btn_add btn-right">
                              <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Topic</span>
-                          </label> 
-                        </a>
+                          </label>
+                            </a>
 
 
-                    {% for topic,subtopic in course_topic_list.items %} 
-                      <div class="x_panel ">
-                          <div class="col-md-4 over_view">
-                          <h2  class="head-tag">{{ topic}}</h2>
-                          </div>
-                          <div class="col-md-4"  style="text-align: center;">
-                              <label class="btn btn_add1 add_video_topic" 
-                              data-href="{% url 'customadmin:add_video' %}{{topic.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics">
+                            {% for topic,subtopic in course_topic_list.items %}
+                            <div class="x_panel ">
+                                <div class="col-md-4 over_view">
+                                    <h2 class="head-tag">{{ topic}}</h2>
+                                </div>
+                                <div class="col-md-4" style="text-align: center;">
+                                    <label class="btn btn_add1 add_video_topic" data-href="{% url 'customadmin:add_video' %}{{topic.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics">
                                 <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Video</span>
-                              </label>  
-                              <label class="btn btn_add1 add_activity_topic" 
-                              data-href="" topic-id="{{ topic.id }}">
+                              </label>
+                                    <label class="btn btn_add1 add_activity_topic" data-href="" topic-id="{{ topic.id }}">
                                  <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Activity</span>
-                              </label>  
-                          </div>
-                          <div class="col-md-3 sub_topic add_subtopic" data-href="{% url 'customadmin:add_subtopic' %}{{topic.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics"><i class="fa fa-plus-circle" aria-hidden="true"></i><h2>Sub Topic</h2>
-                          </div>
+                              </label>
+                                </div>
+                                <div class="col-md-3 sub_topic add_subtopic" data-href="{% url 'customadmin:add_subtopic' %}{{topic.id}}?next=/admin/all_course_user/{{object.id}}/edit/$topics"><i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                    <h2>Sub Topic</h2>
+                                </div>
 
-                        <div class="col-md-1 panel-heading" role="tab" id="heading{{forloop.counter}}" style="padding: 10px;font-size: 10px;">
-                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
-                        </a>
-                      </div>
-                      <div class="clearfix"></div>
-                      <div id="collapse{{forloop.counter}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{forloop.counter}}" style="padding: 15px;">
+                                <div class="col-md-1 panel-heading" role="tab" id="heading{{forloop.counter}}" style="padding: 10px;font-size: 10px;">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                                    </a>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div id="collapse{{forloop.counter}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{forloop.counter}}" style="padding: 15px;">
 
-                      {% for ac in subtopic.activities %}
-                        <div class="row">
-                          
-                          <div class="col-md-2">
-                          </div>
-                          <div class="col-md-4" style="display: flex;padding: 10px;">
-                           {% if ac.activity_type == "video" %} 
-                           <i class="fa fa-play"></i>
-                           {% elif ac.activity_type == "quiz" %}
-                            <i class="fa fa-question"></i> 
+                                    {% for ac in subtopic.activities %}
+                                    <div class="row">
 
-                           {% elif ac.activity_type == "spin_activity" %}
-                            <i class="fa fa-spinner"></i> 
-
-                          {% elif ac.activity_type == "assignment" %}
-                            <i class="icon-tasks"></i> 
-                           {% endif %}
+                                        <div class="col-md-2">
+                                        </div>
+                                        <div class="col-md-4" style="display: flex;padding: 10px;">
+                                            {% if ac.activity_type == "video" %}
+                                            <i class="fa fa-play"></i> {% elif ac.activity_type == "quiz" %}
+                                            <i class="fa fa-question"></i> {% elif ac.activity_type == "spin_activity" %}
+                                            <i class="fa fa-spinner"></i> {% elif ac.activity_type == "assignment" %}
+                                            <i class="icon-tasks"></i>
+                                            <!-- add this -->
+                                            <i class="fa fa-spinner"></i> {% elif ac.activity_type == "url" %}
+                                            <i class="icon-tasks"></i> {% endif %}
 
 
-                            <p class="topic-size p-size">{{ ac.activity_name }}</p>
-                         </div>
+                                            <p class="topic-size p-size">{{ ac.activity_name }}</p>
+                                        </div>
 
-                         <div class="col-md-2" style="display: flex;padding: 10px;">
-                            {{ ac.activity_type }}
-                          </div>
+                                        <div class="col-md-2" style="display: flex;padding: 10px;">
+                                            {{ ac.activity_type }}
+                                        </div>
 
-                        <!--  <div class="col-md-4"  style="text-align: center;"> -->
-                           <div class="col-md-4"  style="text-align: center;">
+                                        <!--  <div class="col-md-4"  style="text-align: center;"> -->
+                                        <div class="col-md-4" style="text-align: center;">
 
-                                {% if ac.activity_type == "quiz" %}
-                                <label class="btn btn_add1">
+                                            {% if ac.activity_type == "quiz" %}
+                                            <label class="btn btn_add1">
                                   <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
-                                </label>
-                                {% endif %}
-
-                                {% if ac.activity_type == "mcq" %}
-                                <label class="btn btn_add1">
+                                </label> {% endif %} {% if ac.activity_type == "mcq" %}
+                                            <label class="btn btn_add1">
                                   <a href="{% url 'assesment:designquestionpaper' ac.content_id %}">Add Question</a>
-                                </label>
-                                {% endif %}
+                                </label> {% endif %}
 
-                                <label class="btn btn_add1 edit_ac_ac" activity_type="{{ ac.activity_type }}" activity-id="{{ ac.content_id}}" data-href="{{ ac.id }}">
+                                            <label class="btn btn_add1 edit_ac_ac" activity_type="{{ ac.activity_type }}" activity-id="{{ ac.content_id}}" data-href="{{ ac.id }}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Edit</span>
-                              </label>  
-                               <label class="btn btn_add1 delete_ac_ac" activity_type="{{ ac.activity_type }}" activity-id="{{ac.content_id }}" data-href="{{ac.id}}">
+                              </label>
+                                            <label class="btn btn_add1 delete_ac_ac" activity_type="{{ ac.activity_type }}" activity-id="{{ac.content_id }}" data-href="{{ac.id}}">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
                                  <span>Delete</span> 
                               </label>
-                            </div>
-                         </div>
-                        <!-- s -->
+                                        </div>
+                                    </div>
+                                    <!-- s -->
 
-                      {% endfor %}
+                                    {% endfor %} {% for sub,ac in subtopic.subtopic.items %}
 
-                          
-                      {% for sub,ac in subtopic.subtopic.items %}
+                                    <div class="row">
 
-                      <div class="row">
-
-                       <div class="col-md-4" style="display: flex;padding: 10px;"><i class="fa fa-bars"></i><p class="topic-size p-size">{{ sub }}</p>
-                       </div>
-                        <div class="col-md-4"  style="text-align: center;">
-                          <label class="btn btn_add1 add_video" topic-id="{{ sub.id }}">
+                                        <div class="col-md-4" style="display: flex;padding: 10px;"><i class="fa fa-bars"></i>
+                                            <p class="topic-size p-size">{{ sub }}</p>
+                                        </div>
+                                        <div class="col-md-4" style="text-align: center;">
+                                            <label class="btn btn_add1 add_video" topic-id="{{ sub.id }}">
                           <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Video</span>
-                        </label>  
-                         <label class="btn btn_add1 add_activity_topic" topic-id="{{ sub.id }}">
+                        </label>
+                                            <label class="btn btn_add1 add_activity_topic" topic-id="{{ sub.id }}">
                            <i class="fa fa-play-circle-o" aria-hidden="true"></i><span> Add Activity</span>
-                        </label>  
-                        </div>
-                       <div class="col-md-4">
-                    <div class="time-input">
-                  <p class="topic-size">Time</p>
-                   <input type="text" id="fullname" class="form-control" name="fullname" required />
-                    <input type="text" id="fullname1" class="form-control" name="fullname" required />
-                   <i class="fa fa-cog cog-img" aria-hidden="true"></i>
-                   <i class="fa fa-ellipsis-v ellipsis-img  box_show">
+                        </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="time-input">
+                                                <p class="topic-size">Time</p>
+                                                <input type="text" id="fullname" class="form-control" name="fullname" required />
+                                                <input type="text" id="fullname1" class="form-control" name="fullname" required />
+                                                <i class="fa fa-cog cog-img" aria-hidden="true"></i>
+                                                <i class="fa fa-ellipsis-v ellipsis-img  box_show">
                      <ul style="display:none;" class="box_hide box-ul1">
                       <li>View</li>
                        <li>Edit</li>
@@ -469,183 +440,171 @@
                          <li>Delete</li>
                     </ul>
                    </i>
-                 </div>
-                 </div>
-               </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-                  {% for a in ac.activities %}
-                   <div class="row">
-                          <div class="col-md-2">
-                          </div>
-                          <div class="col-md-4" style="display: flex;padding: 10px;">
-                           {% if a.activity_type == "video" %} 
-                           <i class="fa fa-play"></i>
-                           {% elif a.activity_type == "quiz" %}
-                            <i class="fa fa-question"></i> 
+                                    {% for a in ac.activities %}
 
-                           {% elif a.activity_type == "spin_activity" %}
-                            <i class="fa fa-spinner"></i> 
-
-                          {% elif a.activity_type == "assignment" %}
-                            <i class="fa fa-tasks"></i> 
-                           {% endif %}
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                        </div>
+                                        <div class="col-md-4" style="display: flex;padding: 10px;">
+                                            {% if a.activity_type == "video" %}
+                                            <i class="fa fa-play"></i> {% elif a.activity_type == "quiz" %}
+                                            <i class="fa fa-question"></i> {% elif a.activity_type == "spin_activity" %}
+                                            <i class="fa fa-spinner"></i> {% elif a.activity_type == "assignment" %}
+                                            <i class="fa fa-tasks"></i>
+                                            <i class="fa fa-url"></i> {% elif a.activity_type == "urlactivity" %}
+                                            <i class="fa fa-tasks"></i> {% endif %}
 
 
-                            <p class="topic-size p-size">{{ a.activity_name }}</p>
-                         </div>
+                                            <p class="topic-size p-size">{{ a.activity_name }}</p>
+                                        </div>
 
-                         <div class="col-md-2">
-                            {{ a.activity_type }}
-                          </div>
+                                        <div class="col-md-2">
+                                            {{ a.activity_type }}
+                                        </div>
 
-                         <!-- <div class="col-md-2" style="display: flex;padding: 10px;">
+                                        <!-- <div class="col-md-2" style="display: flex;padding: 10px;">
                             {{ a.activity_type }}
                           </div> -->
 
-                         <div class="col-md-4"  style="text-align: center;">
-                                {% if a.activity_type == "quiz" %}
-                                <label class="btn btn_add1">
+                                        <div class="col-md-4" style="text-align: center;">
+                                            {% if a.activity_type == "quiz" %}
+                                            <label class="btn btn_add1">
                                   <a href="{% url 'assesment:designquestionpaper' a.content_id %}">Add Question</a>
-                                </label>
-                                {% endif %}
-
-                                {% if a.activity_type == "mcq" %}
-                                <label class="btn btn_add1">
+                                </label> {% endif %} {% if a.activity_type == "mcq" %}
+                                            <label class="btn btn_add1">
                                   <a href="{% url 'assesment:designquestionpaper' a.content_id %}">Add Question</a>
-                                </label>
-                                {% endif %}
+                                </label> {% endif %}
 
-                                <label class="btn btn_add1 edit_ac_ac" activity_type="{{ a.activity_type }}" activity-id="{{ a.content_id }}" data-href="{{ a.id }}">
+                                            <label class="btn btn_add1 edit_ac_ac" activity_type="{{ a.activity_type }}" activity-id="{{ a.content_id }}" data-href="{{ a.id }}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Edit</span>
-                              </label>  
-                               <label class="btn btn_add1 delete_ac_ac" activity_type="{{ a.activity_type }}" activity-id="{{a.content_id }}" data-href="{{a.id}}">
+                              </label>
+                                            <label class="btn btn_add1 delete_ac_ac" activity_type="{{ a.activity_type }}" activity-id="{{a.content_id }}" data-href="{{a.id}}">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
                                  <span>Delete</span> 
                               </label>
+                                        </div>
+
+                                    </div>
+
+
+                                    {% endfor %} {% endfor %}
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                            <!-- /4th topic -->
+
                         </div>
-                         
+                        <!-- /course content -->
+
                     </div>
-
-                   
-                  {% endfor %}
-
-                 {% endfor %}
-               </div>
-
-                  </div>
-
-            {% endfor %}
-
-                  <!-- /4th topic -->
-
-                  </div><!-- /course content -->
-
-                  </div>
                 </div>
-              </div>
             </div>
-
-      
-
         </div>
 
 
-        <div tabindex="-1" class="modal fade" id="activity-dialog" style="display: none;" aria-hidden="true">
-                                <div class="modal-dialog modal-center">
-                                  <div class="modal-content">
-                                    <div class="modal-header bordered">
-                                      <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                      <h6 class="">
-                                      Add Activity
-                                      </h6>
-                                    </div>
-                                    <div class="modal-body">
 
-                                         <img src="{% static 'pix/quiz.jpeg' %}" width="60px" height="60px" />
-                                         <span>
+    </div>
+
+
+    <div tabindex="-1" class="modal fade" id="activity-dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-center">
+            <div class="modal-content">
+                <div class="modal-header bordered">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h6 class="">
+                        Add Activity
+                    </h6>
+                </div>
+                <div class="modal-body">
+
+                    <img src="{% static 'pix/quiz.jpeg' %}" width="60px" height="60px" />
+                    <span>
                                          <a href="" class="activity_quiz_link">
                                           MCQ
-                                         </a></span>
-                                          &nbsp;&nbsp;&nbsp;
-                                          <img src="{% static 'pix/spin.jpeg' %}" width="60px" height="60px" /><span> <a href="" class="activity_spin_link">Spin</a></span>
-                                          &nbsp;&nbsp;&nbsp;
+                                         </a></span> &nbsp;&nbsp;&nbsp;
+                    <img src="{% static 'pix/spin.jpeg' %}" width="60px" height="60px" /><span> <a href="" class="activity_spin_link">Spin</a></span> &nbsp;&nbsp;&nbsp;
 
-                                          <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
+                    <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
                                             class="activity_assignment_link">Assignment</a></span>
 
-                                          <!-- <img src="{% static 'pix/drag.webp' %}" width="60px" height="60px" /><span><a 
+                    <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
+                                              class="activity_addurl_link">URL</a></span>
+                    <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
+                                                class="activity_addpdf_link">PDF</a></span>
+                    <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
+                                            class="activity_addppt_link">PPT</a></span>
+                    <img src="{% static 'pix/assignment.png' %}" width="60px" height="60px" /><span><a href=""
+                                            class="activity_adddoc_link">Doc</a></span>
+
+                    <!-- <img src="{% static 'pix/drag.webp' %}" width="60px" height="60px" /><span><a 
                                             href="" class="activity_drag_link">Drag And Drop</a></span> -->
-                                        
-                                         
-                                      
-                      </div>
-                                    
-                  
-              </div>
-          </div>
+
+
+
+                </div>
+
+
+            </div>
         </div>
+    </div>
 
 
-        <!-- video modal -->
-        <div tabindex="-1" class="modal fade" id="form-dialog" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header bordered">
-                                      <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                      <h2 class="pmd-card-title-text">Upload Video</h2>
-                                    </div>
-                                    <div class="modal-body">
+    <!-- video modal -->
+    <div tabindex="-1" class="modal fade" id="form-dialog" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bordered">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h2 class="pmd-card-title-text">Upload Video</h2>
+                </div>
+                <div class="modal-body">
 
-                                      <form class="video_forms" id="form_video" enctype="multipart/form-data" method="post"> 
-                                        {% if is_editing %}
-                                     
-                                      {{ video_form.video|as_crispy_field }}
-                                      
-                                      {{ video_form.description|as_crispy_field }}
-                                      {{ video_form.thumbnail|as_crispy_field }}
-                                      {{ video_form.language|as_crispy_field }}
+                    <form class="video_forms" id="form_video" enctype="multipart/form-data" method="post">
+                        {% if is_editing %} {{ video_form.video|as_crispy_field }} {{ video_form.description|as_crispy_field }} {{ video_form.thumbnail|as_crispy_field }} {{ video_form.language|as_crispy_field }} {% endif %}
 
-                                      {% endif %}
-                                    
-                                      <input type="hidden" id="topic_for_video" name="topic" value="" />
+                        <input type="hidden" id="topic_for_video" name="topic" value="" />
 
-                                      <br/>
+                        <br/>
 
-                                      <button class="video_form_submit btn-submit">Submit</button>
-                                      <!-- <input class="btn pmd-ripple-effect btn-primary" value="save" type="submit" /> -->
-                                    </form>
-                                    </div>
-                                  </div>
-                          </div>
-                      </div>
+                        <button class="video_form_submit btn-submit">Submit</button>
+                        <!-- <input class="btn pmd-ripple-effect btn-primary" value="save" type="submit" /> -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-{% endblock %} 
+    {% endblock %} {% block inpage_script %}
 
+    <!-- <script src="{% static 'user_lms/js/bootstrap.min.js' %}"></script> -->
 
-{% block inpage_script %}
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 
-<!-- <script src="{% static 'user_lms/js/bootstrap.min.js' %}"></script> -->
-
-<script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
-
-<script type="text/javascript">
-      var about =CKEDITOR.replace('about');
-      about.setData("{{ object.about }}");
-      CKEDITOR.replace('overview').setData("{{ object.overview }}");
-      CKEDITOR.replace('highlights').setData("{{ object.highlights }}");
+    <script type="text/javascript">
+        var about = CKEDITOR.replace('about');
+        about.setData("{{ object.about }}");
+        CKEDITOR.replace('overview').setData("{{ object.overview }}");
+        CKEDITOR.replace('highlights').setData("{{ object.highlights }}");
 
 
-      $('#id_thumbnail').change(function(){
+        $('#id_thumbnail').change(function() {
 
-          var elm = this;
-          
-          if (elm.files && elm.files[0]) {
-             
+            var elm = this;
+
+            if (elm.files && elm.files[0]) {
+
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    
+                reader.onload = function(e) {
+
                     $('.thumb_nail img')
                         .attr('src', e.target.result)
                         .width(300)
@@ -654,191 +613,194 @@
 
                 reader.readAsDataURL(elm.files[0]);
             }
-      });
+        });
 
 
 
 
 
-      $('.add_topic').on('click',function(){
-          var courseid=$(this).attr('data-href');
-          var obj_id="{{object.id}}"
-        if(courseid)
-        {
-      // window.open("{% url 'customadmin:add_topic' %}"+parseInt(courseid),"Add Topic",menubar=0,resizable=1);
-      window.location.href="{% url 'customadmin:add_topic' %}"+parseInt(courseid)+"?next=/admin/all_course_user/"+obj_id+"/edit/$topics";
-      }
-      else
-      {
-          window.location.href="{% url 'customadmin:add_topic' %}";
-      }
-  
-  });
+        $('.add_topic').on('click', function() {
+            var courseid = $(this).attr('data-href');
+            var obj_id = "{{object.id}}"
+            if (courseid) {
+                // window.open("{% url 'customadmin:add_topic' %}"+parseInt(courseid),"Add Topic",menubar=0,resizable=1);
+                window.location.href = "{% url 'customadmin:add_topic' %}" + parseInt(courseid) + "?next=/admin/all_course_user/" + obj_id + "/edit/$topics";
+            } else {
+                window.location.href = "{% url 'customadmin:add_topic' %}";
+            }
+
+        });
 
 
-   $('.add_subtopic').on('click',function()
-   {
-        var topicid= $(this).attr('data-href');
-        window.location.href=topicid;
-   });
+        $('.add_subtopic').on('click', function() {
+            var topicid = $(this).attr('data-href');
+            window.location.href = topicid;
+        });
 
-   $('.add_video_topic').click(function(){
-        var topicid = $(this).attr('data-href');
-        window.location.href=topicid;
-   });
+        $('.add_video_topic').click(function() {
+            var topicid = $(this).attr('data-href');
+            window.location.href = topicid;
+        });
 
-   $('.add_activity_topic').click(function(){
-      $('#activity-dialog').modal('show');
-      var topicid=$(this).attr("topic-id");
+        $('.add_activity_topic').click(function() {
+            $('#activity-dialog').modal('show');
+            var topicid = $(this).attr("topic-id");
 
-      var link = "{% url 'assesment:add_quiz' %}"+"0/"+topicid+"/?next=/admin/all_course_user/{{object.id}}/edit";
-      $('.activity_quiz_link').attr("href",link);
+            var link = "{% url 'assesment:add_quiz' %}" + "0/" + topicid + "/?next=/admin/all_course_user/{{object.id}}/edit";
+            $('.activity_quiz_link').attr("href", link);
 
-      var spin_link = "{% url 'customadmin:spin_activity_topic' %}";
-      $('.activity_spin_link').attr("href",spin_link+topicid+"/");
-      
-      var assignment_link = "{% url 'customadmin:add_assignment' %}"+topicid+"/";
+            var spin_link = "{% url 'customadmin:spin_activity_topic' %}";
+            $('.activity_spin_link').attr("href", spin_link + topicid + "/");
 
-      $('.activity_assignment_link').attr("href",assignment_link+"?next=/admin/all_course_user/{{object.id}}/edit/$topics");
+            var assignment_link = "{% url 'customadmin:add_assignment' %}" + topicid + "/";
 
-   });
-
-   $('.add_video').click(function(){
-      $('#form-dialog').modal('show');
-      var topicid=$(this).attr("topic-id");
-      $('#topic_for_video').val(topicid);
+            $('.activity_assignment_link').attr("href", assignment_link + "?next=/admin/all_course_user/{{object.id}}/edit/$topics");
 
 
-      
-   });
+            // var add_urlactivity = "{% url 'customadmin:add_urlactivity' %}" + topicid + "/";
+            var add_urlactivity = "{% url 'customadmin:add_urlactivity' %}" + topicid + "/";
+            $('.activity_addurl_link').attr("href", add_urlactivity + "?next=/admin/all_course_user/{{object.id}}/edit/$topics");
+
+            var add_pdfactivity = "{% url 'customadmin:add_pdfactivity' %}" + topicid + "/";
+            $('.activity_addpdf_link').attr("href", add_pdfactivity + "?next=/admin/all_course_user/{{object.id}}/edit/$topics");
+
+            var add_pptactivity = "{% url 'customadmin:add_pptactivity' %}" + topicid + "/";
+            $('.activity_addppt_link').attr("href", add_pptactivity + "?next=/admin/all_course_user/{{object.id}}/edit/$topics");
 
 
-   
-      
-
-</script>
-
-
-<script>
-  
+            var add_docactivity = "{% url 'customadmin:add_docactvity' %}" + topicid + "/";
+            $('.activity_adddoc_link').attr("href", add_docactivity + "?next=/admin/all_course_user/{{object.id}}/edit/$topics");
 
 
 
-       // $(".video_form_submit").on('click',(function(e) {
-        $(".video_form_submit").click(function(){
-                    
-                    //e.preventDefault();
-                    let myForm = document.getElementById('form_video');
-                    let formdata = new FormData(myForm);
-                    console.log(formdata);
 
-                    $.ajax({
-                      url:"{% url 'customadmin:madd_video' %}",
-                      data:formdata,
-                      type:"post",
-                      contentType:false,
-                      cache:false,
-                      processData:false,
-                      success:function(data){
-                        alert(data);
-                      }
-         });
-      });
+
+        });
+
+        $('.add_video').click(function() {
+            $('#form-dialog').modal('show');
+            var topicid = $(this).attr("topic-id");
+            $('#topic_for_video').val(topicid);
 
 
 
-        $('.edit_ac_ac').click(function(){
-                var dataid=$(this).attr("data-href");
-                var acid= $(this).attr("activity-id");
-                
+        });
+    </script>
+
+
+    <script>
+        // $(".video_form_submit").on('click',(function(e) {
+        $(".video_form_submit").click(function() {
+
+            //e.preventDefault();
+            let myForm = document.getElementById('form_video');
+            let formdata = new FormData(myForm);
+            console.log(formdata);
+
+            $.ajax({
+                url: "{% url 'customadmin:madd_video' %}",
+                data: formdata,
+                type: "post",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    alert(data);
+                }
+            });
+        });
+
+
+
+        $('.edit_ac_ac').click(function() {
+            var dataid = $(this).attr("data-href");
+            var acid = $(this).attr("activity-id");
+
+            var activity_type = $(this).attr("activity_type");
+
+            if (activity_type == "spin_activity") {
+                window.location.href = "{% url 'customadmin:edit_spin_activity' %}" + dataid + "/?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+            } else if (activity_type == "quiz") {
+
+                var url = "{% url 'assesment:edit_quiz_ac' 0 0 1 %}".replace('1', parseInt(acid));
+
+                window.location.href = url + "?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+            } 
+            else if (activity_type == "Assignment") {
+                var url = "{% url 'customadmin:edit_assignment' 0 %}".replace('0', acid);
+                window.location.href = url + "?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+
+            } 
+            else if (activity_type == "urlactivity") {
+                var url = "{% url 'customadmin:edit_urlactivity' 0 %}".replace('0', acid);
+                window.location.href = url + "?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+
+            } 
+            else if (activity_type == "pdfactivity") {
+                var url = "{% url 'customadmin:edit_pdfactivity' 0 %}".replace('0', acid);
+                window.location.href = url + "?next=/admin/all_course_user/{{courseid}}/edit/$topics";
+
+            } 
+           
+            else if (activity_type == "video") {
+                var dataid = $(this).attr("activity-id");
+                window.location.href = "{% url 'customadmin:all_video' %}" + dataid + '/edit/?next={{EXTRA_URL}}/admin/all_course_user/' + dataid + "/edit/$topics";
+            }
+
+        });
+
+
+        $('.delete_ac_ac').click(function() {
+            if (confirm("this will delete the activity")) {
+                var dataid = $(this).attr("data-href");
                 var activity_type = $(this).attr("activity_type");
-                
-                if(activity_type=="spin_activity"){
-                     window.location.href="{% url 'customadmin:edit_spin_activity' %}"+dataid+"/?next=/admin/all_course_user/{{courseid}}/edit/$topics";
-                }
-                else if(activity_type=="quiz")
-                {
 
-                   var url= "{% url 'assesment:edit_quiz_ac' 0 0 1 %}".replace('1',parseInt(acid));
-
-                   window.location.href=url+"?next=/admin/all_course_user/{{courseid}}/edit/$topics";
-                }
-                else if(activity_type =="Assignment")
-                {
-                  var url = "{% url 'customadmin:edit_assignment' 0 %}".replace('0',acid);
-                    window.location.href=url+"?next=/admin/all_course_user/{{courseid}}/edit/$topics";
-                }
-                else if(activity_type == "video"){
-                    var dataid=$(this).attr("activity-id");
-                    window.location.href="{% url 'customadmin:all_video' %}"+dataid+'/edit/?next={{EXTRA_URL}}/admin/all_course_user/'+dataid+"/edit/$topics";
-                }
-               
-      });
-
-
-      $('.delete_ac_ac').click(function(){
-                if(confirm("this will delete the activity"))
-                {
-                  var dataid=$(this).attr("data-href");
-                  var activity_type = $(this).attr("activity_type");
-
-                  // if(activity_type=="video"){
-                  //   var dataid=$(this).attr("activity-id");
-                  // }
-                  $.ajax({
-                    url :"{% url 'customadmin:delete_activity' %}"+dataid+"/delete/?next=/admin/all_course_user/{{courseid}}/edit/$topics",
-                    type:'get',
-                    success:function(data){
-                      if(data=='true'){
-                         alert("activity has been deleted");
-                      }
+                // if(activity_type=="video"){
+                //   var dataid=$(this).attr("activity-id");
+                // }
+                $.ajax({
+                    url: "{% url 'customadmin:delete_activity' %}" + dataid + "/delete/?next=/admin/all_course_user/{{courseid}}/edit/$topics",
+                    type: 'get',
+                    success: function(data) {
+                        if (data == 'true') {
+                            alert("activity has been deleted");
+                        }
                     }
                 });
-              }
-          });
-      
- 
-</script>
+            }
+        });
+    </script>
 
-<script>
+    <script>
+        $('.panel-collapse').on('show.bs.collapse', function() {
+            $(this).siblings('.panel-heading').addClass('active');
+        });
+        // $('.panel-collapse').collapse("hide");
+        $('.panel-collapse').on('hide.bs.collapse', function() {
+            $(this).siblings('.panel-heading').removeClass('active');
+        });
 
-  $('.panel-collapse').on('show.bs.collapse', function () {
-    $(this).siblings('.panel-heading').addClass('active');
-  });
-  // $('.panel-collapse').collapse("hide");
-  $('.panel-collapse').on('hide.bs.collapse', function () {
-    $(this).siblings('.panel-heading').removeClass('active');
-  });
-
-  $(".dLabel-drop").click(function(e)
-  {
-    var x = $(this).attr('aria-expanded');
-    if(x == "false"){
-      $(this).parent('.dropdown').addClass('show');
-      $(this).siblings('.dropdown-menu').addClass('show');
-      $(this).attr('aria-expanded', "true");
-    }
-    else
-    {
-      $(this).parent('.dropdown').removeClass('show');
-      $(this).siblings('.dropdown-menu').removeClass('show');
-      $(this).attr('aria-expanded', "false");
-    }
-  });
+        $(".dLabel-drop").click(function(e) {
+            var x = $(this).attr('aria-expanded');
+            if (x == "false") {
+                $(this).parent('.dropdown').addClass('show');
+                $(this).siblings('.dropdown-menu').addClass('show');
+                $(this).attr('aria-expanded', "true");
+            } else {
+                $(this).parent('.dropdown').removeClass('show');
+                $(this).siblings('.dropdown-menu').removeClass('show');
+                $(this).attr('aria-expanded', "false");
+            }
+        });
+    </script>
 
 
-</script>
+    <script>
+        $(document).ready(function() {
+            $(".box_show").click(function() {
+                $(this).children(".box_hide").toggle();
+            });
+        });
+    </script>
 
-
-<script>
-  
-    $(document).ready(function(){
-      $(".box_show").click(function(){
-        $(this).children(".box_hide").toggle();
-      });
-    });
-
-
-</script>
-
-{% endblock %}
+    {% endblock %}

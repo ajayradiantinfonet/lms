@@ -37,6 +37,16 @@
               <div class="up_comimg">
                      <p>Upcoming Session</p>
                    </div>
+                   <div>
+                  {% for o in li %}
+                  {{o.topic}}  <p align='right'>{{ o.start_date|date }}</p><br>
+                  <hr>
+                  {% endfor %}
+                  
+
+
+
+                  </div>
                 <div class="panel-up">
                  <div class="dashboard-card upcoming1" id="upcoming0" style="display:none">
             <span class="title title00">Labour law</span>

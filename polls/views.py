@@ -136,6 +136,8 @@ def add_poll(request):
 	if request.method=="POST":
 		try:
 			user=request.POST.get('user',False)
+			print("this is poll user")
+			print(user)
 			if user:
 				question_data=request.POST.get('question_data',False)
 				duration=request.POST.get('duration',None)
@@ -161,6 +163,7 @@ def add_poll(request):
 
 		except:
 			return HttpResponse("error")
+	return HttpResponse("this is polls")			
 
 
 class IndexView(generic.ListView):

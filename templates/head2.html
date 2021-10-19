@@ -37,7 +37,7 @@
 
     <!-- Custom Theme Style -->
     <link href="{% static 'boheader/build/css/custom.min.css' %}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/style.css' %}" />
+     <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/style.css'  %}" media="screen" /> 
 
 
      <link rel="stylesheet" type="text/css" href="{% static 'boheader/css/responsive.css' %}" />
@@ -94,7 +94,7 @@ body{
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title">
-              <a href="{% url 'userlms:home' %}" class="site_title">
+              <a href="{% url 'customadmin:admin_home' %}" class="site_title">
                 <img src="{% static 'boimage/ApprentissageLogo.png' %}" alt=""></a>
             </div>
 
@@ -134,12 +134,9 @@ body{
 
                   <li><a href="{% url 'customadmin:course_report' %}"><i href="#"><img src="{% static 'boimage/calendar.svg'%}" alt=""></i><span style="font-size:14px !important;color:black;">User Report</span></a>
                   </li>
-
-                  <li><a><i href="#"><img src="{% static 'boimage/calendar.svg'%}"
-                    alt="">
-                    </i><span style="font-size:14px !important;color:black;"> Other Details </span> </a>
-
-                     <ul class="nav child_menu">
+                  
+                                  
+                       <ul class="nav child_menu">
                       <li>
                         <a style="color:black" href="{% url 'customadmin:country' %}"> Country </a>
                       </li>
@@ -155,18 +152,20 @@ body{
               <a  href="{% url 'grades:grading_systems_home' %}"> Grading System</a>
             </li>
 
-           <!--  <li>
+            <li>
               <a  href="{% url 'grades:add_grade' %}"> Add Grade </a>
-            </li> -->
+            </li> 
                                       {% if not user.is_anonymous %}
                       {% if user|check_permission:'generic.can_view_category' %}
                         <li> 
                              <a style="color:black" href="{% url 'customadmin:all_category_user' %}">Categories </a>
                         </li>
+                        
                       {% endif %}
+                      
 
                     {% endif %}
-                      <li><a href="#">text</a></li>
+                    
                     </ul>
                   </li>
                   <!-- <li><a><i href="#"><img src="{% static 'boimage/chart.svg'  %}" alt=""></i><span> Analytics </span> 
@@ -191,23 +190,22 @@ body{
                  <input type="text"  placeholder="search....">
                </div>
 
-              <ul class="navbar-right">
+               <ul class="navbar-right">
                 
                 <li class="nav-item dropdown open" style="padding-left: 15px;">
                   <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                    <img src="{% static 'boimage/img.jpg' %}" alt="">{{ user.first_name }}
+                   {% if user.is_authenticated %}
+                    <img src="{% static 'boimage/img.jpg' %}" alt="">Welcome, {{user.email}}
+
                   </a>
+                    <a  href="{% url 'customadmin:logout' %}" >logout</a>
+                     {% endif %}
                   <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
 
-                    <a class="dropdown-item"  href="javascript:;"> Profile</a> 
+                    
 
-                      <a class="dropdown-item"  href="javascript:;">
-                        <span class="badge bg-red pull-right">50%</span>
-                        <span>Settings</span>
-                      </a>
 
-                       <a class="dropdown-item">Help</a>
-                    <a class="dropdown-item"  href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+              
 
                     
        <!--  <a class="dropdown-item" href="#">Delivered Status</a>
@@ -303,12 +301,8 @@ body{
                     </li>
                   </ul>
                 </li>
-                <li class="nav-item dropdown open" style="padding-left: 15px;">
-                  <a href="javascript:;" class="bell_img">
-                    <img src="{% static 'boimage/bell.svg' %}" alt="">
-                  </a>
-               </li>
-              </ul>
+                
+              </ul> 
             </nav>
           </div>
         </div>

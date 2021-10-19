@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect
+from django.db.models.expressions import OrderBy
+from django.shortcuts import get_object_or_404, render,redirect
 
 # Create your views here.
 
@@ -29,22 +30,31 @@ def trending_course():
 	trending_course=None
 	total_views=0
 	course_list=CoursesEndUser.objects.filter(access='PUBLIC',state='PUBLISHED')
+	print('course_list',course_list)
 	for course in course_list:
 		if course.total_view > total_views:
 			trending_course = course
 			total_views=course.total_view
+			
 	return trending_course
+	
 
 
 
-@is_profile_complete(next='/home')
+# @is_profile_complete(next='/home')
 def home(request):
+	all_course_front = len(CoursesEndUser.objects.all())
+	print(all_course_front)
+	all_front = CoursesEndUser.objects.filter(access='PUBLIC')[all_course_front-8::-1]	
+
+	
 	#return render(request,'user_lms/student_dashboard.html',{})
 	#is_profile_completed(request,next=None)
 	all_courses=[]
 	#trending_course=trending_course()
 	#print(request.get_full_path())
 	all_cuser_categories=UserCategories.objects.all()
+
 	if len(all_cuser_categories) > 10:
 		all_cuser_categories = all_cuser_categories[0:10]
 	uc=None
@@ -52,6 +62,7 @@ def home(request):
 	if request.GET.get('category',None) is not None:
 		category = request.GET['category']
 		uc = UserCategories.objects.get(name=category)
+		
 		if request.user.is_authenticated:
 			if request.user.groups.filter(name=settings.END_USER_GROUP).exists():
 				#print("org user")
@@ -77,18 +88,27 @@ def home(request):
 		else:
 			course_list.extend(CoursesEndUser.objects.filter(category_id=uc.id,state='PUBLISHED',access='PUBLIC'))
 			print("user not logged in",course_list)
+		is_fav=[]
+		for i in all_courses:
+			post=get_object_or_404(CoursesEndUser,id=i.id)
+			if post.favourites.filter(id=request.user.id).exists():
+				is_fav.append(post.id)
+				print(is_fav)
 
-		
+
 		if trending_course is not None:
-			return render(request,'user_lms/first.html',{'user':request.user,'object_list':course_list,
-				'categories':all_cuser_categories,'trending':trending_course})
+			
+			return render(request,'user_lms/first.html',{'room_name': "broadcast",'user':request.user,'all':all_front,'object_list':course_list,
+				'categories':all_cuser_categories,'trending':trending_course,'is_fav':is_fav})
 		else:
-			return render(request,'user_lms/first.html',{'user':request.user,'object_list':course_list,
-				'categories':all_cuser_categories})
+			
+			return render(request,'user_lms/first.html',{'room_name': "broadcast",'user':request.user,'all':all_front,'object_list':course_list,
+				'categories':all_cuser_categories,'is_fav':is_fav})
+
 	 
 	if request.user.is_authenticated:
 		if request.user.groups.filter(name=settings.END_USER_GROUP).exists():
-			#print("org user")
+			# print("org user")
 			#ui=UserInformation.objects.filter(user_id=request.user.id)
 			orgs=request.user.organization_student.all()
 			if len(orgs) > 0:
@@ -111,21 +131,36 @@ def home(request):
 		if c not in all_courses:
 			all_courses.append(c)
 
-	all_students = UserInformation.objects.filter(position='student').count()
+	all_students = len(get_user_model().objects.filter(position='student'))
+	print('kjsdgjggggggggggggggggjfsgdsdhjhjgjds')
+	print(all_students)
 	all_course = CoursesEndUser.objects.filter(access='public').count()
-	all_instructor = UserInformation.objects.filter(position='teacher').count()
+	print(all_course)
+	all_instructor = len(get_user_model().objects.filter(position='teacher'))
+	print(all_instructor)
 
 	total_views=0
+	is_fav=[]
+	print(is_fav)
+	for i in all_courses:
+		# print('cour/se id ',i.id)
+		post=get_object_or_404(CoursesEndUser,id=i.id)
+		# print('the post is',post)
+		# print(post.id)
+		if post.favourites.filter(id=request.user.id).exists():
+			# print('fav is ',post.id)
+			is_fav.append(post.id)
+	print(is_fav)	
 
 	if trending_course is not None:
 
-		return render(request,'user_lms/first.html',{'user':request.user,'object_list':all_courses,
-				'categories':all_cuser_categories,'all_students':all_students,
+		return render(request,'user_lms/first.html',{'room_name': "broadcast",'user':request.user,'all':all_front,'object_list':all_courses,
+				'categories':all_cuser_categories,'all_students':all_students,'is_fav':is_fav,
 				'all_course':all_course,'all_instructor':all_instructor,'trending':trending_course
 				})
 	else:
-		return render(request,'user_lms/first.html',{'user':request.user,'object_list':all_courses,
-				'categories':all_cuser_categories,'all_students':all_students,
+		return render(request,'user_lms/first.html',{'room_name': "broadcast",'user':request.user,'all':all_front,'object_list':all_courses,
+				'categories':all_cuser_categories,'all_students':all_students,'is_fav':is_fav,
 				'all_course':all_course,'all_instructor':all_instructor,
 				})
 
@@ -312,20 +347,120 @@ def useradmin(request):
 from customadmin.models import CourseEnroll,SpinActivity,AssignmentActivity
 from django.shortcuts import get_object_or_404
 
-
+from customadmin.models import  UrlActivity,PDFFActivity,PPTActivity, DocActivity
 def get_activity(request,pk):
-	if request.method=="POST":
-		def get_object(id):
+	def get_object(id):
 			obj = get_object_or_404(Activities, id = id) 
 			return obj
-
-		act=get_object(pk)
-
+	print(pk)
+	act=get_object(pk)
+	print(act.activity_type)
+	print('key is ',act)
+	if request.method=="POST":
+		print('the post meth')
+		
 		if act.activity_type=="Assignment":
 			ass=AssignmentActivity.objects.filter(id=act.content_id)
+			# status = request.POST.get('status',None)
+			# print('status',status)
+			for i in ass:
+				i.status = 'True'
+				i.save()
+			
+		
+			
+			
+			
+
+			
+			ass=AssignmentActivity.objects.filter(id=act.content_id)
+			print(ass[0].status)
+			# ass.status = status
+		
+			# ass.save()
+
+			assignment_desc=ass[0].description+'@'+ass[0].question_file.url+'@'+str(ass[0].status)
+			print(assignment_desc)
 			if len(ass) > 0:
-				return HttpResponse(ass[0].question_file.url)
-	return HttpResponse("error")
+				# return HttpResponse(ass[0].question_file.url)
+				# return HttpResponse(ass[0].question_file.url)
+				return HttpResponse(assignment_desc)
+		elif act.activity_type=="urlactivity":
+			ul= UrlActivity.objects.filter(id=act.content_id)
+			# print(ul)
+			if len(ul) > 0:
+				return HttpResponse(ul[0].website)
+				
+		elif act.activity_type=="pptactivity":
+			pd= PPTActivity.objects.filter(id=act.content_id)
+			print(pd)
+			assignment_desc=pd[0].description+'@'+pd[0].pptfile.url
+			print(assignment_desc)
+			# print(pd)
+			if len(pd) > 0:
+				return HttpResponse(pd[0].assignment_desc)
+				
+		elif act.activity_type=="pdfactivity":
+			pd= PDFFActivity.objects.filter(id=act.content_id)
+			print(pd)
+			assignment_desc=pd[0].description+'@'+pd[0].pdffile.url
+			print(assignment_desc)
+			if len(pd) > 0:
+				return HttpResponse(pd[0].assignment_desc)
+		elif act.activity_type=="docactivity":
+			pd= DocActivity.objects.filter(id=act.content_id)
+			if len(pd) > 0:
+				return HttpResponse(pd[0].docfile.url)	
+
+	elif request.method == "GET":
+		if act.activity_type=="Assignment":
+			ass=AssignmentActivity.objects.filter(id=act.content_id)
+			# print(ass)
+			if len(ass) > 0:
+				return HttpResponse(ass[0].question_file.url,)
+		elif act.activity_type=="urlactivity":
+			ul= UrlActivity.objects.filter(id=act.content_id)
+			# print(ul)
+			if len(ul) > 0:
+				return HttpResponse(ul[0].website)
+				
+		elif act.activity_type=="pptactivity":
+			pd= PPTActivity.objects.filter(id=act.content_id)
+			print(pd)
+			assignment_desc=pd[0].description+'@'+pd[0].pptfile.url
+			print(assignment_desc)
+			# print(pd)
+			if len(pd) > 0:
+				return HttpResponse(assignment_desc)
+
+		elif act.activity_type=="video":
+			pd= ContentVideo.objects.filter(id=act.content_id)
+			print('this is video'.pd)
+			assignment_desc=pd[0].description
+			print(assignment_desc)
+			# print(pd)
+			if len(pd) > 0:
+				return HttpResponse(assignment_desc)
+
+		elif act.activity_type=="pdfactivity":
+			df= PDFFActivity.objects.filter(id=act.content_id)
+			print(df)
+			assignment_desc=df[0].description+'@'+df[0].pdffile.url
+			print(assignment_desc)
+			# print(df)
+			if len(df) > 0:
+				return HttpResponse(assignment_desc)
+
+		elif act.activity_type=="docactivity":
+			dd= DocActivity.objects.filter(id=act.content_id)
+			print(dd)
+			assignment_desc=dd[0].description+'@'+dd[0].docfile.url
+			print(assignment_desc)
+			if len(dd) > 0:
+				return HttpResponse(assignment_desc)
+					
+	return HttpResponse("Error")
+
 
 def show_spin_activity(request,pk):
 	if request.method=="POST":
@@ -531,6 +666,7 @@ def user_profile(request):
 	if request.user.is_superuser and not request.user.has_organization:
 		from customadmin.forms import CreateOrganizationForm
 		form = CreateOrganizationForm()
+	
 		context['form'] = form
 	return render(request,'user_lms/profile.html',context)
 
@@ -862,7 +998,7 @@ def course_dashboard(request,*args,**kwargs):
 			# 		is_org_course=True
 			# 		Organization.objects.filter(id=course)		
 			#print(is_org_course)
-			discussions=Discussion.objects.filter(course=obj)
+			discussions=Discussion.objects.filter(course=obj).order_by('created_date')[::-1]
 			#ui=UserInformation.objects.all()
 			ce,created = CourseEnroll.objects.get_or_create(course_id=courseid,
 				user=request.user,is_completed=0)
@@ -880,6 +1016,7 @@ def course_dashboard(request,*args,**kwargs):
 			#if created == True:
 			ce.create_topic_answerpaper(courseid,request.user.id)
 			all_content=all_available_topic_and_subtopic(courseid=courseid,user=True)
+			print(all_content)
 
 			#get_last_opened_topic(obj,request.user,all_content)
 
@@ -927,6 +1064,81 @@ def add_discussion(request):
 			print(e)
 			return HttpResponse("error occured")
 
+# ######### this is alert state chnage
+# def add_alert(request):
+# 	if request.method =="POST":
+# 		state =request.POST.get('state',None)
+# 		asss = AssignmentActivity(state =state)
+#         asss.save()
+#         return HttpResponse("state has been changed")
+			
+			
+
+
+
+
+
+
+
+
+from .models import Notes
+def add_notes(request):
+	if request.method=="POST":
+		print("this is notes requests")
+		# print(request.POST)
+		# pass
+		try:
+			note=request.POST.get('note',None)
+			print(note)
+			course=CoursesEndUser.objects.get(id=int(request.POST.get('course',None)))
+			print('################33')
+			print(course)
+			author=get_user_model().objects.get(id=int(request.POST.get('author',None)))
+			print('##############')
+			print(author)
+			Notes.objects.create(note=note,course=course,author=author)
+			return HttpResponse("notes has been submitted")
+		except Exception as e:
+			print(e)
+			return HttpResponse("error occured")
+	return HttpResponse("this is notes ")		
+
+
+def show_notes(request):
+	objects = Notes.objects.filter(author=request.user )
+	return render(request,'user_lms/show_notes.html',{'objects':objects})
+		
+
+
+###wishlist#################
+
+@login_required
+def fav(request,id):
+	post=get_object_or_404(CoursesEndUser, id=id)
+	if post.favourites.filter(id=request.user.id).exists():
+		post.favourites.remove(request.user)
+		print('remove')
+	else:
+		post.favourites.add(request.user)
+		print('add')
+	return HttpResponseRedirect(request.META['HTTP_REFERER'])
+	
+@login_required
+def Wishlistfun(request):
+	new=CoursesEndUser.objects.filter(favourites=request.user)
+	return render(request,'user_lms/fav.html',{'new':new})
+
+
+
+
+
+
+
+
+
+
+
+
 
 from customadmin.models import ContentVideo
 def is_open(request):
@@ -947,6 +1159,9 @@ def is_open(request):
 					#print(cv)
 					if len(cv) > 0:
 						video_href= cv[0].video.url
+						print(cv[0].description)
+						# kaif
+						video_href=video_href+'@'+cv[0].description
 
 			#ContentVideo.objects.filter(id=video)
 			if len(tw) > 0:

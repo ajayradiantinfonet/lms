@@ -117,7 +117,7 @@ img {
             <div class="row">
               <div class="col-md-9 col-sm-9">
                 <!-- <div class="x_panel company_height"> -->
-                  <center><h5 class="head-text">Your Profile</h5>
+                  <center><h5 class="head-text"> Update Your Profile</h5>
 
                   <form action="{%  url 'userlms:profile_submit' user.id  %}" method="post">
 
@@ -140,7 +140,7 @@ img {
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h2 class="head-tag">Personal Information Edit</h2> 
+                <h2 class="head-tag">Personal Information </h2> 
               </div>
             </div>
             
@@ -181,8 +181,8 @@ img {
             <br/>
             <div class="row">
               <div class="col-md-4">
-                    <h2 class="head-tag">E-Mail ID Edit</h2>
-                    <input type="text" id="email" value="{{user.email}}" class="form-control" name="email" />
+                    <h2 class="head-tag">E-Mail ID </h2>
+                    <input type="text" id="email"   value="{{user.email}}" class="form-control" name="email" />
               </div>
               <div class="col-md-4">
                 
@@ -196,10 +196,12 @@ img {
             <div class="row">
                   
               <div class="col-md-4">
-                    <h2 class="head-tag">Mobile Number Edit</h2>
-                    <input type="number" id="phone" value="{{ user.phone }}" 
+                    <h2 class="head-tag">Mobile Number </h2>
+                    <input type="number" id="phone" maxlength="10" value="{{ user.phone }}" 
                     class="form-control" name="phone" />
               </div>
+
+              
               <div class="col-md-4"></div>
               <div class="col-md-4"></div>
             </div>
@@ -207,7 +209,7 @@ img {
               <br/>
               <div class="row">
                   <div class="col-md-12">
-                    <h2 class="head-tag">Address Edit</h2>
+                    <h2 class="head-tag">Address </h2>
                   </div>
               </div>
               <div class="row">
@@ -225,8 +227,8 @@ img {
                 
               <div class="row">
                        <div class="col-md-9 offset-md-4">
-                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">Save</button>
-                          <button type="submit" class="btn btn-danger save-delete5">Delete</button>
+                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">update profile</button>
+                          <!-- <button type="submit" class="btn btn-danger save-delete5">Delete</button> -->
                         </div>
               </div>
             </form>
@@ -398,7 +400,7 @@ img {
   <div class="col-md-1">
   </div>
   <div class="col-md-3">
-    <div style="border: 1px solid #80808026;padding: 6px 0px;">
+    <div style="border: 3px solid #80808026;padding: 6px 0px;">
       <div class="col-md-6 image_w">
         {% if user.image %}
           <img class="img-circle1 img1" src="{{ user.image.url }}"  style="border-radius:50%;width:100px;height:100px;"/>
@@ -409,9 +411,16 @@ img {
         <div class="col-md-6" style="padding: 6px 6px;"><p>Hello</p><h2 style="font-size: 12px;
       font-weight: 700;">{{ user.get_full_name }}</h2></div>
     </div>
-    <div style="border-radius: 4px;border: 1px solid #80808026; margin: 17px 0px;height: 62vh;padding: 6px 0px;">
-              <h2 style="font-size: 13px;text-align: center;padding: 6px 0px;">Profile Information</h2>
-    </div>
+    <div style="border-radius: 4px;border: 3px solid #80808026; margin: 17px 0px;height: 62vh;padding: 6px 0px;">
+              <h2 style="font-size: 18px;text-align: center;padding: 6px 0px;">Profile Information</h2>
+                  <ul style=" font-size: 14px "><li>{{ user.email }}</li>
+                    <li>{{ user.phone }}</li>
+                    <li>{{ user.gender }}</li>
+                     <li>{{ user.address }}</li>
+                     <li>{{ user.address1 }}</li>
+                     <li>{{ user.pincode }}</li>
+                  </ul>
+            </div>
 
   </div> <!--col-3-->
 
@@ -420,21 +429,20 @@ img {
   <div class="col-md-8">
 
 
-            {% if messages %}
-        <ul class="messages">
-                    {% for message in messages %}
-                   <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-
-                        {{ message }}
-                    </li>
-                    {% endfor %}
-        </ul>
-    {% endif %}
-            <div class="row">
-              <div class="col-md-9 col-sm-9">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+                        <i class="fa fa-close"></i>
+                    </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
+    <!-- <div class=" border"> -->
+            <div class="row ">
+              <div class="col-md-9 col-sm-9  ">
                 <!-- <div class="x_panel company_height"> -->
-                  <center><h5 class="head-text">Your Profile</h5>
-
+                  <center><h5 class="head-text"> Update Your Profile</h5>
+                   
                   <form action="{%  url 'userlms:profile_submit' user.id  %}" method="post" enctype="multipart/form-data">
 
 
@@ -457,16 +465,18 @@ img {
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h2 class="head-tag">Personal Information Edit</h2> 
+                <h2 class="head-tag">Personal Information </h2> 
               </div>
             </div>
             
             <div class="row">
               <div class="col-md-4">
+                <h3 class="head-tag">First Name :</h3>
                 <input type="text" id="first_name" class="form-control" 
                 value="{{user.first_name}}" name="first_name"/>
               </div>
               <div class="col-md-4">
+                <h3 class="head-tag">Last Name:</h3>
                 <input type="text" id="last_name" class="form-control" 
                 value="{{user.last_name}}" name="last_name" />
               </div>
@@ -479,7 +489,7 @@ img {
 
             <div class="row">
               <div class="col-md-6">
-                <h2 class="head-tag">Gender</h2>
+                <h2 class="head-tag">Gender :</h2>
                   <div class="row">
                     <input type="radio" id="gender1" name="gender" style="display: none;" value="male" />
                     {% if user.gender == "male" %}
@@ -515,8 +525,8 @@ img {
             <br/>
             <div class="row">
               <div class="col-md-4">
-                    <h2 class="head-tag">E-Mail ID Edit</h2>
-                    <input type="text" id="email" value="{{user.email}}" class="form-control" name="email" />
+                    <h2 class="head-tag">E-Mail ID :</h2>
+                    <input type="email" id="email" value="{{user.email}}" class="form-control" name="email" />
               </div>
               <div class="col-md-4">
                 
@@ -530,8 +540,8 @@ img {
             <div class="row">
                   
               <div class="col-md-4">
-                    <h2 class="head-tag">Mobile Number Edit</h2>
-                    <input type="number" id="phone" value="{{ user.phone }}" 
+                    <h2 class="head-tag">Mobile Number :</h2>
+                    <input type="number" onkeypress="return this.value.length < 10;" oninput="if(this.value.length>=10) id="phone" value="{{ user.phone }}" 
                     class="form-control" name="phone" />
               </div>
               <div class="col-md-4"></div>
@@ -541,15 +551,18 @@ img {
               <br/>
               <div class="row">
                   <div class="col-md-12">
-                    <h2 class="head-tag">Address Edit</h2>
+                    <h2 class="head-tag">Address:</h2>
                   </div>
               </div>
               <div class="row">
                     <div class="col-md-4">
+                    <h3 class="head-tag">Line1:</h3>
                     <input type="text" id="address" class="form-control"  value="{% if user.address %} {{user.address}} {% endif %}" name="address"></div>
                     <div class="col-md-4">
+                      <h3 class="head-tag">Line2:</h3>
                     <input type="text" id="address1" class="form-control" value="{% if user.address1 %} {{user.address1}} {% endif %}" name="address1"></div>
                     <div class="col-md-4">
+                      <h3 class="head-tag">Pincode:</h3>
                     <input type="text" id="pincode" class="form-control" value="{% if user.pincode %} {{user.pincode}} {% endif %}" name="pincode"></div>
                   
                 
@@ -559,16 +572,16 @@ img {
                 
               <div class="row">
                        <div class="col-md-9 offset-md-4">
-                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">Save</button>
-                          <button type="submit" class="btn btn-danger save-delete5">Delete</button>
+                          <button type="submit" id="submit" name="submit" class="btn btn-primary save-delete5">Update Profile</button>
+                          <!-- <button type="submit" class="btn btn-danger save-delete5">Delete</button> -->
                         </div>
               </div>
             </form>
 
              </div> <!-- /tab content-->
-                  
+            </div>     
       </div>
-
+    
 {% endif %}
 
 

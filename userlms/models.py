@@ -11,7 +11,6 @@ from django.conf import settings
 	
 
 class Notes(models.Model):
-	#id=models.IntegerField(primary_key=True,default=True)
 	note = models.TextField()
 	author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 	course = models.ForeignKey(CoursesEndUser,on_delete=models.CASCADE,null=True)
@@ -20,7 +19,7 @@ class Notes(models.Model):
 # class Forum(BaseMixin):
 # 	def __str__(self):
 # 		return self.created_date
-
+ 
 class Discussion(models.Model):
 	#forum = models.ForeignKey(BaseMixin,blank=True,on_delete=models.CASCADE)
 	course =models.ForeignKey(CoursesEndUser,on_delete=models.CASCADE,null=True)

@@ -1,0 +1,58 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+{% load static %}
+
+
+
+ <div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{desc}}</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+
+
+      <li class="active">{{ desc }}</li>
+
+    
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Group Name</th>
+      <th scope="col">org_id</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for q in obj %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>{{q.name}}</td>
+      <td>{{q.org_id}}</td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+  {% endblock %}

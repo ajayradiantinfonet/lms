@@ -1,36 +1,28 @@
+ {% extends 'head2.html'%} {% block inner_content %} {% load static %} {% load crispy_forms_tags %} {% load mytag %}
 
-{% extends 'head2.html'%}
-
-{% block inner_content %}
-{% load static %}
-{% load crispy_forms_tags %}
-{% load mytag %}
-
-<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
 <div class="right_col" role="main">
-{% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-dismissible alert-{{ message.tags }}">
-              <button type="button" class="close" data-dismiss="alert">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
                   <i class="fa fa-close"></i>
               </button>
-              <strong>{{ message }}</strong>
-          </div>
-          {% endfor %}
-        {% endif %}
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
 
-        
-       
-                                
-            <!-- row courses-->
-          <div class="row">
-            <div class="col-md-12 col-sm-12 ">
-              <div class="dashboard_graph companies-courses responsive-section">
+
+
+
+    <!-- row courses-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph companies-courses responsive-section">
                 <div class="x_title h2-size table-border1">
                     <h2>{{ desc }}</h2>
-                      <ul class="nav navbar-right panel_toolbox">
+                    <ul class="nav navbar-right panel_toolbox">
                         <li>
-                          <!-- <div class="btn_dashgraph" data-toggle="buttons">
+                            <!-- <div class="btn_dashgraph" data-toggle="buttons">
                                        
                             {% if not user.is_anonymous %}
                               {% if user|check_permission:'generic.can_create_organization' %}
@@ -47,15 +39,15 @@
                                
                           </div> -->
                         </li>
-                      </ul>
-                <div class="clearfix"></div>
-              </div>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
 
-              <div class="box_bottom">
+                <div class="box_bottom">
 
 
-                
-  <!-- <div id="content" class="pmd-content inner-page">
+
+                    <!-- <div id="content" class="pmd-content inner-page">
 
     {% if messages %}
     {% for message in messages %}
@@ -93,50 +85,42 @@
 
         
         <div class="pmd-card-body" style="height: 400px;">  -->
-                
-              <div class="row">
-                <div class="col-md-8">
-                  <form method="post" action="." enctype="multipart/form-data">
-                
 
-                    <p>{{ form|crispy }}</p>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form method="post" action="." enctype="multipart/form-data">
 
-                    {% csrf_token %}
 
-                    <input value="{{next}}" name="next" type="hidden" />
+                                <p>{{ form|crispy }}</p>
 
-                    <br/>
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
-                      </div>
+                                {% csrf_token %}
+
+                                <input value="{{next}}" name="next" type="hidden" />
+
+                                <br/>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
                     </div>
 
-                  </form>
-                  
+
+
                 </div>
-              </div>
-
-             
-
             </div>
-          </div>
 
- {% endblock %}
-            
-{% block inpage_script %}
- <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
- <script>
+            {% endblock %} {% block inpage_script %}
+            <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+            <script>
+                $('.datepicker').datepicker({
+                    'minDate': '+0d',
+                    'changeYear': 'true',
+                });
+            </script>
 
-  $('.datepicker').datepicker({
-    'minDate' :'+0d',
-    'changeYear':'true',
-  });
-
-  </script>
-
-{% endblock %}
-
-
-
- 
+            {% endblock %}

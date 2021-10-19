@@ -1,0 +1,19 @@
+{% extends 'user_lms/header_2.html' %}
+
+{% block user_course %} 
+<br>
+<center>
+<h2> lets check Notes</h2></center>
+<hr>
+<br>
+{%  for obj in objects %}
+  <center>ID:{{obj.id}}<br>
+  course:{{obj.course}}<br>
+  author:{{obj.author}}<br>
+  Notes:{{obj.note }}<br>
+  date:{{obj.created_date}}<br></center>
+  <hr>
+
+
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,126 @@
+</form> {% extends 'head2.html'%} {% block inner_content %} {% load static %} {% load crispy_forms_tags %} {% load mytag %}
+
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<div class="right_col" role="main">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+                  <i class="fa fa-close"></i>
+              </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
+
+
+
+
+    <!-- row courses-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph companies-courses responsive-section">
+                <div class="x_title h2-size table-border1">
+                    <h2>{{ desc }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <!-- <div class="btn_dashgraph" data-toggle="buttons">
+                                       
+                            {% if not user.is_anonymous %}
+                              {% if user|check_permission:'generic.can_create_organization' %}
+                                <label class="btn btn_upload">
+                                <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
+                                </label>
+
+                        
+                               <label class="btn btn_add add_company">
+                                  <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Company</span>
+                              </label> 
+                              {% endif %}
+                            {% endif %}
+                               
+                          </div> -->
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="box_bottom">
+
+
+
+                    <!-- <div id="content" class="pmd-content inner-page">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+<div class="container-fluid full-width-container data-tables">
+
+   <h1 class="section-title" id="services">
+      <span>{{ desc}}</span>
+    </h1>
+
+     
+    <ol class="breadcrumb text-left">
+      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+      <li class="active">{{ desc }}</li>
+    </ol>
+
+    
+
+
+    <section class="row component-section">
+
+      <div class=" col-md-12">
+
+        <div class="section section-custom billinfo"> 
+     
+      <div class="pmd-card pmd-z-depth">
+
+        
+        <div class="pmd-card-body" style="height: 400px;">  -->
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form method="post" action="/admin/urlactivity/" enctype="multipart/form-data">
+
+
+                                <p>{{ form|crispy }}</p>
+
+                                {% csrf_token %}
+
+                                <input value="{{next}}" name="next" type="hidden" />
+
+                                <br/>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            {% endblock %} {% block inpage_script %}
+            <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+            <script>
+                $('.datepicker').datepicker({
+                    'minDate': '+0d',
+                    'changeYear': 'true',
+                });
+            </script>
+
+            {% endblock %}

@@ -50,16 +50,16 @@ class Layer(models.Model):
 	class Meta:
 		unique_together =(('course','user_name'),)
 
-# class FileInformation(models.Model):
-# 	file_name=models.CharField(max_length=255,unique=True)
-# 	file_size=models.CharField(max_length=255)
-# 	room_id=models.CharField(max_length=255
-# 	sent_from=models.CharField(max_length=255)
-# 	sent_to=models.CharField(max_length=255)
-# 	file=models.FileField(upload_to='uploads/')
+class FileInformation(models.Model):
+	file_name=models.CharField(max_length=255,unique=True)
+	file_size=models.CharField(max_length=255)
+	room_id=models.CharField(max_length=255)
+	sent_from=models.CharField(max_length=255)
+	sent_to=models.CharField(max_length=255)
+	file=models.FileField(upload_to='uploads/')
 
-# 	def __str__(self):
-# 		return self.file_name
+	def __str__(self):
+		return self.file_name
 
 
 class Chatmessage(models.Model):

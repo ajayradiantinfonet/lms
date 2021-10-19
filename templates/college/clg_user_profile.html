@@ -1,0 +1,490 @@
+{% extends 'head4.html' %} {% block inner_content %} {% load static %} {% load mytag %} {% load crispy_forms_tags %}
+
+<!-- 
+<style>
+
+  @media only screen and (min-width:1030px) and (max-width:1366px) {
+    #cards_landscape_wrap-2 .card-flyer .img-height img{
+        height: 110px;
+      }
+      .btn-save{
+      float: right;
+    position: relative;
+    top: 2px;
+    right: 0;
+    }
+       .height-card1 {
+    height: 240px;
+    }
+      #cards_landscape_wrap-2 .card-flyer .text-box h6 {
+    font-size: 10px;
+  }
+.right_col {
+    min-height: 635px !important;
+}
+.custom-file-upload .custom-file-upload2 {
+  font-size: 11px;
+}
+.profile_p{
+  font-size: 11px;
+}
+.save-delete1 {
+    font-size: 11px;}
+  
+    .ul-management li {
+    margin: 0px 3px !important;
+    font-size: 10px !important;}
+    .ul-management img {
+    width: 12px !important;
+}
+#cards_landscape_wrap-2 .card-flyer .text-box .text-container {
+    padding: 10px 1px;
+}
+  }
+</style>
+ -->
+
+
+<div class="right_col" role="main">
+
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+                      <i class="fa fa-close"></i>
+                  </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %} {% endif %}
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="dashboard_graph border_radius">
+                <div class="col-md-6 col-sm-6 border_radius1">
+                    <h2>Add User</h2>
+                </div>
+                <div class="col-md-6 col-sm-6 left-courses border_radius1">
+                    <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                    <p>User<i class="fa fa-angle-right" aria-hidden="true"></i></p>
+                    <p>Add User<i></i></p>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!--row 2  -->
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel company_height">
+                    <h2 class="head-tag1">User Information</h2>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="head-tag">First Name*</h2>
+                                <!-- <input type="text" id="fullname" class="form-control" name="fullname"> -->
+                                <input type="text" class="form-control" name="first_name" id="first_name" value="{{cuser.first_name}}" required="" placeholder="first name" title="enter your first name if any.">
+
+                                <h2 class="head-tag">Last Name*</h2>
+                                <input type="text" class="form-control" name="last_name" id="last_name" value="{{cuser.last_name}}" required="" placeholder="last name" title="enter your last name if any.">
+
+                                <h2 class="head-tag">Mobile No*</h2>
+                                <input type="number" onkeypress="return this.value.length < 10;" oninput="if(this.value.length>=10) { this.value = this.value.slice(0,10); }" placeholder="Enter 10 Digits no." id="phone" maxlength="10" class="form-control" name="phone" value="{{ cuser.phone}}">
+
+
+                                <h2 class="head-tag">Email ID*</h2>
+                                <input type="text" id="email" class="form-control" name="email" value="{{ cuser.email }}">
+
+                                <h2 class="head-tag">Password*</h2>
+                                <input type="password" id="password" class="form-control" name="password" value="{{ cuser.email }}">
+
+                                <h2 class="head-tag">Password Again*</h2>
+                                <input type="password" id="password_again" class="form-control" name="password_again" value="{{ cuser.email }}">
+                                 <h2 class="head-tag">College</h2>
+                            
+                                {{ form.clg_name }}
+                                
+                                <h2 class="head-tag">Company</h2>
+                                {{ form.organization_name }}
+                                
+                                <!--  <input type="text" id="organization" class="form-control" name="organization" value="{{ cuser.organization_student.all.0 }}"> -->
+                            </div>
+                                 
+
+                            
+                            <div class="col-md-4">
+                                <div class="profile-header-container">
+                                    <div class="profile-header-img">
+                                        <img class="img-circle" src="{% static 'boimage/account-circle.svg' %}">
+                                        <div class="rank-label-container">
+                                            <!-- <span class="label label-default rank-label camera-user"><i class="fa fa-camera" aria-hidden="true"></i></span> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <h2 class="profile-tag">Add Profile Picture</h2> -->
+
+                                <div class="company_upload">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p style="float: right;">
+                                                Upload Profile:
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="custom-file-upload file-size">
+                                                <label for="imgupload" class="up-load1">
+                          Choose File
+                          </label>
+
+
+
+
+
+
+
+
+
+                                                <input id="imgupload" type="file" name="image" accept="image/" onchange="fileValidation()" />
+                                            </div>
+                                        </div>
+                                        <!--  <div class="col-md-12" style="text-align: center;">
+                          <button type="submit" class="btn save-delete1" style="padding: 3px 19px;">Upload</button>
+                      </div> -->
+                                        <div class="col-md-6"></div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <!-- /row -->
+
+
+
+                        <!-- /Company Information-->
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="head-tag">Gender*</h2>
+
+                                <input type="radio" id="gender1" name="gender" style="display: none;" value="male" />
+                                <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/male-b.svg' %}" id="mgender" alt="">
+                                    <span>Male</span>
+                                </div>
+                                <input type="radio" id="gender2" name="gender" value="female" style="display: none;" />
+                                <div class="col-md-6 user-image"><img class="gender" src="{% static 'user_lms/img/female-b.svg' %}" id="fgender" alt="">
+                                    <span>Female</span>
+
+
+                                    <!--  <div class="col-md-6 user-image"><img src="{% static 'boimage/male-b.svg' %}" alt=""><span>Male</span>
+                   </div>
+                   <div class="col-md-6 user-image"><img src="{% static 'boimage/female-b.svg' %}" alt=""><span>Female</span>
+                   </div> -->
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">Position</h2>
+                                <!-- <input type="text" id="position" class="form-control" name="position" value="{{ cuser.position }}"> -->
+                                {{ form.position }}
+                            </div>
+
+
+                            <!-- <div class="col-md-4"></div><br/> -->
+                            <!-- 
+                      <div class="col-md-4">
+                        <h2 class="head-tag">Registration Date</h2>
+                        <input type="text" id="fullname" class="form-control" name="fullname">
+                      </div> 
+                    -->
+
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">D.O.B</h2>
+                                <input type="text" id="dob" class="form-control" name="dob">
+                            </div>
+
+                            <div class="col-md-4"></div>
+
+                        </div>
+                        <div>
+                            <h2 class="head-tag">Address</h2>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">Line 1</h2>
+                                <input type="text" id="address" class="form-control" name="address">
+                            </div>
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">Line 2</h2>
+                                <input type="text" id="address1" class="form-control" name="address1">
+                            </div>
+
+                            <!--<div class="col-md-4">
+                      <h2 class="head-tag">House No</h2>
+                      <input type="text" id="houseno" class="form-control" name="houseno">
+                    </div>-->
+
+
+                            <!-- <div class="col-md-4"></div> -->
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">State</h2>
+                                <!-- <input type="text" id="state" class="form-control" name="state"> -->
+                                {{ form.state }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">City</h2>
+                                <!-- <input type="text" id="city" class="form-control" name="city"> -->
+                                {{ form.city }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <h2 class="head-tag">Pincode</h2>
+                                <input type="number" onkeypress="return this.value.length < 6;" oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }" id="pincode" class="form-control" name="pincode">
+                            </div>
+
+                            <div class="col-md-4"></div>
+                            <div class="col-md-9 offset-md-4">
+                                <input type="submit" class="btn btn-primary save-delete5" value="submit" />
+                                <button type="submit" class="btn btn-danger save-delete5">Cancel</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /tab content-->
+
+
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="rolemodal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title">Add Role</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="overflow-y:scroll;">
+                Enter Role Name: <input type="text" class="form-control" maxlength="30" name="role" id="role_id" /><br/>
+
+                <div class="row">
+
+                    {% if user|check_permission:'generic.can_see_all_custompermission' %} {% for perm in permissions %}
+
+                    <div class="col-md-6">
+                        <div class="">
+                            <input class="custom-control-input" type="checkbox" value="{{ perm.codename }}" data-attr="{{ perm.id }}" name="checkbox" id="checkbox6" {% if perm in user_permission %} checked {% endif %}>
+                            <label class="custom-control-label pmd-checkbox-ripple-effect" for="checkbox5">
+                         {{ perm.codename }}
+                      </label>
+                        </div>
+                    </div>
+
+
+
+                    {% endfor %} {% endif %}
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submit-role">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</div>
+</section>
+
+{% endblock %} {% block inpage_script %}
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $('#dob').datepicker({
+        "dateFormat": "mm/dd/yy",
+        'maxDate': '+0d',
+        'changeYear': 'true',
+    });
+
+
+
+    // $('.openfile').click(function(){ 
+    //   $('#imgupload').trigger('click'); 
+    // });
+
+    $('#mgender').click(function() {
+
+        $(this).attr('src', "{% static 'user_lms/img/male-b.svg' %}");
+        $('#gender1').click();
+        $("#fgender").attr('src', "{% static 'user_lms/img/female-b.svg' %}");
+    });
+
+    $('#fgender').click(function() {
+
+        $(this).attr('src', "{% static 'user_lms/img/femail-g.svg' %}");
+        $('#gender2').click();
+        $("#mgender").attr('src', "{% static 'user_lms/img/male-g.svg' %}");
+    });
+
+    $('#imgupload').on('change', function() {
+        if (this.files && this.files[0]) {
+            var img = document.querySelector('img');
+            //console.log(img[0]);
+            // var img = $('.img-circle');
+
+            console.log(URL.createObjectURL(this.files[0]));
+            $('.img-circle').on('load', function() {
+                console.log("herer");
+                //URL.revokeObjectURL($('.imgp').attr('src')); 
+                //$('.imgp').attr('src','#');
+            });
+
+            $('.img-circle').attr('src', URL.createObjectURL(this.files[0]));
+            //$('.img1').attr('src',URL.createObjectURL(this.files[0]));
+            // img.onload = () => {
+            //     URL.revokeObjectURL(img.src);  
+            // }
+
+        }
+    });
+
+
+
+
+    $('#submit-role').click(function() {
+        var role_name = $('#role_id').val();
+        permission_arr = [];
+        $("input:checkbox[id=checkbox6]:checked").each(function() {
+            permission_arr.push($(this).attr("data-attr"));
+        });
+
+        $.post({
+            url: '{% url "customadmin:add_role" %}',
+            data: {
+                'name': role_name,
+                'permission': permission_arr
+            },
+            success: function(data) {
+                if (data == 'true') {
+                    alert("role has been created");
+                    window.location.reload();
+                } else {
+                    alert(data);
+                }
+            }
+        });
+    });
+</script>
+
+
+
+<script>
+    var userid = "{{ cuser.id }}";
+
+    $('.create_user').click(function() {
+
+        if (isNaN($('#mobile').val())) {
+            alert("please enter number for mobile ");
+            return false;
+        }
+        $('#registrationForm').submit();
+    });
+
+    $('.submit_student').click(function() {
+
+        permission_arr = [];
+        $("input:checkbox[id=checkbox5]:checked").each(function() {
+            permission_arr.push($(this).attr("data-attr"));
+        });
+
+        group_arr = [];
+        $("input:checkbox[id=checkbox1]:checked").each(function() {
+            group_arr.push($(this).attr("data-attr"));
+        });
+
+        $.ajax({
+            type: 'post',
+            url: '{% url "customadmin:assign_permission_and_role" %}',
+            data: {
+                'user': "{{ cuser.user.id }}",
+                'permission': permission_arr,
+                'group': group_arr
+            },
+            success: function(data) {
+                if (data == 'true') {
+                    alert("assigned successfully");
+                } else {
+                    alert(data);
+                }
+            }
+        });
+
+
+
+    });
+
+
+    $('#add_perm').click(function() {
+        window.location.href = "{% url 'customadmin:create_permission' %}?next={{EXTRA_URL}}/admin/students/edit/{{cuser.id}}"
+    });
+</script>
+
+
+
+<script>
+    function fileValidation() {
+        var fileInput =
+            document.getElementById('imgupload');
+
+        var filePath = fileInput.value;
+
+        // Allowing file type
+        var allowedExtensions =
+            /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Invalid File! The file you uploaded is not an image or a corrupted image.')
+
+            fileInput.value = '';
+            return false;
+        }
+
+    }
+</script>
+
+
+
+
+
+
+{% endblock %}

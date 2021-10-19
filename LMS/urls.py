@@ -24,6 +24,7 @@ urlpatterns = [
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from .settings import STATIC_URL,STATIC_ROOT,MEDIA_URL,MEDIA_ROOT
 #import forms_builder.forms.urls
@@ -37,6 +38,7 @@ urlpatterns = [
     #path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('superuseradmin/', admin.site.urls),
     #path('', include('accounts.urls'),namespace="accounts"),
+    # path('mainapp/',include (('mainapp.urls','mainapp'), namespace='mainapp')),
     path("assesapi/",include(('assesapi.urls','assesapi'), namespace='assesapi')),
     path('accounts/', include (('accounts.urls','accounts'), namespace='accounts')),
     path('',include (('userlms.urls','userlms'), namespace='userlms')),
@@ -44,6 +46,7 @@ urlpatterns = [
     path('admin/',include(('customadmin.urls','customadmin'),namespace='customadmin')),
     path('grades/',include(('grades.urls','grades'),namespace='grades')),
     path('poll/',include(('polls.urls','poll'),namespace='poll')),
+    # path('chat/',include(('chat.urls','chat'),namespace='chat')),
     #url(r'^forms/', include(forms_builder.forms.urls)),
     #url(r'^forms/', include('pulpo_forms.urls'), name='base'),
     #path("forms/", include(("form.urls"),namespace='form'))

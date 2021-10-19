@@ -1,0 +1,212 @@
+{% extends 'head4.html' %}
+
+
+
+{% block inner_content %}
+
+{% load static %}
+
+{% load mytag %}
+
+
+
+
+
+<div class="right_col" role="main">
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible alert-{{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="fa fa-close"></i>
+        </button>
+        <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+{% endif %}
+
+		{% ifequal course|length 0 %}
+              <p>&nbsp;&nbsp;There is no course  available</p>
+        {% endifequal %}
+                                
+            <!-- row courses-->
+         <!--  <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+              <div class="dashboard_graph companies-courses">
+                <div class="x_title h2-size">
+                                <h2>Courses</h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                  <li>
+                                    <div class="btn_dashgraph" data-toggle="buttons">
+                                       <label class="btn btn_upload">
+                        <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
+                        </label>
+                        <label class="btn btn_add add_course_user">
+                           <img src="{% static 'boimage/plus.svg' %}" alt=""><span> Add Courses</span>
+                        </label>    
+                    </div>
+                  </li>
+                </ul>
+                <div class="clearfix"></div>
+              </div> -->
+
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 ">
+                <div class="dashboard_graph companies-courses">
+                  <div class="x_title h2-size table-border1">
+                    <h2>Courses</h2>
+                    
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li>
+                        <div class="btn_dashgraph" data-toggle="buttons">
+                          <!-- <label class="btn btn_upload">
+                            <i class="fa fa-cloud-upload bulk_img" aria-hidden="true"></i><span>Bulk Upload</span>
+                          </label> -->
+                          <label class="btn btn_add add_course_user">
+                           <img src="{% static 'boimage/plus.svg' %}"  alt=""><span> Add Courses</span>
+                          </label>         
+                        </div>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+              
+
+
+
+                <div class="box_bottom1">
+
+                  {% for obj in course %}
+
+                    <div id="cards_landscape_wrap-2">
+                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" style="margin-right:80px;">
+                     <div class="card-flyer height-card1">
+                            <div class="text-box">
+                                <div class="image-box img-height">
+                                    <img src="{{ obj.thumbnail.url }}" alt="" />
+                                    <span class="fa-img1">.
+                                    <i class="fa fa-ellipsis-v box_show" aria-hidden="true" >
+                                      <ul style="display:none;" class="box_hide box-ul">
+                                        <a class="show_course" obj_id="{{obj.id}}"><li>View</li></a>
+                                        <a class="edit_course" obj_id="{{obj.id}}"><li>Edit</li></a>
+                                        <a class="delete_course" obj_id="{{obj.id}}"><li>Suspend</li></a>
+                                        <!-- <a><li>Suspend</li></a> -->
+                                        <!-- <a href=""><li>Delete</li></a> -->
+                                    </ul>
+                                    </i>
+                                  </span>
+                                </div>
+                                <div class="text-container">
+                                      <h6 style="font-size:15px;">{{ obj.name }}</h6>
+                                        <ul class="ul-management">
+                                          <li><img src="{% static 'boimage/education.svg' %}" alt=""></li>
+                                          <li>Students</li>
+                                          <li>25 Students</li>
+                                        </ul>
+                                        <ul class="ul-management">
+                                         <li><img src="{% static 'boimage/clock.svg' %}" alt=""></li>
+                                         <li>Duration</li>
+                                         <li>3h 30 Min</li>
+                                        </ul>
+                                     </div>
+                                <div class="btn-view">
+                             <a class="btn view_btn show_course" obj_id="{{obj.id}}" >
+                                          <i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i><span>View More</span>
+                                        </a>
+                            </div>
+                            </div>
+                        </div>
+                  
+                </div>
+                </div>
+
+
+
+
+                     
+                  {% endfor %}
+
+
+                  {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation example" style="float:right">
+                    <ul class="pagination">
+                      {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                      {% else %}
+                        <li class="disabled page-item"><span></span></li>
+                      {% endif %}
+                      {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                          <li class="active page-item"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                        {% else %}
+                          <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                      {% endfor %}
+                      {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                      {% else %}
+                        <li class="disabled"><span></span></li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                  {% endif %}
+
+                 <div class="clearfix"></div>
+                </div>
+      </div>
+      </div>
+          
+          </div>
+      </div>
+    </br>
+        <!-- /page content -->
+            <!-- footer content -->
+
+                    <!-- /footer content -->
+            
+
+{% endblock %}
+
+
+{% block inpage_script %}
+
+  <script>
+
+
+    $(document).ready(function()
+    {
+      $(".box_show").click(function(){
+        $(this).children(".box_hide").toggle();
+      });
+    });
+
+    $('.add_course_user').click(function(){
+      window.location.href="{% url 'customadmin:add_course_user' %}";
+    });
+
+
+    $('.show_course').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        window.location.href="{% url 'customadmin:all_course_user'  %}"+obj_id+"/view/";
+    });
+
+    $('.edit_course').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        console.log(10)
+        window.location.href="{% url 'customadmin:all_course_user'  %}"+obj_id+"/edit/";
+    });
+    $('.delete_course').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        window.location.href="{% url 'customadmin:all_course_user'  %}"+obj_id+"/delete/";
+    });
+
+  </script>
+
+{% endblock %}
+
+
+</body>
+</html>

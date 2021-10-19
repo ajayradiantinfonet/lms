@@ -41,7 +41,7 @@
                                </div>
 
                                <div class="col-md-3">
-                                  <label class="btn btn_upload">
+                                  <label class="btn btn_upload add_user_bulk">
                                       <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
                                     </label>
                                     <label class="btn btn_add add_user">
@@ -183,6 +183,10 @@
     $('.add_user').click(function()
     {
       window.location.href="{% url 'customadmin:create_organization_user' %}";
+    });
+     $('.add_user_bulk').click(function()
+    {
+      window.location.href="{% url 'customadmin:importemployee' %}";
     });
 
     

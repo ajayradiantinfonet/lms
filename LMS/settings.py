@@ -35,9 +35,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
 
-EMAIL_HOST_USER = 'AKIAXDEPQC3JSC3VDC4T'
+EMAIL_HOST_USER = 'vatanagrwal@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'BP99CLEuYkPHWKoj6+NeHwajIdxwPecEOBdndJN1nED9'
+EMAIL_HOST_PASSWORD = 'ajaybabu0046'
 
 EMAIL_PORT = 587
 
@@ -136,8 +136,19 @@ INSTALLED_APPS = [
     'crispy_forms',
     'chat',
     'taggit',
+    # 'mainapp',
     'django_user_agents',
+    'django_celery_beat',
+    'django_celery_results',
+    'notifications_app',
+    
+    
+
+
+    
 ]
+
+ASGI_APPLICATION = 'LMS.asgi.application'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
  
@@ -166,13 +177,14 @@ DEBUG_TOOLBAR_CONFIG = {
     'SQL_WARNING_THRESHOLD': 100,
 }
 
+
 WSGI_APPLICATION = 'LMS.wsgi.application'
 
-
 use_websockets = True
-#FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
-ASGI_APPLICATION = 'LMS.routing.application'
+
+# ASGI_APPLICATION = 'LMS.routing.application'
 
 CHANNEL_LAYERS = {
     'default': {
@@ -183,6 +195,19 @@ CHANNEL_LAYERS = {
         },
     }
 }
+
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SELERLIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_TASK_TRACK_STARTED = True
+# CELERY_RESULT_BACKEND = 'django-cache'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
 
 
 INTERNAL_IPS = [
@@ -237,11 +262,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'host':'localhost',
-            'database' :'lms_ac',
-            # 'user' :'newuser',
-            # 'password':'password',
-            'user' :'peter',
-            'password':'jtp12345',
+            'database' :'lms_acc',
+            'user' : 'peter',
+            'password': 'jtp12345',
         
         },
     }
@@ -309,14 +332,15 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
 
+# TIME_ZONE = 'UTC'
 USE_I18N = True
 
-USE_L10N = False
+USE_L10N = True
 
 #USE_L10N = True
 
+# USE_TZ = False
 USE_TZ = True
-
 # Static files (CSS, JavaScript, Images)
 
 
@@ -325,7 +349,11 @@ MEDIA_ROOT = BASE_DIR / 'uploads/'
 MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# STATIC_URL = BASE_DIR / 'static/'
 STATIC_URL = '/static/'
+
+# STATIC_URL = 'http://lms.evaluer.in' + '/static/'
+
 
 STATIC_ROOT = BASE_DIR / 'static/'
 

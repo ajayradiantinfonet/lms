@@ -1,0 +1,297 @@
+{% extends 'head1.html'%}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+{% block content %}
+
+{% load static %}
+
+<div id="content" class="pmd-content inner-page">
+
+<div class="container-fluid full-width-container data-tables">
+    <!-- Title -->
+    <h1 class="section-title" id="services">
+      <span>Data Table</span>
+    </h1>
+
+      <!-- End Title -->
+  
+    <!--breadcrum start-->
+    <ol class="breadcrumb text-left">
+      <li><a href="index.html">Dashboard</a></li>
+      <li class="active">Data Table</li>
+    </ol><!--breadcrum end-->
+  
+    <!-- table card -->
+    <section class="row component-section">
+    
+      <!-- table card title and description -->
+      <!-- <div class="col-md-2">
+        <div id="card">
+          <h2>Custom Permission</h2>
+        </div>
+        <p>In its simplest form, a data table contains a top row of column names, and rows for data. Checkboxes should accompany each row if the user needs to select or manipulate data.</p>
+      </div>  -->
+
+      <!-- table card title and description end -->
+      
+      <!-- table card code and example -->
+      <div class="col-md-12">
+        <div class="component-box">
+          <!-- table card example -->
+          <div class="pmd-card pmd-z-depth pmd-card-custom-view">
+            <div class="table-responsive">
+            <div id="example-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="pmd-card-title">
+
+              <div class="data-table-title">
+              <h2 class="pmd-card-title-text">Propeller Data table</h2></div>
+
+              <div class="search-paper pmd-textfield">
+                <!-- <div id="example-checkbox_filter" class="dataTables_filter">
+                <label>
+                <input type="search" class="form-control input-sm" placeholder="Search" aria-controls="example-checkbox"></label></div> -->
+
+              </div></div><div class="custom-select-info" style="display: none;"><div class="custom-select-item"></div><div class="custom-select-action"><button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button"><i class="material-icons pmd-sm">delete</i></button><button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button"><i class="material-icons pmd-sm">more_vert</i></button></div></div><div class="row"><div class="col-sm-12">
+
+                <table id="example-checkbox" class="table pmd-table table-hover table-striped display responsive nowrap dataTable no-footer" role="grid" aria-describedby="example-checkbox_info" style="width: 100%;" width="100%" cellspacing="0">
+            <thead>
+              <tr role="row">
+                <th class="select-checkbox sorting_disabled" rowspan="1" colspan="1" style="width: 0px;" aria-label=""></th>
+                <th class="sorting_asc" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 61px;" aria-sort="ascending" aria-label="First name: activate to sort column descending">Code Name</th>
+                <th class="sorting" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 61px;" aria-label="Last name: activate to sort column ascending">Type</th>
+                <th class="sorting" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 180px;" aria-label="Position: activate to sort column ascending">Description</th>
+                <!-- <th class="sorting" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 83px;" aria-label="Office: activate to sort column ascending">Office</th>
+                <th class="sorting" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 23px;" aria-label="Age: activate to sort column ascending">Age</th>
+                <th class="sorting" tabindex="0" aria-controls="example-checkbox" rowspan="1" colspan="1" style="width: 68px;" aria-label="Start date: activate to sort column ascending">Start date</th> -->
+
+              </tr>
+            </thead>
+            <tbody>
+              
+              
+        
+              
+              
+              
+              
+              
+              
+            <!-- <tr role="row" class="odd">
+                <td class=" select-checkbox"></td>
+                <td class="sorting_1">Brielle</td>
+                <td>Williamson</td>
+                <td>Integration Specialist</td>
+                <td>New York</td>
+                <td>61</td>
+                <td>2012/12/02</td> 
+              </tr> -->
+
+              <!-- {% for item in data %}
+                <tr role="row" >
+                  <td class="select-checkbox"></td>
+                  <td class="sorting_1">{{ data.codename }}</td>
+                  <td> {{data.type}}</td>
+                  <td> {{ data.description }} </td>
+                </tr>
+
+              {% endfor %} -->
+
+              <!-- var data = JSON.parse("{{data|escapejs}}");
+    console.log(typeof(data));
+
+    //console.log(data)
+    var counter = 1;
+ 
+     // $('#addRow').on( 'click', function () {
+
+      for (i=0;i<data.length;i++){
+      
+    
+        t.row.add([
+            
+            data[i].codename,
+            data[i].type,
+            data[i].description
+            
+           // counter +'.5'
+        ]).draw(false);
+
+      }
+ 
+        counter++; -->
+
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <!-- <div class="pmd-card-footer"><div class="pmd-datatable-pagination"><div class="dataTables_length" id="example-checkbox_length"><label><span class="custom-select-title">Rows per page:</span> <span class="custom-select"> <select name="example-checkbox_length" aria-controls="example-checkbox" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> </span></label></div> -->
+      <!--   <div class="dataTables_info" id="example-checkbox_info" role="status" aria-live="polite"> 11 - 19 of 19 </div><div class="dataTables_paginate paging_simple" id="example-checkbox_paginate"><ul class="pagination"><li class="paginate_button previous" id="example-checkbox_previous"><a href="#" aria-controls="example-checkbox" data-dt-idx="0" tabindex="0"> </a></li><li class="paginate_button next disabled" id="example-checkbox_next"><a href="#" aria-controls="example-checkbox" data-dt-idx="1" tabindex="0"> </a></li></ul></div></div> -->
+
+      </div></div>
+            </div>
+          </div> <!-- table card example end -->
+        
+        </div>
+      </div> <!-- table card code and example end -->
+    </section> <!-- table card end -->
+    
+    <!-- Responsive table -->
+     <!-- Inverse table end-->
+  
+  
+</div>
+</div>
+
+<script src="{% static 'js/jquery-1.12.2.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+       <script>
+//Propeller Customised Javascript code 
+$(document).ready(function() {
+  var t = $('#example-checkbox').DataTable({
+    responsive: false,
+    columnDefs: [ {
+      orderable: false,
+      className: 'select-checkbox',
+      targets:0,
+    } ],
+    select: {
+      style: 'multi',
+      selector: 'td:first-child'
+    },
+    order: [ 1, 'asc' ],
+    bFilter: true,
+    bLengthChange: true,
+    pagingType: "simple",
+    "paging": true,
+    "searching": true,
+    "language": {
+      "info": " _START_ - _END_ of _TOTAL_ ",
+      "sLengthMenu": "<span class='custom-select-title'>Rows per page:</span> <span class='custom-select'> _MENU_ </span>",
+      "sSearch": "",
+      "sSearchPlaceholder": "Search",
+      "paginate": {
+        "sNext": " ",
+        "sPrevious": " "
+      },
+    },
+    dom:
+      "<'pmd-card-title'<'data-table-title'><'search-paper pmd-textfield'f>>" +
+      "<'custom-select-info'<'custom-select-item'><'custom-select-action'>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'pmd-card-footer' <'pmd-datatable-pagination' l i p>>",
+  });
+  
+  /// Select value
+  $('.custom-select-info').hide();
+  
+  $('#example-checkbox tbody').on( 'click', 'tr', function () {
+    if ( $(this).hasClass('selected') ) {
+      var rowinfo = $(this).closest('.dataTables_wrapper').find('.select-info').text();
+      $(this).closest('.dataTables_wrapper').find('.custom-select-info .custom-select-item').text(rowinfo);
+      if ($(this).closest('.dataTables_wrapper').find('.custom-select-info .custom-select-item').text() != null){
+        $(this).closest('.dataTables_wrapper').find('.custom-select-info').show();
+        //show delet button
+      } else{
+        $(this).closest('.dataTables_wrapper').find('.custom-select-info').hide();
+      }
+    }
+    else {
+      var rowinfo = $(this).closest('.dataTables_wrapper').find('.select-info').text();
+      $(this).closest('.dataTables_wrapper').find('.custom-select-info .custom-select-item').text(rowinfo);
+    }
+    if($('#example-checkbox').find('.selected').length == 0){
+      $(this).closest('.dataTables_wrapper').find('.custom-select-info').hide();
+    }
+  } );
+  // $("div.data-table-title").html('<h2 class="pmd-card-title-text">Propeller Data table</h2>');
+  // $(".custom-select-action").html('<button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button"><i class="material-icons pmd-sm">delete</i></button><button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button"><i class="material-icons pmd-sm">more_vert</button>');
+
+  var check='<td class="select-checkbox"></td>';
+  var data = JSON.parse("{{data|escapejs}}");
+
+  for (i=0;i<data.length;i++){
+      
+    
+        t.row.add([
+            check,
+            data[i].codename,
+            data[i].type,
+            data[i].description
+            
+           // counter +'.5'
+        ]).draw(false);
+
+      }
+  
+} );
+</script>
+
+{# <script type="text/javascript">#}
+{#    $(document).ready(function(){#}
+{#      $.post("all_permission/",#}
+{#      {#}
+{#        name: "Donald Duck",#}
+{#        city: "Duckburg"#}
+{#      },#}
+{#      function(data, status){#}
+{#        alert("Data: " + data + "\nStatus: " + status);#}
+{#      });#}
+{##}
+{##}
+{#    });#}
+
+
+$(document).ready(function() {
+    var t = $('#example-checkbox').DataTable();
+    var data = JSON.parse("{{data|escapejs}}");
+    console.log(typeof(data));
+
+    //console.log(data)
+    var counter = 1;
+ 
+     // $('#addRow').on( 'click', function () {
+
+      for (i=0;i<data.length;i++){
+      
+    
+        t.row.add([
+            
+            data[i].codename,
+            data[i].type,
+            data[i].description
+            
+           // counter +'.5'
+        ]).draw(false);
+
+      }
+ 
+        counter++;
+      //});
+ 
+    // Automatically add a first row of data
+    //$('#addRow').click();
+  });
+    
+      
+    
+
+  </script>  -->
+
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+<!-- Datatable Bootstrap -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+<!-- Datatable responsive js-->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+
+<!-- Datatable select js-->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script>
+
+</body>
+
+</html>
+
+{% endblock %}

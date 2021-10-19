@@ -1,4 +1,11 @@
 from __future__ import unicode_literals
+
+import customadmin
+import accounts
+from accounts.apps import AccountsConfig
+import customadmin
+
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import PermissionsMixin
@@ -55,10 +62,15 @@ class User(AbstractUser):
 	password_change_date = models.DateTimeField(null=True)
 	profile_complete = models.BooleanField(default=False)
 	has_organization = models.BooleanField(default=False)
+	roles = models.CharField(max_length=255)
 	#is_verified = models.BooleanField(default=False)
 	#token = models.TextField(null=True)
-	#organization=models.ForeignKey(Organization,on_delete=models.CASCADE,related_name='organization_user',null=True)
+
+    
+	# organization=models.ForeignKey(Organization,on_delete=models.CASCADE,related_name='organization_user',null=True)
 	houseno = models.CharField(max_length=125,null=True)
+	clg_name = models.CharField(max_length=100)
+	organization_name = models.CharField(max_length=100)
 	registration_date = models.CharField(max_length=125,null=True,blank=True)
 	address= models.CharField(max_length=225,null=True)
 	address1 = models.CharField(max_length=225,null=True)

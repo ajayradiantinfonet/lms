@@ -206,7 +206,7 @@
         var organization_id = $(this).val();
 
         $.ajax({
-          type:'post',
+          type:'get',
           url:'{% url "customadmin:g_a_co_o_org" %}',
           data:{'organization_id':organization_id},
           success:function(data)

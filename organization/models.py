@@ -1,8 +1,9 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 
 # Create your models here.
 #from customadmin.models import City,Country,State
-from customadmin.models import Organization ,City,Country,State
+from customadmin.models import  Organization ,City,Country,State
 from django.contrib.auth.models import User
 from django.conf import settings
 
@@ -18,6 +19,7 @@ class UserInformation(models.Model):
     is_active=models.BooleanField(default=False)
     organization=models.ForeignKey(Organization,on_delete=models.CASCADE,
         related_name='organization_user')
+    # college = models.ForeignKey(College,on_delete=models.CASCADE)    
 
     first_name = models.CharField(max_length=150,null=True)
     last_name = models.CharField(max_length=150,null=True)

@@ -9,23 +9,25 @@ from organization.models import UserInformation
 from customadmin.models import City,State
 import re
 
-from .models import (SessionActivity,SubTopic,Topic,ContentVideo,
+from .models import (PDFActivity, SessionActivity,SubTopic,Topic,ContentVideo,
 	Courses,Topic,Language,Activities,Organization,CourseEnroll,
-	Categories,CategoriesHirerchy,SpinActivity,TopicDetails,Question,City,Country,State)
+	Categories,CategoriesHirerchy,SpinActivity,TopicDetails,Question,City,Country,State,UrlActivity)
 from datetime import datetime
 from django.utils import timezone
 
 from .managers import LanguageManager
 from django.utils import timezone
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from custompermission.models import Perm
 from django.db.models import Q
-from django.forms import ValidationError, TextInput, Select , Form
+from django.forms import ValidationError, TextInput, Select , Form, fields
 from django.conf import settings
 from accounts.models import User
 from django.contrib.auth import get_user_model
+
+from customadmin import models
 #User=settings.AUTH_USER_MODEL 
 
 class CustomFormMixin(Form):
@@ -93,8 +95,8 @@ class AssignmentForm(forms.ModelForm):
 	
 	class Meta:
 		model = AssignmentActivity
-		fields = ('description','question_file','created_at',
-			'no_of_submission','topic')
+		fields = ('name','description','question_file','created_at',
+			'no_of_submission','topic','last_date')
 
 	def __init__(self,*args,**kwargs):
 		super(AssignmentForm,self).__init__(*args,**kwargs)
@@ -102,8 +104,120 @@ class AssignmentForm(forms.ModelForm):
 		self.fields['question_file'].widget.attrs.update({"class": "form-control"})
 		self.fields['description'].widget.attrs.update({"class": "form-control"})
 		self.fields['no_of_submission'].widget.attrs.update({"class": "form-control"})
+		self.fields['name'].widget.attrs.update({"class": "form-control"})
+		self.fields['last_date'].widget.attrs.update({"class": "form-control"})
+		self.fields['description'].required = False
 		#if initial is not None:
 			#self.fields['topic'].queryset=initial.get('topic',None)
+
+########## URLassigmentform
+from .models import UrlActivity
+class UrlActivityForm(forms.ModelForm):
+	name = forms.CharField(max_length=120,required=False)
+	img = forms.ImageField(required=False)
+	website = forms.URLField(max_length=255,required=True )
+	description = forms.CharField(max_length=125,required=False)
+	topic = forms.ModelChoiceField(queryset = Topic.objects.all(),
+		required=True,widget=forms.HiddenInput())
+
+	
+	
+	class Meta:
+		model = UrlActivity
+		fields = ('name','description','topic','website','img')
+
+	def __init__(self,*args,**kwargs):
+		super(UrlActivityForm,self).__init__(*args,**kwargs)
+		initial=kwargs.get('initial',None)
+		self.fields['description'].widget.attrs.update({"class": "form-control"})
+		self.fields['website'].widget.attrs.update({"class": "form-control"})
+		self.fields['name'].widget.attrs.update({"class": "form-control"})
+		self.fields['img'].widget.attrs.update({"class": "form-control"})
+	
+	
+		
+		#if initial is not None:
+			#self.fields['topic'].queryset=initial.get('topic',None)
+from .models import PPTActivity
+class PPTActivityForm(forms.ModelForm):
+	name = forms.CharField(max_length=120,required=False)
+	description = forms.CharField(max_length=125,required=False)
+	topic = forms.ModelChoiceField(queryset = Topic.objects.all(),required=True,widget=forms.HiddenInput())
+	pptfile = forms.FileField(help_text =" only alowed ppt file",required=True,validators=[FileTypeValidator(
+		 allowed_extensions=['.pptx',],
+		allowed_types=allowed_types )])		
+	
+	class Meta:
+		model = PPTActivity
+		fields = ('name','description','topic','pptfile')
+		
+	def __init__(self,*args,**kwargs):
+		super(PPTActivityForm,self).__init__(*args,**kwargs)
+		initial=kwargs.get('initial',None)
+		self.fields['description'].widget.attrs.update({"class": "form-control"})
+		self.fields['pptfile'].widget.attrs.update({"class": "form-control"})
+		self.fields['name'].widget.attrs.update({"class": "form-control"})
+		
+				
+
+
+from .models import PDFFActivity 
+class PDFFActivityForm(forms.ModelForm):
+	name= forms.CharField(max_length=120,required=False)
+	description=forms.CharField(max_length=120)
+	topic =forms.ModelChoiceField(queryset=Topic.objects.all(),required=True,widget=forms.HiddenInput())
+	pdffile = forms.FileField(required=True,help_text =" only alowed pdf file",validators=[FileTypeValidator(
+		 allowed_extensions=['.pdf',],
+		allowed_types=allowed_types )])
+
+	class Meta:
+		model = PDFFActivity
+		fields =('name','description','topic','pdffile')
+	def __init__(self,*args,**kwargs):
+		super(PDFFActivityForm,self).__init__(*args,**kwargs)
+		initial=kwargs.get('initial',None)
+		self.fields['description'].widget.attrs.update({"class": "form-control"})
+		self.fields['pdffile'].widget.attrs.update({"class": "form-control"})
+		self.fields['name'].widget.attrs.update({"class": "form-control"})		
+
+
+
+from .models import DocActivity
+class DocActivityForm(forms.ModelForm):
+	name =forms.CharField(max_length=120,required=False)
+	description =forms.CharField(max_length=200)
+	topic = forms.ModelChoiceField(queryset=Topic.objects.all(),required=True,widget=forms.HiddenInput())
+	docfile = forms.FileField(required=True,validators=[FileTypeValidator(
+		 allowed_extensions=['.docx','.xls',],
+		allowed_types=allowed_types )])
+	class Meta:
+		model = DocActivity
+		fields =('name','description','topic','docfile')
+		
+	def __init__(self,*args,**kwargs):
+		super(DocActivityForm,self).__init__(*args,**kwargs)
+		initial=kwargs.get('initial',None)
+		self.fields['description'].widget.attrs.update({"class": "form-control"})
+		self.fields['docfile'].widget.attrs.update({"class": "form-control"})
+		self.fields['name'].widget.attrs.update({"class": "form-control"})		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,7 +294,7 @@ class UserForm(forms.ModelForm):
 		super(UserForm, self).__init__(**kwargs)
 		if user:
 			#self.fields['username'].queryset = User.objects.filter(~Q(username=user.username))
-			self.fields['choice'].queryset = User.objects.filter(~Q(username=user.username))
+			self.fields['choice'].queryset = User.objects.filter(~Q(first_name=user.first_name))
 	
 	class Meta:
 		model=User
@@ -237,6 +351,99 @@ class CourseAllotForm(forms.ModelForm):
 position_choices=(('student','student'),('teacher','teacher'),('collaborator','collaborator'),
 	(None,"None"))
 
+from customadmin.models import College
+########### this is collegeuser########
+class AddCollegeUser(forms.ModelForm):
+	position = forms.ChoiceField(choices=position_choices)
+	phone = forms.IntegerField(required=True)
+	email = forms.EmailField(max_length=256,required=True)
+	password = forms.CharField(max_length=256,required=False,widget=forms.PasswordInput())
+	password_again = forms.CharField(max_length=256,required=False,widget=forms.PasswordInput())
+	#name=forms.CharField(max_length=256,required=True)
+	houseno=forms.CharField(required=False,max_length=125)
+	pincode = forms.CharField(required=False,max_length=125)
+	address = forms.CharField(required=False,max_length=256)
+	address1 = forms.CharField(max_length=256,required=False)
+	image = forms.ImageField(required=False)
+	gender = forms.ChoiceField(choices=(('male','male'),('female','female')))
+	
+	organization_name = forms.ModelChoiceField(queryset=Organization.objects.filter(is_active=True),required=True,widget=forms.Select({'class':'form-control'}))
+	clg_name = forms.ModelChoiceField(queryset=College.objects.all(),required=True,widget=forms.Select({'class':'form-control'}))
+	city = forms.ModelChoiceField(queryset=City.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
+	state = forms.ModelChoiceField(queryset=State.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
+	#registration_date = forms.CharField(required=False,max_length=125,initial=timezone.now())
+	class Meta:
+		#model = UserInformation
+		model = get_user_model() 
+		fields = ['position','password','password_again',
+		'first_name','clg_name','last_name','address','pincode','email','address','image','phone','address1','gender','city','state']
+		# widgets = {
+		# 	'password': forms.PasswordInput(),
+		# 	'password_again': forms.PasswordInput(),
+		# }
+	def __init__(self,*args,**kwargs):
+		super(AddCollegeUser,self).__init__(*args,**kwargs)
+		initial = kwargs.get('initial',None)
+		#if initial is not None:
+			#org = initial.get('organization',False)
+			#if org:
+				#self.fields['organization'].initial = initial.get('organization',None)
+		#self.fields['registration_date'].initial = timezone.now
+
+	def clean_password_again(self):
+		password1 = self.cleaned_data.get('password',None)
+		password2 = self.cleaned_data.get('password_again',None)
+		print(password2,password1)
+		if password1 is not None and password2 is not None:
+			if password1 != password2:
+				#print(password2 , password1)
+				raise ValidationError("Password should be match")
+			elif len(password1) < 7 :
+				raise ValidationError("Password length should be equal or greater than 7")
+			else:
+				return password2
+		return password2
+
+
+class AddUserOfCollegeForSuperUser(AddCollegeUser):
+	organization = forms.ModelChoiceField(queryset=Organization.objects.filter(is_active=1),
+		empty_label='select organization',required=True)
+	college = forms.ModelChoiceField(queryset=College.objects.all(),
+		empty_label='select college',required=True)		
+	#registration_date = forms.CharField(max_length=125,required=False,initial=timezone.now())
+	phone = forms.CharField(max_length=10,required=True)
+	class Meta:
+		#model = UserInformation
+		model = get_user_model()
+		fields =['position','password','password_again','organization','college',
+		'first_name','last_name','houseno','pincode','address','email',
+		'image','phone','gender']
+
+
+	def __init__(self,*args,**kwargs):
+		super(AddUserOfCollegeForSuperUser,self).__init__(*args,**kwargs)
+		#self.fields['registration_date'].initial = timezone.now
+
+
+
+
+
+
+
+
+
+##########endofcolegeuser################3
+
+
+
+
+
+
+
+
+
+
+
 class AddOrganizationUser(forms.ModelForm):
 	position = forms.ChoiceField(choices=position_choices)
 	phone = forms.IntegerField(required=True)
@@ -250,6 +457,8 @@ class AddOrganizationUser(forms.ModelForm):
 	address1 = forms.CharField(max_length=256,required=False)
 	image = forms.ImageField(required=False)
 	gender = forms.ChoiceField(choices=(('male','male'),('female','female')))
+	# college = forms.ModelChoiceField(queryset=College.objects.all(),required=False)
+	
 	organization = forms.ModelChoiceField(queryset=Organization.objects.filter(is_active=True),required=False)
 	city = forms.ModelChoiceField(queryset=City.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
 	state = forms.ModelChoiceField(queryset=State.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
@@ -338,7 +547,7 @@ class ScheduleSessionFormSuperuser(forms.ModelForm):
 	description =forms.CharField(max_length=125,widget=forms.Textarea(attrs={"rows":4, "cols":35,'class':class_attr,
 		'required':'true'}))
 	course =forms.ModelChoiceField(queryset=CoursesEndUser.objects.all(),empty_label='select course',required=False)
-	#teacher = forms.ModelChoiceField(queryset=UserInformation.objects.filter(position='teacher'),empty_label='select teacher')
+	# teacher = forms.ModselChoiceField(queryset=UserInformation.objects.filter(position='teacher'),empty_label='select teacher')
 	teacher = forms.ModelChoiceField(queryset=get_user_model().objects.filter(position='teacher'),empty_label='select teacher')
 	organization = forms.ModelChoiceField(queryset=Organization.objects.filter(is_active=True),required=False,empty_label='select organization')
 	
@@ -400,8 +609,8 @@ class ScheduleSessionForm(forms.ModelForm):
 		#self.fields['start_date'].initial= 
 		initial=kwargs.pop('initial',None)
 		if initial is not None:
-			self.fields['teacher'].queryset=initial['teacher']
-			course=initial.get('course',None)
+			self.fields['teacher'].queryset = initial['teacher']
+			course = initial.get('course',None)
 			if course is not None:
 				self.fields['course'].queryset = initial['course']
 			organization = initial.get('organization',None)
@@ -639,7 +848,7 @@ class CreateCourseForEndUser(forms.ModelForm):
 	# 	return price
 
 
-
+## ajay ##
 class CreateOrganizationForm(forms.ModelForm):
 	password_again=forms.CharField(max_length=256,required=True,widget=forms.PasswordInput(attrs={'class':'form-control'}))
 	password = forms.CharField(max_length=256,required=True,widget=forms.PasswordInput(attrs={'class':'form-control','width':'50%'}))
@@ -727,12 +936,14 @@ class CreateOrganizationForm(forms.ModelForm):
 class AddUserOfOrganizationForSuperUser(AddOrganizationUser):
 	organization = forms.ModelChoiceField(queryset=Organization.objects.filter(is_active=1),
 		empty_label='select organization',required=True)
+	college = forms.ModelChoiceField(queryset=College.objects.all(),
+		empty_label='select college',required=True)		
 	#registration_date = forms.CharField(max_length=125,required=False,initial=timezone.now())
 	phone = forms.CharField(max_length=10,required=True)
 	class Meta:
 		#model = UserInformation
 		model = get_user_model()
-		fields =['position','password','password_again','organization',
+		fields =['position','password','password_again','organization','college',
 		'first_name','last_name','houseno','pincode','address','email',
 		'image','phone','gender']
 
@@ -740,6 +951,7 @@ class AddUserOfOrganizationForSuperUser(AddOrganizationUser):
 	def __init__(self,*args,**kwargs):
 		super(AddUserOfOrganizationForSuperUser,self).__init__(*args,**kwargs)
 		#self.fields['registration_date'].initial = timezone.now
+
 
 
 
@@ -841,15 +1053,18 @@ class AddActivityForm(forms.ModelForm):
 
 
 
-class CreateGroupForm(forms.Form):
-	name= forms.CharField(max_length=125)
-	users= forms.ModelMultipleChoiceField(queryset=User.objects.all(),
+class CreateGroupForm(forms.ModelForm):
+	name = forms.CharField(max_length=125)
+	u_id = forms.CharField(max_length=125)
+	org  = forms.ModelChoiceField(queryset=Organization.objects.all(),required=True)
+	users = forms.ModelMultipleChoiceField(queryset=User.objects.all(),
 			required=True, widget=FilteredSelectMultiple('users', False))
 	permissions = forms.ModelMultipleChoiceField(queryset=Perm.objects.all(),required=True,
 			widget=FilteredSelectMultiple('permissions', False))
-	# class Meta:
-	# 	model = Group
-	# 	exclude=[]
+	class Meta:
+		model = Group
+		fields = ('name','u_id','org','users','permissions')
+	
 
 		
 	def __init__(self, *args, **kwargs):
@@ -869,7 +1084,8 @@ class CreateGroupForm(forms.Form):
 	def save(self, *args, **kwargs):
 		#instance = super(CreateGroupForm, self).save()
 		#print(self)
-		g,created=Group.objects.get_or_create(name=self.cleaned_data['name'])
+		# g,created=Group.objects.get_or_create(name=self.cleaned_data['name'],user =self.cleaned_data['users'],u_id = self.cleaned_data['u_id'],org=self.cleaned_data['org'])
+		g ,created = Group.objects.get_or_create(name=self.cleaned_data['name'],u_id=self.cleaned_data['u_id'],org=self.cleaned_data['org'])
 
 		for obj in self.cleaned_data['permissions']:
 			g.perms.add_perm(obj)
@@ -1068,27 +1284,64 @@ class SpinActivityForm(forms.ModelForm):
 
 
 
+############# notificationbroadcasteform###########
+from datetime import datetime
+from django import forms
+from notifications_app.models import BroadcastNotification
 
+class BroadcastNotificationForm(forms.ModelForm):
+    message = forms.CharField(widget=forms.Textarea)
+    broadcast_on = forms.DateTimeField(initial=datetime.now, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    sent = forms.BooleanField(required=False)
+    class Meta:
+        model = BroadcastNotification
+        fields = ['message','broadcast_on','sent']
+		
 
+############## clg addd
+from customadmin.models import College
+from django import forms
+class CreateCollegeForm(forms.ModelForm):
+	password_again=forms.CharField(max_length=256,required=True,widget=forms.PasswordInput(attrs={'class':'form-control'}))
+	password = forms.CharField(max_length=256,required=True,widget=forms.PasswordInput(attrs={'class':'form-control','width':'50%'}))
+	address = forms.CharField(required=False,
+		widget=forms.Textarea({'label':'address','name':'address','placeholder':'Address','rows':5,'cols':20,'class':'form-control'}))
 
+	#organization_name = forms.CharField(max_length=256,required=True,widget=forms.)
+	no_of_candidates=forms.IntegerField(required=False,widget=forms.TextInput({'class':'form-control'}))
+	end_date=forms.CharField(max_length=125,required=False,
+		widget=forms.TextInput({'class':'form-control','id':'datepicker-default'}),help_text='m/d/y format')
+	logo = forms.ImageField(required=False)
+	logo1 = forms.ImageField(required=False)
+	city = forms.ModelChoiceField(queryset=City.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
+	state = forms.ModelChoiceField(queryset=State.objects.filter(status=1),empty_label=None,widget=forms.Select({'class':'form-control'}))
+	unique_code = forms.CharField(max_length=200,required=True,widget=forms.TextInput({'class':'form-control'}))
+	website = forms.URLField(required=False,widget=forms.TextInput({'class':'form-control'}))
+	pin = forms.IntegerField(required=False,widget=forms.TextInput({'class':'form-control'}))
+	organization = forms.ModelChoiceField(queryset=Organization.objects.all(),required=False)
+	class Meta:
+	
+		model = College
+		fields = ['clg_name','contact_person_email','password','password_again',
+		'address','website','end_date','no_of_candidates','logo','state',
+		'contact_person_phone','contact_person_name','sector_type',
+		'pin','city','certificate','logo1','show_second_logo','unique_code','organization']
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		widgets = {
+			'clg_name':forms.TextInput(attrs={'class':'form-control'}),
+			'unique_code':forms.TextInput(attrs={'class':'form-control'}),
+			'contact_person_name':forms.TextInput(attrs={'id':'person_name','class':'form-control'}),
+			'contact_person_email':forms.TextInput(attrs={'id':'person_email','class':'form-control'}),
+			'contact_person_phone':forms.TextInput(attrs={'id':'person_phone','class':'form-control'}),
+			'website':forms.TextInput(attrs={'id':'website','class':'form-control'}),
+			#'no_of_candidates':forms.TextInput(attrs={'id':'noc','class':'form-control'}),
+			'logo':forms.TextInput(attrs={'id':'company_logo','class':'form-control'}),
+			'sector_type':forms.Select(attrs={'id':'sector_type','class':'form-control'}),
+			'pin':forms.TextInput(attrs={'id':'pin','class':'form-control'}),
+			'certificate':forms.HiddenInput(),
+			#'city':forms.Select(attrs={}),
+			#'state':forms.Select(attrs={'class':'form-control'}),	
+		}
 
 
 

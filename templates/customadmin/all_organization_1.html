@@ -42,9 +42,9 @@
                                        
                             {% if not user.is_anonymous %}
                               {% if user|check_permission:'generic.can_create_organization' %}
-                                <label class="btn btn_upload">
+                                <!-- <label class="btn btn_upload">
                                 <img src="{% static 'boimage/plus.svg' %}" alt=""><span>Bulk Upload</span>
-                                </label>
+                                </label> -->
 
                         
                                <label class="btn btn_add add_company">
@@ -71,9 +71,11 @@
                                     <img src="{{ obj.logo.url }}" alt="" style="height:150px;" /><i class="fa fa-ellipsis-v fa-img1 box_show" aria-hidden="true" >
                                       <ul style="display:none;" class="box_hide box-ul">
                                         <a href="{% url 'customadmin:view_organization' obj.id %}"><li>View</li></a>
-                                        <a href="{% url 'customadmin:edit_organization' obj.id %}"><li>Edit</li></a>
-                                        <li>Suspend</li>
-                                        <li>Delete</li>
+                                        <a href="{% url 'customadmin:edit_organization' obj.id %}"><li>Edit</li></a> 
+                    
+                                        <a class="active_company" obj_id="{{obj.id}}"><li>Active</li></a>
+
+                                        <a class="inactive_company" obj_id="{{obj.id}}"><li>Inactive</li></a>
                                     </ul>
                                     </i>
                                 </div>
@@ -151,6 +153,15 @@
       $('.add_company').click(function(){
               window.location.href="{% url 'customadmin:create_organization' %}";
       });
+
+      $('.inactive_company').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        window.location.href="{% url 'customadmin:delete_organization'  %}"+obj_id;
+    });
+    $('.active_company').click(function(){
+        var obj_id=$(this).attr("obj_id");
+        window.location.href="{% url 'customadmin:delete_organizationn'  %}"+obj_id;
+    });
 
 
   </script>

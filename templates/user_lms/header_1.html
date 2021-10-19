@@ -40,7 +40,7 @@
 		.owl-theme .owl-dots .owl-dot span{
 			width:30px;
 			background: #fff;
-			border:1px solid #28a745;
+			`border:1px solid #28a745;
 		}
 
 		.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
@@ -81,6 +81,83 @@
 			window.location.href = link;
 		}
 	</script>
+<style>
+        .notification {
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            padding: 4px 24px;
+            margin-right: 20px;
+            margin-left: 20px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+            font-size: 20px;
+        }
+
+        .notification:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 8px 8px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+
+        .notification-section .dropdown-toggle::after {
+            content: none;
+        }
+
+        .dropdown-toggle::after {
+            color: #fff;
+        }
+
+        #notifications-dropdown li {
+            max-width: 500px;
+            word-wrap: break-word;
+            display: inline-block;
+            white-space: normal;
+        }
+{% comment %} 
+        #notifications-dropdown.dropdown-menu {
+            width: 15rem;
+        }
+         {% endcomment %}
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 <body>
 	<div class="section-apprentissage-header" style="position: fixed; background: #fff; width: 100%;top:0px; z-index: 9999;">
@@ -178,10 +255,13 @@
 			          		<div class="dropdown-item ">Basic of Digital Marketing<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
 			          		<div class="dropdown-item ">Basic of Finances<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div> -->
 			          	</div>
+                   
+
 			          	<div class="col-sm">
 			          		<h5 class="justiy-content-center mb-2" style="text-align: center;">Trending Courses</h5>
 
 			          		{% if trending %}
+							
 
 			          		<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
 			          			<div class="card-inner">
@@ -205,7 +285,7 @@
 			          						</span>
 			          					</div>
 			          					<div>
-			          						{% if trending.id %}
+			          						{% if t.id %}
 			          						<a class="cta-btn btn-wdth-120 fs-13" 
 			          						href="{% url 'userlms:my' trending.id %}">Enroll Now</a>
 			          						{% else %}
@@ -220,6 +300,7 @@
 			          				</div>
 			          			</div>
 			          		</div>
+							  
 			          		{% endif %}
 			          	</div>
 		          		
@@ -246,9 +327,12 @@
 	        					<div class="px-3 py-1">
 	        						<a href="{% url 'userlms:my' %}"><i class="far fa-file-video cta-color" aria-hidden="true" style="width:30px"></i>My Courses</a> 
 	        					</div>
-	        					<div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Wishlist</div>
+	        					<a href="{% url 'userlms:Wishlistfun' %}"><div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Wishlist</div></a>
+								<!-- <div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Notes</div> -->
 	        					<!-- <div class="px-3 py-1"><i class="far fa-bookmark cta-color" aria-hidden="true" style="width:30px"></i> Grade</div> -->
-	        					<a href="{% url 'userlms:certificate' %}"><div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Certificate</div></a>
+	        					<a href="{% url 'userlms:show_notes' %}"><div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Notes</div></a>
+	      
+								<a href="{% url 'userlms:certificate' %}"><div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Certificate</div></a>
 	        					<!--<div class="px-3 py-1"><i class="far fa-comments cta-color" aria-hidden="true" style="width:30px"></i> Chat</div>
 	        					<div class="px-3 py-1"><i class="far fa-question-circle cta-color" aria-hidden="true" style="width:30px"></i> FAQ</div>
 	        					<div class="px-3 py-1"><i class="fa fa-phone cta-color" aria-hidden="true" style="width:30px"></i> Contact Us</div> -->
@@ -259,19 +343,29 @@
 					        <a class="nav-link" href="#">
 					        	<i class="fa fa-shopping-cart cta-color" aria-hidden="true"></i>&nbsp;Cart</a>
 					    </li>
-					    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-15-lg fw-800">
-					        <a class="nav-link" href="#">
-					        	<i class="far fa-bell cta-color" aria-hidden="true"></i>
-					        </a>
-					    </li>
+						 <li class="nav-item dropdown notification-section">
+                    <a href="#" class="notification dropdown-toggle show" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                        <span><i class="fa fa-bell" aria-hidden="true"></i></span>
+                        <span class="badge" id="notification-badge">0</span>
+                    </a>
+                    <ul class="dropdown-menu show" aria-labelledby="navbarDropdown" id="notifications-dropdown" data-popper-placement="bottom-end" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(-70px, 42px, 0px);" data-bs-popper="none">
+                        
+                        
+                        
+                        
+                        
+                    </ul>
+                </li>
+
+					    
 					{% else %}
 				    	<li class="nav-item active wd-full fs-13-lg p-tb-10">
 					        <a class="nav-link" href="#">
 					        	<i class="fa fa-shopping-cart cta-color" aria-hidden="true"></i>&nbsp;Cart</a>
 					    </li>
 					    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 pl-lg-x20-sm-5 fs-13-lg">
-
-
+                         
+              
 					   {% if not user.is_anonymous %}
 				        <button class="login-btn py-1 fs-13" 
 				        onclick="refToLink('{% url "accounts:logout" %}')">
@@ -296,6 +390,47 @@
 	</div>
 	<div class="my-3" style="min-height: 40px;"></div>
 	<div class="clearfix"></div>
+
+
+
+     {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+		
+
+        const notificationSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/notification/'
+            + roomName
+            + '/'
+        );
+        
+
+        notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            //document.querySelector('#chat-log').value += (data.message + '\n');
+            console.log('notification',data)
+            document.getElementById("notifications-dropdown").innerHTML = "";
+            document.getElementById("notifications-dropdown").innerHTML = "<li class='dropdown-item'>" + data + "</li><hr class='dropdown-divider'>" + document.getElementById("notifications-dropdown").innerHTML;
+            //document.getElementById("notification-badge").innerHTML = "";
+            document.getElementById("notification-badge").innerHTML = parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+        };
+
+        notificationSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+</script>
+
+
+
+
+
+
+
+
+
+
 
 
 	
@@ -325,7 +460,24 @@
 {% endblock %}
 
 
-{% include 'user_lms/footer.html' %}
+
+
+ {% include 'user_lms/footer.html' %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous">
 </script>

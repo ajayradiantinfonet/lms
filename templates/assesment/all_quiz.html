@@ -130,7 +130,7 @@
     $('.edit').click(function() {
 
         var objid = $(this).attr('data-href');
-        //window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/edit/";
+         window.location.href = "{% url 'customadmin:all_course_user' %}" + objid + "/edit/";
 
     });
 
@@ -147,7 +147,7 @@
         var objid = $(this).attr('data-href');
         if (confirm('Are you sure you want to delete this course ?')) {
 
-            //window.location.href="{% url 'customadmin:all_course_user' %}"+objid+"/delete/";
+             window.location.href = "{% url 'customadmin:all_course_user' %}" + objid + "/delete/";
 
         } else {
 

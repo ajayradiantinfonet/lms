@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# from django.shortadd_quizuts import render
 import os
 import csv
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect

@@ -9,7 +9,9 @@
 	.gotocourse{
 		padding:5px 20px !important;
 	}
-
+     .red-color{
+        color:green;
+    }
 
 
 </style>
@@ -70,6 +72,7 @@
 		<div class="carousel-inner" role="listbox">
 
 		    <!--First slide-->
+		{% if user.is_authenticated %}
 		    <div class="carousel-item active">
 		    	
 		      	{% for obj in object_list %}
@@ -116,10 +119,23 @@
 	  								Enroll Now
 	  							{% endif %}
 	  							</a> 
-	  						
+	  						{% if obj.id in is_fav %}
+									<a href="/fav/{{ obj.id }}"  id = '{{ obj.id }}'>
+								  <span class="fav-not fl-rt">
+		      							{% comment %} <i class="fa fa-heart" aria-hidden="true"></i> {% endcomment %}
+										  <i class="fa fa-heart red-color"  aria-hidden="true" ></i>  
+		      						</span>
+
+								  
+								{% else %}
+								<a href="/fav/{{ obj.id }}"  id = '{{ obj.id }}'>
+								  
 		      						<span class="fav-not fl-rt">
 		      							<i class="fa fa-heart" aria-hidden="true"></i>
+										  {% comment %} <i class="fa fa-heart red-color " ></i>   {% endcomment %}
 		      						</span>
+								</a>
+								{% endif %}
 		      					</div>
 		      				</div>
 		      			</div>
@@ -191,9 +207,123 @@
 	    </a>
 
 	</div>
+	    {% else %}
+	    {% for obj in all %}
+	<div class="col-md-3 pop-card" style="float:left">
+		<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+		   <div class="card-inner">
+			   <img src="{{ obj.thumbnail.url }}" style="height:125px; width:175px;" />
+			   <div class="card-inner-content">
+				   <div class="card-course-name"><label>{{ obj.name }}</label></div>
+				   <div class="card-course-price" style="display: block;">
+					   <span>
+						   <strike class="card-course-price-strike">{{ obj.price }}</strike>
+					   </span> Free
+				   </div>
+				   <div class="fs-13">
+					   <label class="card-course-rating-star">
+						   <!-- {{ obj.star|floatformat:"0" }} -->
+	
+						   <i class="fa fa-star" aria-hidden="true"></i>
+						   <i class="fa fa-star" aria-hidden="true"></i>
+						   <i class="fa fa-star" aria-hidden="true"></i>
+						   <i class="fa fa-star-half-o" aria-hidden="true"></i>
+						   <i class="fa fa-star-o" aria-hidden="true"></i>
+	
+					   </label>
+					   <span class="card-enroll-count fl-rt">
+						   <i class="fa fa-users" aria-hidden="true"></i>
+						   {{ obj.total_view }}
+					   </span>
+				   </div>
+				   <div>
+	
+					   <a    class="cta-btn btn-wdth-120 fs-13 
+					   {% if user|user_enrolled:obj.id  %}
+							   gotocourse 
+					   {% endif %}" 
+					   href="{% url 'userlms:my' obj.id %}">
+						   {% if user|user_enrolled:obj.id  %}
+							   Go To Course
+						   {% else %}
+							   Enroll Now
+						   {% endif %}
+						   </a> 
+
+
+
+
+			   <!-- <button   class="cta-btn btn-wdth-120 fs-13" 
+						onclick="refToLink('{{obj.link}}')">Enroll Now</button> -->
+					 
+				   </div>
+			   </div>
+		   </div>
+	   </div>
+	
+	
+	
+	   <div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:15px;" >
+		   <a href="{% url 'userlms:course_details' %}{{obj.id}}/details/" class="a-norm">
+			   <div class="fs-13 px-2 py-2 brd-rds-5 brd-green" style="border:1px solid; width:300px;background:#fff;">
+				   <h6 class="fs-15">{{ obj.name }}</h6>
+				   <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video hrs {{ obj.duration }} </p>
+				   <p  class="brd-btm brd-gry py-1">What you will learn in this course</p>
+	
+				   {{ obj.overview }}
+	
+	<!-- 		      			<ul class="check-list p-2">
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur
+					 </li>
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+					 </li>
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+					 </li>
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+					 </li>
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur
+					 </li>
+					 <li class="check-list-item">
+						 Lorem ipsum dolor sit amet, consectetur
+					 </li>
+				 </ul> -->
+	
+	
+				 <div class="card-course-price txt-center py-1">
+					   <span>
+						   <strike class="card-course-price-strike fw-800" style="color: #bbb;display: block;" >Rs. {{ obj.price}}</strike>
+					   </span> 
+				   </div>
+				   <div>
+					   <button style="min-width:200px;" data-href="{{ obj.id }}" class="cta-btn fs-13" 
+					   id="enroll">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+					   <span class="fav-not fl-rt">
+						   <i class="fa fa-heart" aria-hidden="true"></i>
+					   </span>
+				   </div>
+			   </div>
+		   </a>
+	   </div>
+	</div>
+	
+	
+	
+	
+	
+	    {% endfor %}
+	
+        {% endif %}
+
+
+
 	<div class="clearfix"></div>
 </section>
- 
+
 
 {% endblock %} 
 
@@ -217,6 +347,9 @@
 
 		{% endfor %}
 	</div>
+
+{% if user.is_authenticated %}
+
 
 	<div class="col-md-12 popCaro">
 
@@ -263,13 +396,29 @@
 	  							</a> 
 	  				<!-- <button   class="cta-btn btn-wdth-120 fs-13" 
 	  						 onclick="refToLink('{{obj.link}}')">Enroll Now</button> -->
-	  						<span class="fav-not fl-rt">
-	  							<i class="fa fa-heart" aria-hidden="true"></i>
-	  						</span>
+	  							{% if obj.id in is_fav %}
+									<a href="/fav/{{ obj.id }}"  id = '{{ obj.id }}'>
+								  <span class="fav-not fl-rt">
+		      							{% comment %} <i class="fa fa-heart" aria-hidden="true"></i> {% endcomment %}
+										  <i class="fa fa-heart red-color"  aria-hidden="true" ></i>  
+		      						</span>
+
+								  
+								{% else %}
+								<a href="/fav/{{ obj.id }}"  id = '{{ obj.id }}'>
+								  
+		      						<span class="fav-not fl-rt">
+		      							<i class="fa fa-heart" aria-hidden="true"></i>
+										  {% comment %} <i class="fa fa-heart red-color " ></i>   {% endcomment %}
+		      						</span>
+								</a>
+								{% endif %}
 	  					</div>
 	  				</div>
 	  			</div>
 	  		</div>
+		
+
 
 	  		<div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:15px;" >
       			<a href="{% url 'userlms:course_details' %}{{obj.id}}/details/" class="a-norm">
@@ -325,12 +474,120 @@
 			      	{% endif %}
 	  	{% endfor %}
 	  </div>
+{% else %}
 
+{% for obj in all %}
+<div class="col-md-3 pop-card" style="float:left">
+	<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+	   <div class="card-inner">
+		   <img src="{{ obj.thumbnail.url }}" style="height:125px; width:175px;" />
+		   <div class="card-inner-content">
+			   <div class="card-course-name"><label>{{ obj.name }}</label></div>
+			   <div class="card-course-price" style="display: block;">
+				   <span>
+					   <strike class="card-course-price-strike">{{ obj.price }}</strike>
+				   </span> Free
+			   </div>
+			   <div class="fs-13">
+				   <label class="card-course-rating-star">
+					   <!-- {{ obj.star|floatformat:"0" }} -->
+
+					   <i class="fa fa-star" aria-hidden="true"></i>
+					   <i class="fa fa-star" aria-hidden="true"></i>
+					   <i class="fa fa-star" aria-hidden="true"></i>
+					   <i class="fa fa-star-half-o" aria-hidden="true"></i>
+					   <i class="fa fa-star-o" aria-hidden="true"></i>
+
+				   </label>
+				   <span class="card-enroll-count fl-rt">
+					   <i class="fa fa-users" aria-hidden="true"></i>
+					   {{ obj.total_view }}
+				   </span>
+			   </div>
+			   <div>
+
+				   <a    class="cta-btn btn-wdth-120 fs-13 
+				   {% if user|user_enrolled:obj.id  %}
+						   gotocourse 
+				   {% endif %}" 
+				   href="{% url 'userlms:my' obj.id %}">
+					   {% if user|user_enrolled:obj.id  %}
+						   Go To Course
+					   {% else %}
+						   Enroll Now
+					   {% endif %}
+					   </a> 
+		   <!-- <button   class="cta-btn btn-wdth-120 fs-13" 
+					onclick="refToLink('{{obj.link}}')">Enroll Now</button> -->
+				   <span class="fav-not fl-rt">
+					   <i class="fa fa-heart" aria-hidden="true"></i>
+				   </span>
+			   </div>
+		   </div>
+	   </div>
+   </div>
+
+
+
+   <div class="pop-card-hover" style="z-index:9;position: absolute; top:10px; left:210px;padding-left:15px;" >
+	   <a href="{% url 'userlms:course_details' %}{{obj.id}}/details/" class="a-norm">
+		   <div class="fs-13 px-2 py-2 brd-rds-5 brd-green" style="border:1px solid; width:300px;background:#fff;">
+			   <h6 class="fs-15">{{ obj.name }}</h6>
+			   <p  class="brd-btm brd-gry" style="font-size: 11px;"> Total Video hrs {{ obj.duration }} </p>
+			   <p  class="brd-btm brd-gry py-1">What you will learn in this course</p>
+
+			   {{ obj.overview }}
+
+<!-- 		      			<ul class="check-list p-2">
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur
+				 </li>
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+				 </li>
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+				 </li>
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+				 </li>
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur
+				 </li>
+				 <li class="check-list-item">
+					 Lorem ipsum dolor sit amet, consectetur
+				 </li>
+			 </ul> -->
+
+
+			 <div class="card-course-price txt-center py-1">
+				   <span>
+					   <strike class="card-course-price-strike fw-800" style="color: #bbb;display: block;" >Rs. {{ obj.price}}</strike>
+				   </span> 
+			   </div>
+			   <div>
+				   <button style="min-width:200px;" data-href="{{ obj.id }}" class="cta-btn fs-13" 
+				   id="enroll">View Details &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+				   <span class="fav-not fl-rt">
+					   <i class="fa fa-heart" aria-hidden="true"></i>
+				   </span>
+			   </div>
+		   </div>
+	   </a>
+   </div>
+</div>
+
+
+
+
+
+  {% endfor %}
+{% endif %}
 
 	    
-	  	<div class="row mx-1">
+	  	 <!-- <div class="row mx-1">
 			<a href="{% url 'userlms:course_list' %}"><button class="login-btn px-2 mx-2 fs-13" style="position: absolute; right: 0px;margin-top:2px;">View All</button></a>
-		</div>
+		</div>  -->
 	  				
 	
 	<div class="clearfix">
@@ -368,7 +625,7 @@
 					</div>
 					<div style='position:relative;top:-40px; padding: 5px;'>
 						<b style="font-size: 24px;">
-						{{ all_students }} +</b><br>
+						 {{ all_students }}+</b><br>
 						<span style="font-size: 14px;">Students</span>
 					</div>
 				</div>
@@ -515,7 +772,19 @@
                 });
             });
 	});
+
+
+
+
+
+
+
+
+
 </script>
+
+
+
 
 {% endblock %}
 

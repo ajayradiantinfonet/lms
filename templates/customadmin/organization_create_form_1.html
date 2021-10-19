@@ -319,11 +319,8 @@
                       <!--{{ form.pin }}-->
                     <input type="number" id="fullname" onkeypress="return this.value.length < 6;" oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }" class="form-control" name="fullname" value="{{form.pin}}">
                   </div>
-                    <!---->
-                    <!-- <div class="col-md-4">
-                      <h2 class="head-tag">End Date</h2>
-                    <input type="text" id="fullname" class="form-control" name="fullname">
-                    </div> -->
+                    
+                    
                     <div class="col-md-4">
                       <h2 class="head-tag">Organisation Code</h2>
                         {{ form.unique_code }}

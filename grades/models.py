@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.db.models.base import Model
 
 
 class GradingSystem(models.Model):
@@ -49,3 +50,11 @@ class GradeRange(models.Model):
 
     def __str__(self):
         return self.system.name.title()
+
+
+    
+
+
+       
+
+

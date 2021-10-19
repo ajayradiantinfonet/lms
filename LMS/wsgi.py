@@ -25,6 +25,7 @@ sys.path.append("/var/www/html/lms/LMS/")
 sys.path.append("/var/www/html/lms/LMS/uploads/")
 sys.path.append("/var/www/html/lms/LMS/templates")
 
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LMS.settings')
 sys.path.insert(0,"/var/www/html/lms/env/lib/python3.8/site-packages")
 

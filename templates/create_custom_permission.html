@@ -1,83 +1,128 @@
-{% extends 'head1.html'%}
+{% extends 'head1.html' %}
 {% block content %}
-{% load static %}
+    <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
 
-<div id="content" class="pmd-content inner-page">
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
 
-<div class="container-fluid full-width-container data-tables">
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+    {% load static %}
+
+    <div id="content" class="pmd-content inner-page">
+
+        <div class="container-fluid full-width-container data-tables">
 
 
-  <h1 class="section-title" id="services">
-      <span>{{ desc}}</span>
-    </h1>
+            <h1 class="section-title" id="services">
+                <span>{{ desc }}</span>
+            </h1>
 
-    <ol class="breadcrumb text-left">
-      <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
-      <li class="active">{{ desc }}</li>
-    </ol><!--breadcrum end-->
-  
-    <!-- table card -->
-    <section class="row component-section">
+            <ol class="breadcrumb text-left">
+                <li><a href="{% url 'userlms:home' %}">Dashboard</a></li>
+                <li class="active">{{ desc }}</li>
+            </ol><!--breadcrum end-->
+
+            <!-- table card -->
+            <section class="row component-section">
 
 
-<div class="col-md-12">
-  <div class="section section-custom billinfo">
-      <div class="pmd-card pmd-z-depth">
-        {{ msg }}
-        <div class="pmd-card-body"> 
-          <form  action="{% url action %}" class="form-horizontal" method="post" role="form">
-            <!-- <div class="form-group pmd-textfield">
-              <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-              <div class="col-sm-10">
-                <input class="form-control input-sm" id="inputEmail3" placeholder="Email" type="email"><span class="pmd-textfield-focused"></span>
-              </div>
-            </div>
-            <div class="form-group pmd-textfield">
-              <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-              <div class="col-sm-10">
+                <div class="col-md-12">
+                    <div class="section section-custom billinfo">
+                        <div class="pmd-card pmd-z-depth">
+                            the mgs is :{{ msg }}
+                            <div class="pmd-card-body">
+                                <form action="{% url action %}" class="form-horizontal" method="post" role="form">
+                                    <!-- <div class="form-group pmd-textfield">
+                                      <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                                      <div class="col-sm-10">
+                                        <input class="form-control input-sm" id="inputEmail3" placeholder="Email" type="email"><span class="pmd-textfield-focused"></span>
+                                      </div>
+                                    </div>
+                                    <div class="form-group pmd-textfield">
+                                      <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                                      <div class="col-sm-10">
 
-                <div class="fg-line">
-                  <input class="form-control input-sm" id="inputPassword3" placeholder="Password" type="password"><span class="pmd-textfield-focused"></span>
+                                        <div class="fg-line">
+                                          <input class="form-control input-sm" id="inputPassword3" placeholder="Password" type="password"><span class="pmd-textfield-focused"></span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="col-sm-offset-2 col-sm-10">
+                                        <div class="checkbox">
+                                          <label class="pmd-checkbox pmd-checkbox-ripple-effect">
+                                            <input value="" type="checkbox" class="pm-ini"><span class="pmd-checkbox-label">&nbsp;</span>
+                                            <i class="input-helper"></i>
+                                            Remember me
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div> -->
+                                    {{ form.as_p }}
+
+                                    <input type="hidden" name="next" value="{{ next }}"/>
+
+                                    {{ form1.as_p }}
+
+                                    {{ form2.as_p }}
+
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <hr>
+                        <h1 align="center">User's Permission</h1>
+                            {#                            <form method="post" action="show_user_permission">#}
+{#                            <form method="get" action={{ asd }}>#}
+{#                                <label for="cars">Choose a User:</label>#}
+{#                                <select name="cars" id="cars">#}
+{#                                    {% for i in user1 %}#}
+{#                                        <option value="{{ i.id }}">{{ i.email }}</option>#}
+{#                                    {% endfor %}#}
+{#                                </select>#}
+{#                                <br><br>#}
+{#                                <input type="submit" value="Submit">#}
+{#                            </form>#}
+
+                            <table>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                                {% for i in user1 %}
+                                <tr>
+                                    <td>{{ i.email }}</td>
+                                    <td><a href="/admin/show_user_permission/{{ i.id }}" class="btn btn-success" id = '{{ i.id }}'>Show permission</a></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div> <!-- section content end -->
+                    </div>
+
                 </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <div class="checkbox">
-                  <label class="pmd-checkbox pmd-checkbox-ripple-effect">
-                    <input value="" type="checkbox" class="pm-ini"><span class="pmd-checkbox-label">&nbsp;</span>
-                    <i class="input-helper"></i>
-                    Remember me
-                  </label>
-                </div>
-              </div>
-            </div> -->
-            {{ form.as_p }}
+            </section>
 
-            <input type="hidden" name="next" value="{{next}}" />
 
-            {{ form1.as_p}}
-
-            {{ form2.as_p }}
-            
-            {% csrf_token %}
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary pmd-checkbox-ripple-effect">Submit</button>
-              </div>
-            </div>
-          </form>
         </div>
-      </div> <!-- section content end -->  
+
     </div>
-
-  </div>
-</section>
-
-
-</div>
-
-</div>
 
 
 {% endblock %}

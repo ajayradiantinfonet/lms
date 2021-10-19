@@ -171,7 +171,7 @@
                                     <div class="col-md-6">
                                         <h2 class="head-tag">Assigned Person Mobile Number:*</h2>
                                         <input type="number" onkeypress="return this.value.length < 10;" oninput="if(this.value.length>=10) { this.value = this.value.slice(0,10); }" placeholder="Enter 10 Digits no." id="contact_person_phone_id" class="form-control" name="contact_person_phone"
-                                            value="{{form.contact_person_phone}}">
+                                            value="{{form.contact_person_phone}}
 
 
                                     </div>
@@ -334,31 +334,23 @@
                                 <!--  <input type="text" id="fullname" class="form-control" name="fullname"> -->
                                 {{ form.state }}
                             </div>
+                             
+                           
                             <div class="col-md-4">
                                 <h2 class="head-tag">Pincode</h2>
-
-                                <input type="number" id="fullname" onkeypress="return this.value.length < 6;" oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }" class="form-control" name="fullname" value="{{form.pin}}">
-                                <!-- <input type="text" id="fullname" class="form-control" name="fullname">
- --></div>
-                            <!-- <div class="col-md-4">
-                                <h2 class="head-tag">End Date</h2>
-                                {{ form.end_date }}
-                                 <input type="text" id="fullname" class="form-control" name="fullname"> 
-                        </div> -->
-                            <!-- <div class="col-md-4">
-                      <h2 class="head-tag">End Date</h2>
-                    <input type="text" id="fullname" class="form-control" name="fullname">
-                    </div> -->
+                                           <input type="number" id="fullname" onkeypress="return this.value.length < 6;" oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }" class="form-control" name="fullname" value="{{form.pin}} 
+                            </div>
                             <div class="col-md-4">
                                 <h2 class="head-tag">Organisation Code*</h2>
                                 {{ form.unique_code }}
                             </div>
 
+
                             {{ form.certificate }}
 
 
                         </div>
-                        <!-- /col-12 -->
+                    
                         <div class="btn-save">
                             <a id="aa" class="next" id="profile-tab" data-toggle="tab" href="#profile1">SAVE & NEXT</a>
 

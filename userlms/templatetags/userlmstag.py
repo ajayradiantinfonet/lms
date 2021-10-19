@@ -47,32 +47,36 @@ def is_learningunit_open(userid,topicid):
 
 from organization.models import UserInformation
 
-@register.filter()
-def get_first_name_by_id(userid):
-    uid=userid
-    u=User.objects.get(id=uid)
-    if not u.is_superuser:
-        return UserInformation.objects.get(user=u).first_name
-    return "root"
+# @register.filter()
+# def get_first_name_by_id(userid):
+#     uid=userid
+#     u=User.objects.get(id=uid)
+#     if not u.is_superuser:
+#         return UserInformation.objects.get(user=u).first_name
+#     return "root"
 
 
 @register.filter()
 def get_first_name(userid):
     if not userid.is_superuser:
-        return UserInformation.objects.get(user=userid).first_name
+        #this is kaif change
+        # return UserInformation.objects.get(user=userid).first_name
+        return userid.first_name
     return "root"
 
 @register.filter()
 def get_last_name(userid):
     if not userid.is_superuser:
         return UserInformation.objects.get(user=userid).last_name
+        
     return "root"
 
 @register.filter()
 def get_image_url(userid):
     if not userid.is_superuser:
-        return UserInformation.objects.get(user=userid).image.url
-    return None
+        return userid.image.url
+        # return UserInformation.objects.get(user=userid).image.url
+    return userid.image.url
 
 
 @register.filter()
