@@ -1,0 +1,598 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Apprentissage</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+	<link href="{% static 'user_lms/bootstrap-4/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/owl-carousel/owl.carousel.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/owl-carousel/owl.theme.default.min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/css/video-min.css' %}" rel="stylesheet">
+	<link href="{% static 'user_lms/css/style.css' %}?{% now 'U' %}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'blogcss/blogmain.css' %}">
+
+    
+
+
+	<style type="text/css">
+		/*.owl-theme .owl-dots .owl-dot span{
+			width:30px;
+			background: #fff;
+			border:1px solid #28a745;
+		}
+
+		.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
+			background: #28a745;
+		}
+		@media (min-width:991px){
+			.dd-browse{
+				left:-600px;
+			}
+		}
+		@media (max-width:1100px){
+			.dd-browse{
+				left:-700px;
+			}
+		}*/
+
+		.owl-theme .owl-dots .owl-dot span{
+			width:30px;
+			background: #fff;
+			`border:1px solid #28a745;
+		}
+
+		.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{
+			background: #28a745;
+		}
+		@media (min-width:991px){
+			.dd-browse{
+				left:-600px;
+			}
+		}
+		@media (max-width:1100px){
+			.dd-browse{
+				left:-700px;
+			}
+		}
+        .login-btn1 {
+    color: #28a745;
+    background: #fff;
+    border: 1px solid #28a745;
+    box-shadow: 0px 3px 6px #00000029;
+       padding: 3px 15px;
+      border-radius: 5px;
+    font-size: 13px;}
+    .login-btn1:hover{
+	color:#fff !important;
+	background: #28a745 !important;
+	border:1px solid #28a745 !important;
+	box-shadow: 0px 3px 6px #00000029  !important;
+}
+.cal_icon{
+	color: #28a745;
+    background: #fff;
+}
+
+	</style>
+
+
+
+
+<style>
+body {
+  background: #fafafa;
+  color: #333333;
+  margin-top: 5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		function refToLink(link){
+			window.location.href = link;
+		}
+	</script>
+<style>
+        .notification {
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            padding: 4px 24px;
+            margin-right: 20px;
+            margin-left: 20px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+            font-size: 20px;
+        }
+
+        .notification:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 8px 8px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+
+        .notification-section .dropdown-toggle::after {
+            content: none;
+        }
+
+        .dropdown-toggle::after {
+            color: #fff;
+        }
+
+        #notifications-dropdown li {
+            max-width: 500px;
+            word-wrap: break-word;
+            display: inline-block;
+            white-space: normal;
+        }
+{% comment %} 
+        #notifications-dropdown.dropdown-menu {
+            width: 15rem;
+        }
+         {% endcomment %}
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+	<div class="section-apprentissage-header" style="position: fixed; background: #fff; width: 100%;top:0px; z-index: 9999;">
+		<nav class="navbar navbar-expand-lg navbar-light nav-box">
+		  
+		{% if user.is_anonymous %}
+		<a class="navbar-brand ml-5" 
+		href="{% url 'userlms:home' %}">
+		{% else %}
+		<a class="navbar-brand ml-5" 
+		href="{% url 'userlms:home' %}">
+		{% endif %}
+
+		
+        {% if not user.is_superuser %}
+        	{% if user.user_info.organization.logo %}
+           	<img src="{{ user.user_info.organization.logo.url }}" width="120px" height="40px" alt="LMS"/>
+            
+            {% else %}
+            	 <img style="height: 40px;" src="{% static 'user_lms/img/Apprentissage-Logo.png' %}" width="120px" height="40px" alt="LMS"/> 
+            {% endif %}
+            
+
+        
+
+        </a>
+
+        {% if user.user_info.organization.show_second_logo %}
+        <a class="navbar-brand ml-5" href="{% url 'userlms:home' %}" class="navbar-brand">
+         	{% if user.user_info.organization.logo1 %}
+                <img style="height: 40px;" src="{{ user.user_info.organization.logo1.url }}" width="120px" height="40px" alt="LMS"/>
+
+            {% else %}
+            	<img style="height: 40px;" src="{{ user.user_info.organization.logo.url }}" width="120px" height="40px" alt="LMS"/>
+
+            {% endif %}
+         
+
+        </a>
+        {% endif %}
+        {% else %}
+
+        	
+
+              <img style="height: 40px;" src="{% static 'user_lms/img/Apprentissage-Logo.png' %}" width="120px" height="40px" alt="LMS"/>
+        {% endif %}
+
+
+		  <!-- <a class="navbar-brand ml-5" href="https://apprentissage.in/">
+		  	<img style="height: 40px;" 
+		  	src="{% static 'user_lms/img/Apprentissage-Logo.png' %}"/></a> -->
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		  	<div class="form-inline mr-auto ml-auto wd-full">
+			      <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+			      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+			    <label class="sr-only" for="inlineFormInputGroupSearch">Search</label>
+			    <div class="input-group search-bar-wd wd-full">
+			        <div class="input-group-prepend">
+			          <div class="input-group-text search-btn ht-30-lg fs-13-lg pl-2 pr-2"><i class="fa fa-search"></i>&nbsp;Search</div>
+			        </div>
+			        <input type="text" class="form-control ht-30-lg fs-13-lg" id="inlineFormInputGroupSearch" placeholder="Search your learning topics here...">
+		    	</div>
+		    </div>
+		    <div class="dropdown wd-full fs-13-lg p-tb-10">
+		        <a class="dropdown-toggle nav-dd-item" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		        	
+		        </a>
+		        <div class="dropdown-menu dd-browse" aria-labelledby="navbarDropdown">
+		          <div class="browse-menu-content">
+		          	<div class="row">
+
+			          	<div class="col-sm">
+			          	{% block user_categories %}
+			          	  
+					          	{% for category in categories %}
+						          		<div class="dropdown-item ">
+						          			{{ category.name }}
+						          			<label class="fl-rt">
+						          			<span class="fa fa-chevron-right" ></span></label>
+						          		</div>
+					          	{% endfor %}
+				          
+			          	{% endblock user_categories %}
+			          	
+			          		<!-- <div class="dropdown-item">Startups<label class="fl-rt">
+			          			<span class="fa fa-chevron-right" ></span></label>
+			          		</div> -->
+			          	</div>
+			          	<div class="col-sm py-2">
+			          		<!-- <div class="dropdown-item ">Retail Sales Associate<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Basic of Digital Marketing<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div>
+			          		<div class="dropdown-item ">Basic of Finances<label class="fl-rt"><span class="fa fa-chevron-right" ></span></label></div> -->
+			          	</div>
+                   
+
+			          	<div class="col-sm">
+			          		<h5 class="justiy-content-center mb-2" style="text-align: center;">Trending Courses</h5>
+
+			          		{% if trending %}
+							
+
+			          		<div class="card my-2 py-1 px-1 brd-green brd-rds-5">
+			          			<div class="card-inner">
+			          				<img src="{{ trending.thumbnail.url }}" style="height:125px; width:175px;" />
+			          				<div class="card-inner-content">
+			          					<div class="card-course-name"><label class="cc-name">
+			          					{{ trending.name }}</label></div>
+			          					<div class="card-course-price">
+			          						<span>
+			          							<strike class="card-course-price-strike">Rs. {{ trending.price }}</strike>
+			          						</span> Free
+			          					</div>
+			          					<div class="fs-13">
+			          						<label class="card-course-rating-star">
+			          							
+			          						{{ trending.star }}
+			          						</label>
+			          						<span class="card-enroll-count fl-rt">
+			          							<i class="fa fa-users" aria-hidden="true"></i>
+			          							{{ trending.total_view }}
+			          						</span>
+			          					</div>
+			          					<div>
+			          						{% if t.id %}
+			          						<a class="cta-btn btn-wdth-120 fs-13" 
+			          						href="{% url 'userlms:my' trending.id %}">Enroll Now</a>
+			          						{% else %}
+			          							<a class="cta-btn btn-wdth-120 fs-13" 
+			          						href="">Enroll Now</a>
+			          						{% endif %}
+	  						<!-- onclick="refToLink('{{ trending.link }}')" >Enroll Now</button> -->
+			          						<span class="fav-not fl-rt">
+			          							<i class="fa fa-heart" aria-hidden="true"></i>
+			          						</span>
+			          					</div>
+			          				</div>
+			          			</div>
+			          		</div>
+							  
+			          		{% endif %}
+			          	</div>
+		          		
+		          	</div>
+		          </div>
+		        </div>
+		    </div>
+		    <div class="ml-auto mr-5">
+			    <ul class="navbar-nav">
+			    	{% if not user.is_anonymous %}
+			    		<li class="dropdown nav-item active wd-full fs-13-lg">
+					        <a class="dropdown-toggle nav-dd-item nav-link" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					        	{% if user.image %}
+					        		<img alt="Profile Image" src="{{ user.image.url }}" style="border-radius: 50%;width: 40px; height: 40px;">
+					        	{% else %}
+					        	<img alt="Profile Image" src="{% static 'user_lms/img/user_image.jpeg' %}" style="border-radius: 50%;width: 40px; height: 40px;">
+					        	{% endif %}
+				    			<span class="fs-13 ml-3 pt-2">Profile</span>
+				    		</a>
+		        			<div class="dropdown-menu fs-13" aria-labelledby="navbarDropdownProfile">
+	        					<a href="{% url 'userlms:user_profile' %}"><div class="px-3 py-1"><i class="far fa-user cta-color" aria-hidden="true" style="width:30px"></i> Profile
+	        					</div></a>
+
+	        					<div class="px-3 py-1">
+	        						<a href="{% url 'userlms:my' %}"><i class="far fa-file-video cta-color" aria-hidden="true" style="width:30px"></i>My Courses</a> 
+	        					</div>
+	        					<a href="{% url 'userlms:Wishlistfun' %}"><div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Wishlist</div></a>
+								<!-- <div class="px-3 py-1"><i class="far fa-heart cta-color" aria-hidden="true" style="width:30px"></i> Notes</div> -->
+	        					<!-- <div class="px-3 py-1"><i class="far fa-bookmark cta-color" aria-hidden="true" style="width:30px"></i> Grade</div> -->
+	        					<a href="{% url 'userlms:show_notes' %}"><div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Notes</div></a>
+	      
+								<a href="{% url 'userlms:certificate' %}"><div class="px-3 py-1"><i class="fa fa-certificate cta-color" aria-hidden="true" style="width:30px"></i> Certificate</div></a>
+	        					<!--<div class="px-3 py-1"><i class="far fa-comments cta-color" aria-hidden="true" style="width:30px"></i> Chat</div>
+	        					<div class="px-3 py-1"><i class="far fa-question-circle cta-color" aria-hidden="true" style="width:30px"></i> FAQ</div>
+	        					<div class="px-3 py-1"><i class="fa fa-phone cta-color" aria-hidden="true" style="width:30px"></i> Contact Us</div> -->
+	        					<div class="px-3 py-1"><a href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out-alt cta-color" aria-hidden="true" style="width:30px"></i> Logout</a></div>
+		        			</div>
+					    </li>
+						<li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 pl-lg-x20-sm-5 fs-13-lg">
+							<a class="notification" href="{% url  'blog:post_create' %}"> Add Post</a>
+						</li>
+					    
+
+					    
+					{% else %}
+				    	<li class="nav-item active wd-full fs-13-lg p-tb-10">
+					        <a class="nav-link" href="#">
+					        	<i class="fa fa-shopping-cart cta-color" aria-hidden="true"></i>&nbsp;Cart</a>
+					    </li>
+					    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 pl-lg-x20-sm-5 fs-13-lg">
+                         
+              
+					   {% if not user.is_anonymous %}
+				        <button class="login-btn py-1 fs-13" 
+				        onclick="refToLink('{% url "accounts:logout" %}')">
+				        	Logout
+				    	</button>
+				        {% else %}
+				        <!-- refToLink('https://learning.apprentissage.in/login/index.php') -->
+						    <button class="login-btn py-1 fs-13" 
+								onclick="refToLink('{% url "accounts:login" %}')">
+						        Login
+						    </button>
+						 {% endif %}
+							    </li>
+							    <li class="nav-item wd-full ml-2-mbl-ml-0 p-tb-10 fs-13-lg">
+							        <button class="signup-btn py-1 fs-13" onclick="refToLink('{% url "accounts:register" %}')">Sign Up</button>
+							    </li>
+				    {% endif %}
+			    </ul>
+			</div>
+		  </div>
+		</nav>
+	</div>
+	<div class="my-3" style="min-height: 40px;"></div>
+	<div class="clearfix"></div>
+
+      {% block content %}{% endblock %}
+
+     {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+		
+
+        const notificationSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/notification/'
+            + roomName
+            + '/'
+        );
+        
+
+        notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            //document.querySelector('#chat-log').value += (data.message + '\n');
+            console.log('notification',data)
+            document.getElementById("notifications-dropdown").innerHTML = "";
+            document.getElementById("notifications-dropdown").innerHTML = "<li class='dropdown-item'>" + data + "</li><hr class='dropdown-divider'>" + document.getElementById("notifications-dropdown").innerHTML;
+            //document.getElementById("notification-badge").innerHTML = "";
+            document.getElementById("notification-badge").innerHTML = parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+        };
+
+        notificationSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+	
+{% block course_details %}
+
+{% endblock %}
+
+
+
+{% block user_banner %}
+
+{% endblock %}
+
+
+{% block user_card-slider %}
+
+{% endblock %}
+
+
+{% block user_why %}
+
+{% endblock %}
+
+
+{% block user_course-offered %}
+
+{% endblock %}
+
+
+
+
+ {% include 'user_lms/footer.html' %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous">
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js">
+</script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"> 
+</script> -->
+
+{% block inpage_script %}
+
+  
+{% endblock %}
+
+
+</body>
+</html>

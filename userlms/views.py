@@ -1717,3 +1717,17 @@ def activity_completed(request):
 			return HttpResponse(json.dumps({"message":"you need to play this activity again","activity":None}),content_type='application/json')
 
 
+def aboutus(request):
+	return render (request,"footer/about.html")
+
+
+def contactus(request):
+	return render (request,"footer/contact.html")
+
+
+def mission(request):
+	return render (request,"footer/mission.html")
+
+
+def team(request):
+	return render (request,"footer/team.html")

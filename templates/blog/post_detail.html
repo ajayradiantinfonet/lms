@@ -1,0 +1,47 @@
+{% extends "blog/blogheader.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<center><h3 style="color:black; text-decoration: underline;"> Radiant Blog</h3></center>
+<div class="content-section">
+{% load static %}
+    
+    
+
+    <!-- Post information -->
+    <div>
+        <h1 class="mt-4">{{object.title}}</h1>
+        {% if object.blog_img %}
+         <img src="{{ object.blog_img.url }}" alt="" style="height:450px; width:1300px;" />
+         {% else %}
+         <img src="{% static 'boimage/menu.svg'  %}" alt="" style="style="height:450px; width:1200px;" />
+         {% endif %}
+
+        <p>
+            Posted on {{ object.date_posted|date:"F d, Y" }}
+
+
+            
+            <a class="btn btn-danger btn-sm mt-1 mb-1 float-right" href="{% url 'blog:post_delete' object.id %}">Delete</a>
+            <a class="btn btn-info btn-sm mt-1 mb-1 float-right mr-2 "
+                href="{% url 'blog:post_update' object.id %}">Update</a>
+                
+            
+        </p>
+    </div>
+    
+
+    <!-- Preview Image -->
+    
+
+    <div class="content-section">
+    <!-- Post Content -->
+    
+    <p  class="lead">{{ object.content|safe|linebreaks }}</p>
+    </div>
+
+    
+</div>
+{% endblock content %}

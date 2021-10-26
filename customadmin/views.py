@@ -13,7 +13,7 @@ from django.views import View
 from django.shortcuts import HttpResponseRedirect
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
-from .models import Organization
+from .models import College, Organization
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from accounts.forms import CreateUserForm
@@ -130,7 +130,16 @@ def admin_home(request):
             print(org_id)
         # all_college = College.objects.all()
         all_college = College.objects.filter(organization_id=org_id)
-        # print('all_college',all_college)
+        print('all_college',all_college)
+        for j in all_college:
+	        print("jj",j.organization_id)
+	        mm =j.organization_id
+        all_organ = Organization.objects.filter(id=mm)
+        print(all_organ)
+        for j in all_organ: 
+	        print(i.organization_name)
+		    
+	
 
         if len(orgs) > 0:
             org = orgs[0]
@@ -188,6 +197,7 @@ def admin_home(request):
     
 
     a = College.objects.all()
+	
     # print(a)
     for i in a:
         

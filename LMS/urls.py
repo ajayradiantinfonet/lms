@@ -35,6 +35,7 @@ from .settings import STATIC_URL,STATIC_ROOT,MEDIA_URL,MEDIA_ROOT
 # from wagtail.documents import urls as wagtaildocs_urls
 
 urlpatterns = [
+    path('blog/',include (('blog.urls','blog'), namespace='blog')),
     #path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('superuseradmin/', admin.site.urls),
     #path('', include('accounts.urls'),namespace="accounts"),

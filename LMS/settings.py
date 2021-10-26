@@ -141,6 +141,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'notifications_app',
+    'blog',
+    
     
     
 

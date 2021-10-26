@@ -1,3 +1,6 @@
+
+		
+		
 		{% load static %}
 		<section>
 			<div class="page-footer py-5 mt-4" style="min-height:400px; color:#fff">
@@ -5,7 +8,7 @@
 				<div class="row" style="margin:0px;">
 					<div class="col-sm-4" style="float: left;">
 						<div class="col-sm-10" style="float: left;">
-							<h2 class="fw-800">Apprentissage</h2>
+							<h2 class="fw-800" style=" color:white;">Apprentissage</h2>
 							<p class="fs-13">
 								Apprentissage is a learning platform providing many facilities for learning and contents for courses in multiple domains.
 							</p>
@@ -25,25 +28,26 @@
 						</div>
 					</div>
 					<div class="col-sm-8" style="float: left;">
-						<div class="col-sm-4" style="float: left;">
-							<h4 class="fw-800" >Who we are</h4>
-							<div class="my-2">About Us</div>
-							<div class="my-2">Vision & Mission</div>
-							<div class="my-2">Our Team</div>
-							<div class="my-2">Contact Us</div>
-							<div class="my-2">Apprentissage for business</div>
+						<div class="col-sm-4" style="float: left; color:white;">
+							<h4 class="fw-800 " style=" color:white;"> Who we are</h4>
+							<div class="my-2"> <a style="text-decoration:none; color:white;" href="{% url 'userlms:aboutus' %}"> About Us</div>
+							<div class="my-2"> <a style="text-decoration:none;color:white;" href="{% url 'userlms:mission' %}">Vision & Mission</div>
+							<div class="my-2"> <a  style="text-decoration:none; color:white;" href="{% url 'userlms:team' %}">Our Team</div>
+							<div class="my-2"> <a  style="text-decoration:none; color:white;" href="{% url 'userlms:contactus' %}">Contact Us</div>
+							<div class="my-2" style=" color:white;">Apprentissage for business</div>
 						</div>
-						<div class="col-sm-4" style="float: left;">
-							<h4 class="fw-800">Services</h4>
+						
+						<div class="col-sm-4" style="float: left; color:white;">
+							<h4 class="fw-800" style=" color:white;">Services</h4>
 							<div class="my-2">Tourism</div>
 							<div class="my-2">Banking & finance</div>
 							<div class="my-2">Health care</div>
 							<div class="my-2">General</div>
 						</div>
-						<div class="col-sm-4" style="float: left;">
-							<h4 class="fw-800">Resources</h4>
+						<div class="col-sm-4" style="float: left; color:white;">
+							<h4 class="fw-800" style=" color:white;">Resources</h4>
 							<div class="my-2">News</div>
-							<div class="my-2">Blog</div>
+							<div class="my-2"><a style="text-decoration:none; color:white;" href="{% url 'blog:index' %}">Blog</div>
 							<div class="my-2">Videos</div>
 							<div class="my-2">FAQs</div>
 						</div>

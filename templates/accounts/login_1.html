@@ -16,6 +16,7 @@
 
   
      <style>
+     
 .sign_form{
   font-size: 15px !important;
     padding: 18px 20px;
@@ -30,6 +31,8 @@
 .center-block a
 {
   margin: 40px;
+    
+  
 }
 .form-control {
     width: 100%;
@@ -600,10 +603,11 @@ display: block;
         <div class="col-sm-8" style="float: left;">
           <div class="col-sm-4" style="float: left;">
             <h4 class="fw-800" >Who we are</h4>
-            <div class="my-2">About Us</div>
-            <div class="my-2">Vision & Mission</div>
-            <div class="my-2">Our Team</div>
-            <div class="my-2">Contact Us</div>
+            
+							<div id ="about" class="my-2"> <a href="{% url 'userlms:aboutus' %}"> About Us</div>
+							<div class="my-2"> <a href="{% url 'userlms:mission' %}">Vision & Mission</div>
+							<div class="my-2"> <a href="{% url 'userlms:team' %}">Our Team</div>
+							<div class="my-2"> <a href="{% url 'userlms:contactus' %}">Contact Us</div>
             <div class="my-2">Apprentissage for business</div>
           </div>
           <div class="col-sm-4" style="float: left;">
